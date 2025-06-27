@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, Inject, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthServiceService } from '../../app/services/auth-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +15,7 @@ import { AuthServiceService } from '../../app/services/auth-service.service';
 export class LoginComponent {
     private formBuilder = inject(FormBuilder);
     private authService = inject(AuthServiceService);
+    private router = inject(Router);
     loginForm: FormGroup;
 
     constructor() {
@@ -33,7 +35,9 @@ export class LoginComponent {
     
     onSubmit() {
         this.authService.login(this.loginForm).subscribe((res) => {
-            console.log(res);
+            if(res) {
+                this.router.navigate(['/app-home']);
+              }
         });
     }
 }
