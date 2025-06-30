@@ -1,10 +1,9 @@
-package com.org.back.models;
+package com.org.back.dto.User;
 
-public class LoginUserDto {
+public class UserLoginDto {
     private String email;
-    
     private String password;
-    
+
     public String getEmail() {
         return email;
     }

@@ -1,6 +1,6 @@
-package com.org.back.dto;
+package com.org.back.dto.User;
 
-public class LoginResponse {
+public class UserLoginResponseDto {
     private String token;
     private long expiresIn;
 
@@ -8,7 +8,7 @@ public class LoginResponse {
         return token;
     }
 
-    public LoginResponse setToken(String token) {
+    public UserLoginResponseDto setToken(String token) {
         this.token = token;
         return this;
     }
@@ -17,7 +17,7 @@ public class LoginResponse {
         return expiresIn;
     }
 
-    public LoginResponse setExpiresIn(long expiresIn) {
+    public UserLoginResponseDto setExpiresIn(long expiresIn) {
         this.expiresIn = expiresIn;
         return this;
     }

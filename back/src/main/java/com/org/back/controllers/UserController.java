@@ -6,24 +6,30 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.org.back.dto.User.UserUpdateDto;
 import com.org.back.models.User;
-import com.org.back.services.UserService;
+import com.org.back.services.UserServiceImpl;
+
 import java.util.List;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
-    public UserController(UserService userService) {
+    public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/me")
+    @GetMapping("/{id}")
     public ResponseEntity<User> authenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         User currentUser = (User) authentication.getPrincipal();
 
         return ResponseEntity.ok(currentUser);
@@ -31,8 +37,22 @@ public class UserController {
 
     @GetMapping("/")
     public ResponseEntity<List<User>> allUsers() {
-        List <User> users = userService.allUsers();
-
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(userService.getAllUsers());
     }
+
+    @PutMapping("{id}")
+    public ResponseEntity<User> updateUserById(@PathVariable Long id, @RequestBody UserUpdateDto updatedUser) {
+        User savedUser = userService.updateUserById(id, updatedUser);
+        if(savedUser != null) {
+            return ResponseEntity.ok(savedUser);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // @DeleteMapping("{id}")
+    // public ResponseEntity<void> delete(@PathVariable String id) {
+    //     userService.delete
+    // }
+
 }

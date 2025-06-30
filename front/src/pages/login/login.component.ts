@@ -13,9 +13,9 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-    private formBuilder = inject(FormBuilder);
-    private authService = inject(AuthServiceService);
-    private router = inject(Router);
+    private readonly formBuilder = inject(FormBuilder);
+    private readonly authService = inject(AuthServiceService);
+    private readonly router = inject(Router);
     loginForm: FormGroup;
 
     constructor() {

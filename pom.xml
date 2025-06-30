@@ -10,7 +10,6 @@
   <modules>
     <module>back-utils</module>
     <module>back</module>
-    <module>front</module>
   
   </modules>
 </project>

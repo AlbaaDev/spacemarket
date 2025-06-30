@@ -1,6 +1,6 @@
-package com.org.back.dto;
+package com.org.back.dto.User;
 
-public class RegisterUserDto {
+public class UserRegisterDto {
     private String email;
     
     private String password;

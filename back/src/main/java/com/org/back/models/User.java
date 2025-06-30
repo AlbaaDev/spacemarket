@@ -1,10 +1,13 @@
 package com.org.back.models;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,34 +26,39 @@ import lombok.*;
 public class User implements UserDetails {
     @NonNull
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
+    @NotBlank
+    @Column(nullable = false, length = 45)
     private String firstName;
 
-    @NonNull
+    @NotBlank
+    @Column(nullable = false, length = 45)
     private String lastName;
 
-    @NonNull
+    @Column(unique = true, nullable = false, length = 128)
+    @NotBlank
+    @Email(message = "Invalid email format")
     private String email;
 
-    @NonNull
+    @Column(unique = true, nullable = false, length = 128)
+    @NotBlank
     private String password;
 
-
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+    public String getUsername() {
+        return email;
     }
 
     public String getPassword() {
         return password;
     }
 
+
     @Override
-    public String getUsername() {
-        return email;
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
     }
 
     @Override
