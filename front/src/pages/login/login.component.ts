@@ -16,6 +16,8 @@ export class LoginComponent {
     private readonly formBuilder = inject(FormBuilder);
     private readonly authService = inject(AuthServiceService);
     private readonly router = inject(Router);
+
+    errorMessage: string | null = null;
     loginForm: FormGroup;
 
     constructor() {
@@ -32,12 +34,18 @@ export class LoginComponent {
     get password() {
         return this.loginForm.get('password');
     }
-    
+
+
+
     onSubmit() {
-        this.authService.login(this.loginForm).subscribe((res) => {
-            if(res) {
-                this.router.navigate(['/app-home']);
-              }
+        this.errorMessage = null;
+        this.authService.login(this.loginForm).subscribe({
+                next: () => {
+                    this.router.navigate(['/app-home']);
+                },
+                error: err => {
+                    this.errorMessage = "Identifiants incorrects ou serveur indisponible.";
+                }
         });
     }
 }

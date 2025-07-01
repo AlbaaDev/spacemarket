@@ -2,19 +2,23 @@
   <span>SpaceMarket</span>
 
   <span class="example-fill-remaining-space"></span>
-  <span class="mx-3">
-    <a routerLink="/app-login" routerLinkActive="active" ariaCurrentWhenActive="page">Login</a>
-  </span>
-  <span class="mx-3">
-    <a routerLink="/app-sign-up" routerLinkActive="active" ariaCurrentWhenActive="page">Sign Up</a>
-  </span>
-  <span class="mx-3">
-    <a routerLink="/app-settings" routerLinkActive="active" ariaCurrentWhenActive="page">Settings</a>
-  </span>
-  <span class="mx-3">
-    Deconnexion
-  </span>
-  <span class="mx-3">
-    <a routerLink="/app-profile" routerLinkActive="active" ariaCurrentWhenActive="page">Profile</a>
-  </span>
+  @if(!(authService.isAuth())) {
+    <span class="mx-3">
+      <a routerLink="/app-login" routerLinkActive="active" ariaCurrentWhenActive="page">Login</a>
+    </span>
+    <span class="mx-3">
+      <a routerLink="/app-sign-up" routerLinkActive="active" ariaCurrentWhenActive="page">Sign Up</a>
+    </span>
+  }
+  @if(authService.isAuth()) {
+    <span class="mx-3">
+      <a routerLink="/app-settings" routerLinkActive="active" ariaCurrentWhenActive="page">Settings</a>
+    </span>
+    <span class="mx-3" (click)="logout()">
+      Deconnexion
+    </span>
+    <span class="mx-3">
+      <a routerLink="/app-profile" routerLinkActive="active" ariaCurrentWhenActive="page">Profile</a>
+    </span>
+  }
 </mat-toolbar>

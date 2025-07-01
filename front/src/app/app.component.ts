@@ -1,9 +1,10 @@
-import {Component, computed, Signal, signal, WritableSignal} from '@angular/core';
+import {Component, computed, inject, Signal, signal, WritableSignal} from '@angular/core';
 import {HeaderComponent} from '../components/header/header.component';
 import {MatSidenav, MatSidenavContainer, MatSidenavModule} from '@angular/material/sidenav';
 import {MatButton} from '@angular/material/button';
 import {RouterLink, RouterOutlet} from '@angular/router';
 import {MatList, MatListItem} from '@angular/material/list';
+import { AuthServiceService } from './services/auth-service.service';
 
 @Component({
   selector: 'app-root',
@@ -13,10 +14,8 @@ import {MatList, MatListItem} from '@angular/material/list';
 })
 export class AppComponent {
   title = 'front';
-  count: WritableSignal<number> = signal(0);
-  doubleCount: Signal<number> = computed(() => this.count() * 2);
+  protected readonly authService = inject(AuthServiceService);
 
   constructor() {
-    this.count.set(2);
   }
 }
