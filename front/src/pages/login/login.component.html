@@ -1,16 +1,42 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <mat-form-field>
-        <mat-label for="email">Email</mat-label>    
-        <input type="email" id="email" name="email" formControlName="email" matInput />
-    </mat-form-field>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="w-50">
+    <div class="d-flex flex-column gap-3">
+        <mat-form-field>
+            <mat-label for="email">Email</mat-label>    
+            <input type="email" id="email" name="email" formControlName="email" matInput />
+        </mat-form-field>
+        @if (email?.invalid && (email?.dirty || email?.touched)) {
+            @if(email?.hasError('required')) {
+                <mat-error>
+                    Email is required
+                </mat-error>
+            }
+            @if(email?.hasError('email')) {
+                <mat-error>
+                    Email is not valid
+                </mat-error>
+            }
+        }
+    
+        <mat-form-field>
+            <mat-label for="password">Password</mat-label>    
+            <input type="password" id="password" name="password" formControlName="password" matInput    />
+        </mat-form-field>
+        @if (password?.invalid && (password?.dirty || password?.touched)) { 
+            @if(password?.hasError('required')) {
+                <mat-error>
+                    Password is required
+                </mat-error>    
+            }
+            @if(password?.hasError('minlength')) {
+                <mat-error>
+                    Password must be at least 8 characters long
+                </mat-error>
+            }
+        }   
+    </div>
 
-    <mat-form-field>
-        <mat-label for="password">Password</mat-label>    
-        <input type="password" id="password" name="password" formControlName="password" matInput    />
-    </mat-form-field>
-
-    <button mat-raised-button type="submit"  color="primary">Login</button>
+    <button mat-raised-button type="submit" color="primary" [disabled]="loginForm.invalid">Login</button>
     @if (errorMessage !== null) {
-        <span>{{errorMessage}}</span>
+        <mat-error class="mt-4">{{errorMessage}}</mat-error>
     } 
 </form>     

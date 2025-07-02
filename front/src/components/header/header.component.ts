@@ -19,8 +19,6 @@ export class HeaderComponent {
   private readonly router = inject(Router);
 
   logout() {
-    console.log('click');
-    
     localStorage.removeItem("authToken");
     localStorage.removeItem("tokenExpiration");
     this.router.navigate(['/app-login']);
