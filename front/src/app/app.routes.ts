@@ -24,7 +24,9 @@ export const routes: Routes = [
   { path: 'app-media', component: MediaComponent },
   { path: 'app-login', component: LoginComponent },
   { path: 'app-sign-up', component: SignUpComponent },
+  { path: 'app-logout', redirectTo: '/app-login'},
   { path: 'app-settings', component: SettingsComponent },
   { path: 'app-profile', component: ProfileComponent },
+  { path: '', redirectTo: '/app-home', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },
 ];
