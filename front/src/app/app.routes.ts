@@ -15,6 +15,7 @@ import { AuthGuard } from '../guards/auth.guards';
 import { DashboardComponent } from '../pages/dashboard/dashboard.component';
 import { AuthenticatedLayoutComponent } from './authenticated-layout-component/authenticated-layout-component';
 import { NoAuthGaurd } from '../guards/no-auth.guards';
+import { PageNotFoundComponent } from '../pages/page-not-found/page-not-found.component';
 
 export const routes: Routes = [
   { path: 'app-home', component: HomeComponent },
@@ -33,5 +34,7 @@ export const routes: Routes = [
   { path: 'app-media', component: MediaComponent, canActivate: [AuthGuard] },
   { path: 'app-dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
 
-  // { path: '**', redirectTo: '/app-page-not-found' },
+
+  { path: '**', component: PageNotFoundComponent},
+
 ];
