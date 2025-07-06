@@ -14,11 +14,12 @@ import {MediaComponent} from '../pages/media/media.component';
 import { AuthGuard } from '../guards/auth.guards';
 import { DashboardComponent } from '../pages/dashboard/dashboard.component';
 import { AuthenticatedLayoutComponent } from './authenticated-layout-component/authenticated-layout-component';
+import { NoAuthGaurd } from '../guards/no-auth.guards';
 
 export const routes: Routes = [
   { path: 'app-home', component: HomeComponent },
-  { path: 'app-login', component: LoginComponent },
-  { path: 'app-sign-up', component: SignUpComponent },
+  { path: 'app-login', component: LoginComponent, canActivate: [NoAuthGaurd] },
+  { path: 'app-sign-up', component: SignUpComponent, canActivate: [NoAuthGaurd] },
   { path: 'app-logout', redirectTo: '/app-login' },
 
   { path: 'app-settings', component: SettingsComponent, canActivate: [AuthGuard] },
