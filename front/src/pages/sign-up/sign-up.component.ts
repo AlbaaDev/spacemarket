@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AuthServiceService } from '../../app/services/auth-service.service';
+import { AuthService } from '../../services/auth-service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 })
 export class SignUpComponent {
     private formBuilder = inject(FormBuilder);
-    private authService = inject(AuthServiceService);
+    private authService = inject(AuthService);
     private router = inject(Router);
     signUpForm : FormGroup;
 
@@ -28,26 +28,24 @@ export class SignUpComponent {
     }
 
     get email() {
-      return this.signUpForm.get('email') as FormControl;
+      return this.signUpForm.get('email') as FormControl | null;
     }
-
+ 
     get password() {
-      return this.signUpForm.get('password') as FormControl;
+      return this.signUpForm.get('password') as FormControl | null;
     }
 
     get firstName() {
-      return this.signUpForm.get('firstName') as FormControl;
+      return this.signUpForm.get('firstName') as FormControl | null;
     }
 
     get lastName() {
-      return this.signUpForm.get('lastName') as FormControl;
+      return this.signUpForm.get('lastName') as FormControl | null;
     }
 
     onSubmit() {
-      this.authService.signUp(this.signUpForm).subscribe((res) =>  {
-        if(res) {
+      this.authService.signUp(this.signUpForm).subscribe(() =>  {
           this.router.navigate(['/app-login']);
-        }
       });      
     }
 }

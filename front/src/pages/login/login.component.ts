@@ -1,9 +1,9 @@
-import { Component, Inject, inject } from '@angular/core';
+import { Component, Inject, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AuthServiceService } from '../../app/services/auth-service.service';
+import { AuthService } from '../../services/auth-service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
     private readonly formBuilder = inject(FormBuilder);
-    private readonly authService = inject(AuthServiceService);
+    private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
 
     errorMessage: string | null = null;
@@ -35,13 +35,11 @@ export class LoginComponent {
         return this.loginForm.get('password');
     }
 
-
-
     onSubmit() {
         this.errorMessage = null;
         this.authService.login(this.loginForm).subscribe({
                 next: () => {
-                    this.router.navigate(['/app-home']);
+                    this.router.navigate(['/app-dashboard']);
                 },
                 error: err => {
                     this.errorMessage = "Identifiants incorrects ou serveur indisponible.";

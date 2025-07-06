@@ -1,35 +1,13 @@
-<app-header/>
-  <mat-sidenav-container >
+<app-header></app-header>
+@if (authService.isAuthenticated()) {
+  <mat-sidenav-container>
     <mat-sidenav mode="side" opened>
-@if(authService.isAuth()) {
-
-      <mat-list>
-        <mat-list-item>
-          <button mat-button routerLink="app-contact">Contact</button>
-        </mat-list-item>
-        <mat-list-item>
-          <button mat-button routerLink="app-calendrier">Calendrier</button>
-        </mat-list-item>
-        <mat-list-item>
-          <button mat-button routerLink="app-opportunite">Opportunités</button>
-        </mat-list-item>
-        <mat-list-item>
-          <button mat-button routerLink="app-automation">Automation</button>
-        </mat-list-item>
-        <mat-list-item>
-          <button mat-button routerLink="app-workflow">Workflow</button>
-        </mat-list-item>
-        <mat-list-item>
-          <button mat-button routerLink="app-reporting">Reporting</button>
-        </mat-list-item>
-        <mat-list-item>
-          <button mat-button routerLink="app-media">Media</button>
-        </mat-list-item>
-      </mat-list>
-  }
+      <app-sidebar/>
     </mat-sidenav>
     <mat-sidenav-content>
       <router-outlet/>
     </mat-sidenav-content>
   </mat-sidenav-container>
-
+} @else {
+  <router-outlet/>
+}

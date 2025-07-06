@@ -28,25 +28,26 @@ public class AuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
     
-    public User signup(UserRegisterDto input) {
+    public User signup(UserRegisterDto inputForm) {
         User user = new User();
-        user.setFirstName(input.getFirstName());
-        user.setLastName(input.getLastName());
-        user.setEmail(input.getEmail());
-        user.setPassword(passwordEncoder.encode(input.getPassword()));
+        user.setFirstName(inputForm.getFirstName());
+        user.setLastName(inputForm.getLastName());
+        user.setEmail(inputForm.getEmail());
+        user.setPassword(passwordEncoder.encode(inputForm.getPassword()));
 
         return userRepository.save(user);
     }
 
-    public User authenticate(UserLoginDto input) {
+    public User authenticate(UserLoginDto inputForm) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        input.getEmail(),
-                        input.getPassword()
+                    inputForm.getEmail(),
+                    inputForm.getPassword()
                 )
         );
 
-        return userRepository.findByEmail(input.getEmail())
+
+        return userRepository.findByEmail(inputForm.getEmail())
                 .orElseThrow();
     }
 }
