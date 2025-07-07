@@ -1,23 +1,13 @@
 <mat-toolbar>
-  <span>SpaceMarket</span>
+  <span class="text-primary">SpaceMarket</span>
   <span class="example-fill-remaining-space"></span>
   @if(!(authService.isAuthenticated())) {
-    <span class="mx-3">
-      <a routerLink="/app-login" routerLinkActive="active" ariaCurrentWhenActive="page">Login</a>
-    </span>
-    <span class="mx-3">
-      <a routerLink="/app-sign-up" routerLinkActive="active" ariaCurrentWhenActive="page">Sign Up</a>
-    </span>
+    <button mat-raised-button routerLink="/app-login" class="mx-2">Login</button>
+    <button mat-raised-button routerLink="/app-sign-up" class="mx-2">Sign Up</button>
   }
   @if(authService.isAuthenticated()) {
-    <span class="mx-3">
-      <a routerLink="/app-settings" routerLinkActive="active" ariaCurrentWhenActive="page">Settings</a>
-    </span>
-    <span class="mx-3">
-      <a routerLink="/app-profile" routerLinkActive="active" ariaCurrentWhenActive="page">Profile</a>
-    </span>
-    <span class="mx-3" (click)="logout()">
-      Logout
-    </span>
+    <button mat-raised-button routerLink="/app-settings" class="mx-2">Settings</button>
+    <button mat-raised-button routerLink="/app-profile" class="mx-2">Profile</button>
+    <button mat-raised-button (click)="logout()" class="mx-2">Logout</button>
   }
 </mat-toolbar>
