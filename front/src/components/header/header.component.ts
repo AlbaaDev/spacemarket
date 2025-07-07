@@ -2,15 +2,14 @@ import { Component, inject } from '@angular/core';
 import {MatToolbar} from '@angular/material/toolbar';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import { AuthService } from '../../services/auth-service';
-import { MatButton } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-header',
   imports: [
     MatToolbar,
     RouterLink,
-    MatButton,
-    RouterLinkActive
+    MatButtonModule,
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
