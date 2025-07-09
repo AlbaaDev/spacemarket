@@ -20,11 +20,9 @@ import lombok.*;
 @Setter
 @Getter
 @Entity
-@RequiredArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
 public class User implements UserDetails {
-    @NonNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

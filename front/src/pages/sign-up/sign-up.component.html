@@ -57,4 +57,7 @@
         }   
     </div>
     <button mat-raised-button type="submit"  color="primary" [disabled]="signUpForm.invalid">Sign up</button>
+    @if (errorMessage !== null) {
+        <mat-error class="mt-4">{{errorMessage}}</mat-error>
+    } 
 </form>

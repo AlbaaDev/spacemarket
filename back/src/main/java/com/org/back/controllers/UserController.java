@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 
 
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -44,15 +45,6 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<User> isAuth(@CookieValue(required = false) String jwt) {
-        final String userEmail = jwtService.extractUsername(jwt);
-        if (jwt != null && jwtService.isTokenValid(jwt, userDetailsService.loadUserByUsername(userEmail))) {
-            return ResponseEntity.ok(userRepository.findByEmail(userEmail).get());
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
-
     @PutMapping("{id}")
     public ResponseEntity<User> updateUserById(@PathVariable Long id, @RequestBody UserUpdateDto updatedUser) {
         User savedUser = userService.updateUserById(id, updatedUser);
@@ -68,4 +60,12 @@ public class UserController {
     //     userService.delete
     // }
 
+    @GetMapping("/me")
+    public ResponseEntity<User> isAuth(@CookieValue(required = false) String jwt) {
+        final String userEmail = jwtService.extractUsername(jwt);
+        if (jwt != null && jwtService.isTokenValid(jwt, userDetailsService.loadUserByUsername(userEmail))) {
+            return ResponseEntity.ok(userRepository.findByEmail(userEmail).get());
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
 }

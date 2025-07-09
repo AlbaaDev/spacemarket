@@ -22,7 +22,7 @@ export class AuthService {
     }
     const {email, password} = loginForm.value;
     return this.http.post<string>('http://localhost:8080/auth/login', { email, password }, {withCredentials: true}).pipe(
-      tap(response => {
+      tap(() => {
         this._isAuthenticated.set(true);
       })
     );   
@@ -33,7 +33,7 @@ export class AuthService {
       return throwError(() => new Error('Invalid signup Form'));
     }
     const {email, password, firstName, lastName} = signUpForm.value
-    return this.http.post<void>('http://localhost:8080/auth/signup', {email, password, firstName, lastName});
+    return this.http.post<void>('http://localhost:8080/auth/register', {email, password, firstName, lastName});
   }
 
   getCurrentUser() {

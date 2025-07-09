@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.org.back.dto.User.UserCreateDto;
 import com.org.back.dto.User.UserLoginDto;
 import com.org.back.dto.User.UserRegisterDto;
 import com.org.back.models.User;
 import com.org.back.services.AuthenticationService;
 import com.org.back.services.JwtService;
+import com.org.back.services.UserServiceImpl;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,18 +36,20 @@ public class AuthenticationController {
 
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
+    private final UserServiceImpl userService;
 
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
+
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, UserServiceImpl userServiceImpl) {
+        this.userService = userServiceImpl;
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<User> register(@RequestBody UserRegisterDto registerUserDto) {
-        User registeredUser = authenticationService.signup(registerUserDto);
-
-        return ResponseEntity.ok(registeredUser);
+    @PostMapping("register")
+    public ResponseEntity<User> registerUser(@RequestBody UserCreateDto userCreateDto) {
+        User createdUser = userService.addUser(userCreateDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PostMapping("/login")

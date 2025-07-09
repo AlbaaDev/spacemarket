@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../services/auth-service';
 import { Router } from '@angular/router';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-sign-up',
@@ -17,6 +18,9 @@ export class SignUpComponent {
     private authService = inject(AuthService);
     private router = inject(Router);
     signUpForm : FormGroup;
+
+    errorMessage: string | null = null;
+
 
     constructor() {
       this.signUpForm = this.formBuilder.group({
@@ -44,8 +48,13 @@ export class SignUpComponent {
     }
 
     onSubmit() {
-      this.authService.signUp(this.signUpForm).subscribe(() =>  {
-          this.router.navigate(['/app-login']);
-      });      
+      this.authService.signUp(this.signUpForm).subscribe({
+        next: () => {
+          this.router.navigate(['/app-login']);      
+        },
+        error: err => {
+          this.errorMessage = err.error;
+        },    
+      });
     }
 }
