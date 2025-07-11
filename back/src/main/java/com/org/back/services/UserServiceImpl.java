@@ -21,7 +21,6 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-
     public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
@@ -52,18 +51,12 @@ public class UserServiceImpl implements UserService {
        }
     }
 
-
     @Override
     @Transactional(readOnly = true)
     public User findUserByEmail(String email) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
-        if(optionalUser.isPresent()) {
-            return optionalUser.get();
-        } else {
-            return null;
-        }
+        return optionalUser.orElse(null);
     }
-
 
     @Override
     public User addUser(UserCreateDto userCreateDto) {
@@ -79,9 +72,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
-        if(optionalUser.isPresent()) {
-            userRepository.delete(optionalUser.get());
-        }
+        optionalUser.ifPresent(userRepository::delete);
     }
 
 }
