@@ -8,11 +8,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.org.back.dto.User.UserLoginDto;
+import com.org.back.dto.User.UserResponseDto;
 import com.org.back.dto.User.UserUpdateDto;
+import com.org.back.mapper.UserMapper;
 import com.org.back.models.User;
 import com.org.back.repositories.UserRepository;
 import com.org.back.services.JwtService;
 import com.org.back.services.UserServiceImpl;
+
+import io.micrometer.common.util.StringUtils;
 
 import java.util.List;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,20 +34,24 @@ public class UserController {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final UserRepository userRepository;
+    private final UserMapper UserMapper;
 
     public UserController(UserServiceImpl userService, 
                           JwtService jwtService, 
                           UserDetailsService userDetailsService,
-                          UserRepository userRepository) {
+                          UserRepository userRepository,
+                          UserMapper UserMapper) {
         this.userService = userService;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
         this.userRepository = userRepository;
+        this.UserMapper = UserMapper;
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<User>> allUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<List<UserLoginDto>> allUsers() {
+        List<UserLoginDto> userList = userService.getAllUsers().stream().map(UserMapper::toUserLoginDTO).toList();
+        return ResponseEntity.ok(userList);
     }
 
     @PutMapping("{id}")
@@ -61,10 +70,10 @@ public class UserController {
     // }
 
     @GetMapping("/me")
-    public ResponseEntity<User> isAuth(@CookieValue(required = false) String jwt) {
+    public ResponseEntity<UserResponseDto> isAuth(@CookieValue(required = false) String jwt) {
         final String userEmail = jwtService.extractUsername(jwt);
-        if (jwt != null && jwtService.isTokenValid(jwt, userDetailsService.loadUserByUsername(userEmail))) {
-            return ResponseEntity.ok(userRepository.findByEmail(userEmail).get());
+        if (jwt != null && StringUtils.isNotBlank(userEmail) && jwtService.isTokenValid(jwt, userDetailsService.loadUserByUsername(userEmail))) {
+            return ResponseEntity.ok(UserMapper.toUserResponseDto(userRepository.findByEmail(userEmail).get()));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }

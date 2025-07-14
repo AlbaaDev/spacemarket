@@ -32,13 +32,9 @@ import jakarta.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/auth")
 public class AuthenticationController {
-
-
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
     private final UserServiceImpl userService;
-
-
 
     public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, UserServiceImpl userServiceImpl) {
         this.userService = userServiceImpl;
@@ -95,5 +91,4 @@ public class AuthenticationController {
             response.addCookie(jwtCookie);
         }
     }
-    
 }

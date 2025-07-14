@@ -6,17 +6,6 @@ public class UserLoginDto {
     private String lastName;
     private String password;
 
-    private String token;
-    private long expiresIn;
-
-    public String getUsername() {
-        return email;
-    }
-
-    public void setUserName(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -47,23 +36,5 @@ public class UserLoginDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public UserLoginDto setToken(String token) {
-        this.token = token;
-        return this;
-    }
-
-    public long getExpiresIn() {
-        return expiresIn;
-    }
-
-    public UserLoginDto setExpiresIn(long expiresIn) {
-        this.expiresIn = expiresIn;
-        return this;
     }
 }

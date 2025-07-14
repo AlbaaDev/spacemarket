@@ -106,6 +106,7 @@ public class UserServiceTests {
     //     userToSave.setFirstName("John");
     //     userToSave.setLastName("Doe");
     //     Mockito.when(userRepository.save(userToSave)).thenReturn(userToSave);
+
     //     // when
     //     User user = userServiceImpl.addUser(userToSave);
 
