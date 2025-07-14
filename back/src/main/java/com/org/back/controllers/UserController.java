@@ -24,9 +24,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 
-
-
-
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -34,23 +31,23 @@ public class UserController {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final UserRepository userRepository;
-    private final UserMapper UserMapper;
+    private final UserMapper userMapper;
 
     public UserController(UserServiceImpl userService, 
                           JwtService jwtService, 
                           UserDetailsService userDetailsService,
                           UserRepository userRepository,
-                          UserMapper UserMapper) {
+                          UserMapper userMapper) {
         this.userService = userService;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
         this.userRepository = userRepository;
-        this.UserMapper = UserMapper;
+        this.userMapper = userMapper;
     }
 
     @GetMapping("/")
     public ResponseEntity<List<UserLoginDto>> allUsers() {
-        List<UserLoginDto> userList = userService.getAllUsers().stream().map(UserMapper::toUserLoginDTO).toList();
+        List<UserLoginDto> userList = userService.getAllUsers().stream().map(userMapper::toUserLoginDTO).toList();
         return ResponseEntity.ok(userList);
     }
 
@@ -73,7 +70,7 @@ public class UserController {
     public ResponseEntity<UserResponseDto> isAuth(@CookieValue(required = false) String jwt) {
         final String userEmail = jwtService.extractUsername(jwt);
         if (jwt != null && StringUtils.isNotBlank(userEmail) && jwtService.isTokenValid(jwt, userDetailsService.loadUserByUsername(userEmail))) {
-            return ResponseEntity.ok(UserMapper.toUserResponseDto(userRepository.findByEmail(userEmail).get()));
+            return ResponseEntity.ok(userMapper.toUserResponseDto(userRepository.findByEmail(userEmail).get()));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }

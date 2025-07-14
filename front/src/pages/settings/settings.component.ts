@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-settings',
@@ -8,9 +9,16 @@ import { Component } from '@angular/core';
 })
 export class SettingsComponent {
 
+  private readonly userService = inject(AuthService);
+
   constructor() {
       
   }
 
+  getEmail () {
+    // this.userService.currentUser.email;
+  }
 
+  ngOnInit() {
+  }
 }

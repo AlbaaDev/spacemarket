@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../services/auth-service';
 import { Router } from '@angular/router';
+import { ErrorResponse } from '../../interfaces/ErrorResponse';
 
 @Component({
   selector: 'app-login',
@@ -41,8 +42,8 @@ export class LoginComponent {
                 next: () => {
                     this.router.navigate(['/app-dashboard']);
                 },
-                error: err => {
-                    this.errorMessage = "Identifiants incorrects ou serveur indisponible.";
+                error: (reponseError) => {
+                    this.errorMessage = reponseError.error.message;
                 }
         });
     }

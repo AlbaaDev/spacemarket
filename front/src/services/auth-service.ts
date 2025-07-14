@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { finalize, Observable, tap, throwError } from 'rxjs';
+import { User } from '../interfaces/User';
 
 @Injectable({
   providedIn: 'root'
@@ -16,14 +17,16 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(loginForm: FormGroup) : Observable<string> {
+  login(loginForm: FormGroup) : Observable<User> {
     if(loginForm.invalid) {
       return throwError(() => new Error('Invalid form'));
     }
     const {email, password} = loginForm.value;
-    return this.http.post<string>('http://localhost:8080/auth/login', { email, password }, {withCredentials: true}).pipe(
-      tap(() => {
+    return this.http.post<User>('http://localhost:8080/auth/login', { email, password }, {withCredentials: true}).pipe(
+      tap((user) => {
         this._isAuthenticated.set(true);
+        this._currentUser.set(user);
+        localStorage.setItem('user', JSON.stringify(user));
       })
     );   
   }
@@ -37,29 +40,27 @@ export class AuthService {
   }
 
   getCurrentUser() {
-    return this.http.get<string>('http://localhost:8080/users/me', {withCredentials: true}).pipe(
+    return this.http.get<User>('http://localhost:8080/users/me', {withCredentials: true}).pipe(
       tap({
-        next: () => {
+        next: (user) => {
           this._isAuthenticated.set(true); 
-          this._currentUser.set(null)
+          this._currentUser.set(user)
         },
-        error: () => this._isAuthenticated.set(false)
+        error: () => this.clearSession()
       })
     );
   }
 
   isAuth() {
-    return this.http.get<string>('http://localhost:8080/users/me', {withCredentials: true}).pipe(
+    return this.http.get<User>('http://localhost:8080/users/me', {withCredentials: true}).pipe(
       tap({
         next: () => {
           this._isAuthenticated.set(true); 
-          this._currentUser.set(null)
         },
-        error: () => this._isAuthenticated.set(false)
+        error: () => this.clearSession()
       })
     );
   };
-
 
   logout() : Observable<void> {
     return this.http.post<void>('http://localhost:8080/auth/logout', {}, {withCredentials: true})
@@ -67,7 +68,16 @@ export class AuthService {
               finalize(() => {
                 this._isAuthenticated.set(false);
                 this._currentUser.set(null);
+                localStorage.removeItem('user');
+                this.clearSession();
               })
           );
   }
+
+  private clearSession(): void {
+    if (typeof sessionStorage === 'undefined') return;
+    this._isAuthenticated.set(false);
+    this._currentUser.set(null);
+    sessionStorage.removeItem('user');
+  } 
 }

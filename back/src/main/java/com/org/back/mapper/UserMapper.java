@@ -16,7 +16,6 @@ public interface UserMapper {
     UserLoginDto toUserLoginDTO(User user);
     UserResponseDto toUserResponseDto(User user);
 
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "authorities", ignore = true)
     @Mapping(target = "password", ignore = true)

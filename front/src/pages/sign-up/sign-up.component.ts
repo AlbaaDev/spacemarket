@@ -21,7 +21,6 @@ export class SignUpComponent {
 
     errorMessage: string | null = null;
 
-
     constructor() {
       this.signUpForm = this.formBuilder.group({
           email: ['', [Validators.required, Validators.email]],
@@ -52,9 +51,9 @@ export class SignUpComponent {
         next: () => {
           this.router.navigate(['/app-login']);      
         },
-        error: err => {
-          this.errorMessage = err.error;
-        },    
+        error: (reponseError) => {
+          this.errorMessage = reponseError.error.message;
+        }  
       });
     }
 }
