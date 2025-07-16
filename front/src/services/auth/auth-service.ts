@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { finalize, Observable, tap, throwError } from 'rxjs';
-import { User } from '../interfaces/User';
+import { User } from '../../interfaces/User';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,12 @@ export class AuthService {
   readonly isAuthenticated = this._isAuthenticated.asReadonly();
   readonly currentUser = this._currentUser.asReadonly();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+      if(localStorage.getItem('user')) {
+        this._isAuthenticated.set(true);
+        this._currentUser.set(JSON.parse(localStorage.getItem('user')!))
+      }
+  }
 
   login(loginForm: FormGroup) : Observable<User> {
     if(loginForm.invalid) {
@@ -39,17 +44,17 @@ export class AuthService {
     return this.http.post<void>('http://localhost:8080/auth/register', {email, password, firstName, lastName});
   }
 
-  getCurrentUser() {
-    return this.http.get<User>('http://localhost:8080/users/me', {withCredentials: true}).pipe(
-      tap({
-        next: (user) => {
-          this._isAuthenticated.set(true); 
-          this._currentUser.set(user)
-        },
-        error: () => this.clearSession()
-      })
-    );
-  }
+  // getCurrentUser() {
+  //   return this.http.get<User>('http://localhost:8080/users/me', {withCredentials: true}).pipe(
+  //     tap({
+  //       next: (user) => {
+  //         this._isAuthenticated.set(true); 
+  //         this._currentUser.set(user)
+  //       },
+  //       error: () => this.clearSession()
+  //     })
+  //   );
+  // }
 
   isAuth() {
     return this.http.get<User>('http://localhost:8080/users/me', {withCredentials: true}).pipe(
@@ -72,6 +77,12 @@ export class AuthService {
                 this.clearSession();
               })
           );
+  }
+
+  setCurrentUser(user: User): void {
+    this._currentUser.set(user);
+    this._isAuthenticated.set(true);
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
   private clearSession(): void {

@@ -1,1 +1,37 @@
-<p>profile works!</p>
+<form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="w-50 container mt-5 example-full-width">
+    <div class="d-flex flex-column gap-3">
+        <mat-form-field>
+            <mat-label for="email">Email :</mat-label>
+            <input matInput id="email" type="email" formControlName="email" required />
+            @if(email?.hasError('required')) {
+                <mat-error>
+                    Email is required
+                </mat-error>
+            } 
+            @if(email?.hasError('email')) {
+                <mat-error>
+                    Email is not valid
+                </mat-error>
+            }
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label for="firstName">First Name :</mat-label>
+            <input matInput id="firstName" type="text" formControlName="firstName"/>
+            @if(firstName?.hasError('required')) {
+                <mat-error>
+                    First name is required
+                </mat-error>
+            }
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label for="lastName">Last Name :</mat-label>
+            <input matInput id="lastName" type="text" formControlName="lastName"/>
+            @if(lastName?.hasError('required')) {
+                <mat-error>
+                    Last name is required
+                </mat-error>
+            }
+        </mat-form-field>
+    </div>
+    <button mat-raised-button type="submit" color="primary" [disabled]="profileForm.invalid">Confirm</button>
+</form>

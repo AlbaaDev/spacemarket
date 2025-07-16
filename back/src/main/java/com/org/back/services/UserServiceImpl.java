@@ -41,10 +41,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUserById(Long id, UserUpdateDto userUpdateDto) {
-       Optional<User> userOptional  = userRepository.findById(id);
+    public User updateUser(UserUpdateDto userToUpdate) {
+       Optional<User> userOptional  = userRepository.findByEmail(userToUpdate.email());
        if(userOptional.isPresent()) {
-            userMapper.updateEntityFromDto(userUpdateDto, userOptional.get());
+            userMapper.updateEntityFromDto(userToUpdate, userOptional.get());
             return userRepository.save(userOptional.get());
        } else {
             return null;

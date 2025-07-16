@@ -13,14 +13,15 @@ import {ReportingComponent} from '../pages/reporting/reporting.component';
 import {MediaComponent} from '../pages/media/media.component';
 import { AuthGuard } from '../guards/auth.guards';
 import { DashboardComponent } from '../pages/dashboard/dashboard.component';
-import { AuthenticatedLayoutComponent } from './authenticated-layout-component/authenticated-layout-component';
 import { NoAuthGaurd } from '../guards/no-auth.guards';
 import { PageNotFoundComponent } from '../pages/page-not-found/page-not-found.component';
+import { PasswordForgottenComponent } from '../pages/password-forgotten/password-forgotten.component';
 
 export const routes: Routes = [
   { path: 'app-home', component: HomeComponent },
   { path: 'app-login', component: LoginComponent, canActivate: [NoAuthGaurd] },
   { path: 'app-sign-up', component: SignUpComponent, canActivate: [NoAuthGaurd] },
+  { path: 'app-password-forgotten', component: PasswordForgottenComponent},
   { path: 'app-logout', redirectTo: '/app-login' },
 
   { path: 'app-settings', component: SettingsComponent, canActivate: [AuthGuard] },

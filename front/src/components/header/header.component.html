@@ -1,9 +1,11 @@
 <mat-toolbar>
-  <span class="text-primary">SpaceMarket</span>
+  <span routerLink="/app-home" class="text-primary">SpaceMarket</span>
   <span class="example-fill-remaining-space"></span>
+
   @if(!(authService.isAuthenticated())) {
     <button mat-raised-button routerLink="/app-login" class="mx-2">Login</button>
     <button mat-raised-button routerLink="/app-sign-up" class="mx-2">Sign Up</button>
+
   }
   @if(authService.isAuthenticated()) {
     <button mat-raised-button routerLink="/app-settings" class="mx-2">Settings</button>

@@ -3,13 +3,12 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AuthService } from '../../services/auth-service';
-import { Router } from '@angular/router';
-import { ErrorResponse } from '../../interfaces/ErrorResponse';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth/auth-service';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [RouterLink, ReactiveFormsModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

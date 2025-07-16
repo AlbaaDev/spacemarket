@@ -47,6 +47,7 @@ public class AuthenticationController {
                                     AuthenticationService authenticationService, 
                                     UserServiceImpl userServiceImpl,
                                     UserMapper userMapper) {
+                                        
         this.userService = userServiceImpl;
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
@@ -78,8 +79,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/logout")
-    public void logout(@NonNull HttpServletRequest request, 
-    @NonNull HttpServletResponse response ) {
+    public void logout(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response ) {
         boolean isSecure = false;
         String contextPath = null;
         if (request != null) {

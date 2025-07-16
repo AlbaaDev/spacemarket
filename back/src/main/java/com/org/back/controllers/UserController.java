@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,9 +22,7 @@ import com.org.back.services.UserServiceImpl;
 import io.micrometer.common.util.StringUtils;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/users")
@@ -51,11 +51,16 @@ public class UserController {
         return ResponseEntity.ok(userList);
     }
 
-    @PutMapping("{id}")
-    public ResponseEntity<User> updateUserById(@PathVariable Long id, @RequestBody UserUpdateDto updatedUser) {
-        User savedUser = userService.updateUserById(id, updatedUser);
+    @PostMapping("/update")
+    public ResponseEntity<UserResponseDto> update(
+        @RequestBody UserUpdateDto updatedUser, 
+        @CookieValue(required = false) String jwt) {
+
+        String email = jwtService.extractUsername(jwt);
+        userRepository.findByEmail(email);
+        User savedUser = userService.updateUser(updatedUser);
         if(savedUser != null) {
-            return ResponseEntity.ok(savedUser);
+            return ResponseEntity.ok(userMapper.toUserResponseDto(savedUser));
         } else {
             return ResponseEntity.notFound().build();
         }

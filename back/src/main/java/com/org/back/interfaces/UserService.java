@@ -7,11 +7,10 @@ import com.org.back.dto.User.UserUpdateDto;
 import com.org.back.models.User;
 
 public interface UserService {
-
     List<User> getAllUsers();
     User addUser(UserCreateDto userCreateDto);
     User getUserById(Long id);
     User findUserByEmail(String email);
-    User updateUserById(Long id, UserUpdateDto updateUser);
+    User updateUser(UserUpdateDto userToUpdate);
     void deleteUserById(Long id);
 }

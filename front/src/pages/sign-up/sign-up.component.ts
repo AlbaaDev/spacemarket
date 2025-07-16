@@ -3,9 +3,9 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AuthService } from '../../services/auth-service';
 import { Router } from '@angular/router';
 import { throwError } from 'rxjs';
+import { AuthService } from '../../services/auth/auth-service';
 
 @Component({
   selector: 'app-sign-up',

@@ -1,11 +1,11 @@
-import {Component, computed, inject, Signal, signal, WritableSignal} from '@angular/core';
-import {HeaderComponent} from '../components/header/header.component';
-import {MatSidenav, MatSidenavContainer, MatSidenavModule} from '@angular/material/sidenav';
-import {MatButton, MatButtonModule} from '@angular/material/button';
-import {RouterLink, RouterOutlet} from '@angular/router';
-import { AuthService } from '../services/auth-service';
+import { Component, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
+import { MatSidenav, MatSidenavContainer, MatSidenavModule } from '@angular/material/sidenav';
+import { RouterOutlet } from '@angular/router';
+import { HeaderComponent } from '../components/header/header.component';
 import { SidebarComponent } from '../components/sidebar/sidebar.component';
-import { MatList, MatListItem, MatListModule } from '@angular/material/list';
+import { AuthService } from '../services/auth/auth-service';
 
 @Component({
   selector: 'app-root',
