@@ -1,0 +1,33 @@
+<form [formGroup]="settingsForm" (ngSubmit)="onSubmit()" class="w-50 container mt-5 example-full-width">
+    <div class="d-flex flex-column gap-3">
+        <mat-form-field>
+            <mat-label for="email">Email :</mat-label>
+            <input matInput id="email" type="email" formControlName="email" required />
+            @if(email?.hasError('required') && email?.invalid && (email?.dirty || email?.touched)) {
+                <mat-error>
+                    Email is required
+                </mat-error>
+            } 
+            @if(email?.hasError('email') && email?.invalid && (email?.dirty || email?.touched)) {
+                <mat-error>
+                    Email is not valid
+                </mat-error>
+            }
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label for="password">Password</mat-label>    
+            <input type="password" id="password" name="password" formControlName="password" matInput/>
+            @if (password?.hasError('required') && password?.invalid && (password?.dirty || password?.touched)) { 
+                <mat-error>
+                    Password is required
+                </mat-error> 
+            }   
+            @if(password?.hasError('minlength') && password?.invalid && (password?.dirty || password?.touched)) {
+                <mat-error>
+                    Password must be at least 8 characters long
+                </mat-error>
+            }
+        </mat-form-field>
+    </div>
+    <button mat-raised-button type="submit" color="primary" [disabled]="settingsForm.invalid ||!formHasChanged()">Confirm</button>
+</form>

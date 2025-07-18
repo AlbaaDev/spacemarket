@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,7 +10,7 @@ import { UserService } from '../../services/user/user.service';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, CommonModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
@@ -19,16 +19,14 @@ export class ProfileComponent {
   protected readonly authService = inject(AuthService);
   protected readonly formBuilder = inject(FormBuilder);
   protected readonly router = inject(Router);
-
+  protected readonly formHasChanged = signal<boolean>(false);
 
   profileForm: FormGroup = this.formBuilder.group({
-    email: ['', [Validators.email, Validators.required]],
     firstName: ['', Validators.required],
     lastName: ['', Validators.required]
   });
-
   errorMessage: string | null = null;
-
+  
   constructor() {}
 
   ngOnInit(): void {
@@ -37,13 +35,11 @@ export class ProfileComponent {
       this.profileForm.patchValue({
         firstName: currentUser.firstName,
         lastName: currentUser.lastName,
-        email: currentUser.email,
       });
     }
-  }
-
-  get email() {
-    return this.profileForm.get('email');
+    this.profileForm.valueChanges.subscribe(() => {
+      this.formHasChanged.set(true);
+    });
   }
 
   get firstName() {
@@ -58,7 +54,11 @@ export class ProfileComponent {
     this.errorMessage = null;
     this.userService.updateProfile(this.profileForm.value).subscribe({
             next: (response: any) => {
-                console.log(typeof response, response);
+              console.log('response');
+              
+                this.authService.setCurrentUser(response);
+                this.formHasChanged.set(false);
+                this.router.navigate(['/app-profile']);
             },
             error: (reponseError: any) => {
                 this.errorMessage = reponseError.error.message;

@@ -57,10 +57,13 @@ export class AuthService {
   // }
 
   isAuth() {
+    console.log('currentUser ', this.currentUser(), "isAuthenticated ", this.isAuthenticated());
     return this.http.get<User>('http://localhost:8080/users/me', {withCredentials: true}).pipe(
       tap({
-        next: () => {
+        next: (responseIsAuth) => {
+          console.log(responseIsAuth);
           this._isAuthenticated.set(true); 
+          this._currentUser.set(responseIsAuth);
         },
         error: () => this.clearSession()
       })
@@ -71,24 +74,20 @@ export class AuthService {
     return this.http.post<void>('http://localhost:8080/auth/logout', {}, {withCredentials: true})
           .pipe(
               finalize(() => {
-                this._isAuthenticated.set(false);
-                this._currentUser.set(null);
-                localStorage.removeItem('user');
                 this.clearSession();
               })
           );
   }
 
   setCurrentUser(user: User): void {
-    this._currentUser.set(user);
-    this._isAuthenticated.set(true);
-    localStorage.setItem('user', JSON.stringify(user));
+      this._currentUser.set(user);
+      this._isAuthenticated.set(true);
+      localStorage.setItem('user', JSON.stringify(user));
   }
 
   private clearSession(): void {
-    if (typeof sessionStorage === 'undefined') return;
-    this._isAuthenticated.set(false);
-    this._currentUser.set(null);
-    sessionStorage.removeItem('user');
+      this._isAuthenticated.set(false);
+      this._currentUser.set(null);
+      localStorage.removeItem('user');
   } 
 }

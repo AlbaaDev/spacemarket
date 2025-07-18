@@ -17,15 +17,21 @@ export class UserService {
    }
 
    updateProfile(profileData: User) : Observable<User> {
-      return this.http.post<User>("http://localhost:8080/users/update", profileData, {withCredentials: true}).pipe(
-        tap((updatedUser) => {
-          this.authService.setCurrentUser(updatedUser);
+      return this.http.put<User>("http://localhost:8080/users/update/profile", profileData, {withCredentials: true}).pipe(
+        tap(() => {
+          console.log('profileData ', profileData);
+          this.authService.setCurrentUser(profileData);
+          console.log('currentUser ', this.authService.currentUser(), "isAuthenticated ", this.authService.isAuthenticated());
         })
       )
    }
 
-   updatePassword(password: any) {
-
-   }
+   updateSettings(settingsData: User) : Observable<User> {
+    return this.http.put<User>("http://localhost:8080/users/update/settings", settingsData, {withCredentials: true}).pipe(
+      tap(() => {
+        this.authService.setCurrentUser(settingsData);
+      })
+    )
+ }
   }
 

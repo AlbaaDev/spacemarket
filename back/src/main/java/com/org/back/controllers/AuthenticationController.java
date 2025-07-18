@@ -8,10 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.util.StringUtils;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.org.back.dto.User.UserCreateDto;
 import com.org.back.dto.User.UserLoginDto;
-import com.org.back.dto.User.UserRegisterDto;
 import com.org.back.dto.User.UserResponseDto;
 import com.org.back.exceptions.BadCredentialsException;
 import com.org.back.exceptions.UserAlreadyExistsException;
+import com.org.back.mapper.UserMapper;
 import com.org.back.models.User;
 import com.org.back.services.AuthenticationService;
 import com.org.back.services.JwtService;
@@ -32,7 +31,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import com.org.back.mapper.UserMapper;
 
 @RestController
 @RequestMapping("/auth")
@@ -55,14 +53,14 @@ public class AuthenticationController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<UserResponseDto> registerUser(@RequestBody UserCreateDto userCreateDto) {
+    public ResponseEntity<UserResponseDto> registerUser(@RequestBody UserCreateDto userCreateDto) throws UserAlreadyExistsException {
         User savedUser = userService.addUser(userCreateDto);
         UserResponseDto createdUser = userMapper.toUserResponseDto(savedUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDto> authenticate(@RequestBody UserLoginDto loginUserDto, HttpServletResponse response) {
+    public ResponseEntity<UserResponseDto> authenticate(@RequestBody UserLoginDto loginUserDto, HttpServletResponse response) throws BadCredentialsException {
             User authenticatedUser = authenticationService.authenticate(loginUserDto);
             UserResponseDto userResponseDto = userMapper.toUserResponseDto(authenticatedUser);
             String jwtToken = jwtService.generateToken(authenticatedUser);

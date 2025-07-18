@@ -14,9 +14,13 @@ export class NoAuthGaurd implements CanActivate {
   ) {}
 
   canActivate(): Observable<boolean | UrlTree> {
+    console.log("NoAuthGaurd ");
+    
     return this.authService.isAuth().pipe(
-      map(() => this.router.parseUrl('/app-dashboard')),
-      catchError(() => of(true))
+      map(() => {
+        return this.router.parseUrl('/app-dashboard');
+      }),
+      catchError(() => of(true)) 
     );
   }
 } 

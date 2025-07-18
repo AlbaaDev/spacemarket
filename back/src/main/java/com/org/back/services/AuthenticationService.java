@@ -13,19 +13,14 @@ import org.springframework.security.core.AuthenticationException;
 @Service
 public class AuthenticationService {
     private final UserRepository userRepository;
-    
-    
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationService(
-        UserRepository userRepository,
-        AuthenticationManager authenticationManager
-    ) {
+    public AuthenticationService(UserRepository userRepository, AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
     }
 
-    public User authenticate(UserLoginDto inputForm) {
+    public User authenticate(UserLoginDto inputForm) throws BadCredentialsException {
         try {
             authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

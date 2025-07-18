@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.org.back.dto.User.UserCreateDto;
 import com.org.back.mapper.UserMapper;
 import com.org.back.models.User;
 import com.org.back.repositories.UserRepository;
@@ -43,7 +42,7 @@ public class UserServiceTests {
         Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
     
         // when
-        User result = userServiceImpl.findUserByEmail(email);
+        User result = userServiceImpl.findUserByEmail(email).get();
     
         // then
         assertNotNull(result);
@@ -59,7 +58,7 @@ public class UserServiceTests {
         Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
         // when
-        User result = userServiceImpl.findUserByEmail(email);
+        User result = userServiceImpl.findUserByEmail(email).get();
 
         // then
         assertNull(result);
@@ -76,7 +75,7 @@ public class UserServiceTests {
         Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         //when
-        User result = userServiceImpl.getUserById(userId);
+        User result = userServiceImpl.getUserById(userId).get();
 
         // then
         assertNotNull(result);
@@ -92,7 +91,7 @@ public class UserServiceTests {
         Mockito.when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // when 
-        User result = userServiceImpl.getUserById(userId);
+        User result = userServiceImpl.getUserById(userId).get();
 
         // then
         assertNull(result);
