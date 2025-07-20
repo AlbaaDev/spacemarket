@@ -1,9 +1,9 @@
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpHandlerFn, HttpInterceptor, HttpRequest, HttpXsrfTokenExtractor } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest, HttpXsrfTokenExtractor } from "@angular/common/http";
+import { inject } from "@angular/core";
 import { Observable } from "rxjs/internal/Observable";
-import { AuthService } from "../services/auth/auth-service";
-import { catchError } from "rxjs/internal/operators/catchError";
 import { throwError } from "rxjs/internal/observable/throwError";
+import { catchError } from "rxjs/internal/operators/catchError";
+import { AuthService } from "../services/auth/auth-service";
 
 export const xsrfInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> => {
     const tokenExtractor = inject(HttpXsrfTokenExtractor);

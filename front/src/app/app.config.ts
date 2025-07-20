@@ -3,7 +3,7 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { xsrfInterceptor } from '../interceptors/XsrfInterceptor';
+import { xsrfInterceptor } from '../interceptors/xrfInterceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
