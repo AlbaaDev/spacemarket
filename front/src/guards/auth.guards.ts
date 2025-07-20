@@ -14,10 +14,10 @@ export class AuthGuard implements CanActivate {
   ) {}
 
 
-  canActivate(): Observable<boolean | UrlTree> {
-    return this.authService.isAuth().pipe(
-      map(() => true),
-      catchError(() => of(this.router.parseUrl('/app-login')))
-    );
+  canActivate(): boolean | UrlTree {
+    if (this.authService.isAuthenticated()) {
+      return true;
+    }
+    return this.router.parseUrl('/app-login');
   }
 } 

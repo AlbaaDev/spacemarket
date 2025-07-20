@@ -10,7 +10,6 @@ export const xsrfInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn):
     const authService = inject(AuthService);
     const token = tokenExtractor.getToken();
     let authReq = req;
-    console.log("token ", token, "authReq ", authReq);
     
     if (token !== null && req.method !== 'GET' && req.method !== 'HEAD') {
         authReq = req.clone({

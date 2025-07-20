@@ -22,29 +22,28 @@ export class AuthService {
       }
   }
 
-    login(loginForm: FormGroup): Observable<User> {
-      if (loginForm.invalid) {
-        return throwError(() => new Error('Invalid form'));
-      }
-
-      return this.http.get('http://localhost:8080/auth/csrf', { withCredentials: true })
-        .pipe(
-          switchMap(() => {
-            const { email, password } = loginForm.value;
-            // 2) Envoyer la requête de login
-            return this.http.post<User>(
-              'http://localhost:8080/auth/login',
-              { email, password },
-              { withCredentials: true }
-            );
-          }),
-          tap(user => {
-            this._isAuthenticated.set(true);
-            this._currentUser.set(user);
-            localStorage.setItem('user', JSON.stringify(user));
-          })
-        );
+  login(loginForm: FormGroup): Observable<User> {
+    if (loginForm.invalid) {
+      return throwError(() => new Error('Invalid form'));
     }
+
+    return this.http.get('http://localhost:8080/auth/csrf', { withCredentials: true })
+      .pipe(
+        switchMap(() => {
+          const { email, password } = loginForm.value;
+          return this.http.post<User>(
+            'http://localhost:8080/auth/login',
+            { email, password },
+            { withCredentials: true }
+          );
+        }),
+        tap(user => {
+          this._isAuthenticated.set(true);
+          this._currentUser.set(user);
+          localStorage.setItem('user', JSON.stringify(user));
+        })
+      );
+  }
 
   signUp(signUpForm: FormGroup) {
     if(signUpForm.invalid) {
@@ -54,12 +53,11 @@ export class AuthService {
     return this.http.post<void>('http://localhost:8080/auth/register', {email, password, firstName, lastName});
   }
 
-  isAuth() {
+  getCurrentUser() : Observable<User> {
     return this.http.get<User>('http://localhost:8080/users/me', {withCredentials: true}).pipe(
       tap({
-        next: (responseIsAuth) => {
-          this._isAuthenticated.set(true); 
-          this._currentUser.set(responseIsAuth);
+        next: (user) => {
+          this.setCurrentUser(user);
         },
         error: () => this.clearSession()
       })
@@ -69,19 +67,17 @@ export class AuthService {
   logout() : Observable<void> {
     return this.http.post<void>('http://localhost:8080/auth/logout', {}, {withCredentials: true})
           .pipe(
-              finalize(() => {
-                this.clearSession();
-              })
+            tap(() => this.clearSession())
           );
   }
 
-  setCurrentUser(user: User): void {
+  setCurrentUser(user: User) : void {
     this._currentUser.set(user);
     this._isAuthenticated.set(true);
     localStorage.setItem('user', JSON.stringify(user));
   }
 
-  private clearSession(): void {
+  private clearSession() : void {
     this._isAuthenticated.set(false);
     this._currentUser.set(null);
     localStorage.removeItem('user');

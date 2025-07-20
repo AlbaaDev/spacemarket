@@ -13,14 +13,11 @@ export class NoAuthGaurd implements CanActivate {
     private readonly router: Router
   ) {}
 
-  canActivate(): Observable<boolean | UrlTree> {
-    console.log("NoAuthGaurd ");
-    
-    return this.authService.isAuth().pipe(
-      map(() => {
-        return this.router.parseUrl('/app-dashboard');
-      }),
-      catchError(() => of(true)) 
-    );
+ 
+  canActivate(): boolean | UrlTree {
+    if (this.authService.isAuthenticated()) {
+      return this.router.parseUrl('/app-dashboard');
+    }
+    return true;
   }
 } 

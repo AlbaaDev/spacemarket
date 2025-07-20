@@ -55,7 +55,7 @@ public class SecurityConfiguration {
         .logout(logout -> logout
             .logoutUrl("/auth/logout")
             .deleteCookies("jwt")         
-            .logoutSuccessHandler((req,res,auth) -> 
+            .logoutSuccessHandler((_,res,_) -> 
                 res.setStatus(HttpServletResponse.SC_OK)
         ))
         .authenticationProvider(authenticationProvider)
