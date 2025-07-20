@@ -1,4 +1,4 @@
-package com.org.back.services;
+package com.org.back.security.jwt;
 
 import java.security.Key;
 import java.util.Date;

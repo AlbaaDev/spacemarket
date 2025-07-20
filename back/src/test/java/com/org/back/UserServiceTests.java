@@ -19,7 +19,7 @@ import com.org.back.repositories.UserRepository;
 import com.org.back.services.UserServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTests {
+class UserServiceTests {
     
     @InjectMocks
     private UserServiceImpl userServiceImpl;
@@ -32,7 +32,7 @@ public class UserServiceTests {
     private UserMapper userMapper;
 
     @Test
-    public void testFindUserByEmail() {
+    void testFindUserByEmail() {
         // given
         String email = "user@example.com";
         User user = new User();
@@ -52,7 +52,7 @@ public class UserServiceTests {
     }
 
     @Test
-    public void testFindUserByEmail_NotFound() {
+    void testFindUserByEmail_NotFound() {
         // given
         String email = "nonexistent@example.com";
         Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
@@ -65,7 +65,7 @@ public class UserServiceTests {
     }
     
     @Test
-    public void testGetUserById() {
+    void testGetUserById() {
         // given
         Long userId = 1L;
         User user = new User();
@@ -82,10 +82,10 @@ public class UserServiceTests {
         assertEquals(userId, result.getId());
         assertEquals(user.getFirstName(), result.getFirstName());
         assertEquals(user.getLastName(), result.getLastName());
-    };
+    }
 
     @Test
-    public void testGetUserById_NotFound() {
+    void testGetUserById_NotFound() {
         // given
         Long userId = 99L;
         Mockito.when(userRepository.findById(userId)).thenReturn(Optional.empty());

@@ -54,8 +54,6 @@ export class ProfileComponent {
     this.errorMessage = null;
     this.userService.updateProfile(this.profileForm.value).subscribe({
             next: (response: any) => {
-              console.log('response');
-              
                 this.authService.setCurrentUser(response);
                 this.formHasChanged.set(false);
                 this.router.navigate(['/app-profile']);

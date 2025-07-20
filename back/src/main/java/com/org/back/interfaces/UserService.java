@@ -3,6 +3,7 @@ package com.org.back.interfaces;
 import java.util.List;
 import java.util.Optional;
 
+
 import com.org.back.dto.User.UserCreateDto;
 import com.org.back.dto.User.UserUpdateProfileDto;
 import com.org.back.dto.User.UserUpdateSettingsDto;
@@ -20,7 +21,11 @@ public interface UserService {
     User addUser(@Valid UserCreateDto userCreateDto) throws UserAlreadyExistsException;
     Optional<User> getUserById(@NotNull Long id);
     Optional<User> findUserByEmail(@NotBlank @Email String email);
-    void updateUserProfile(@NotNull Long userId, @Valid UserUpdateProfileDto newUserUpdate) throws UserAlreadyExistsException, EntityNotFoundException;
-    void updateUserSettings(@NotNull Long userId, @Valid UserUpdateSettingsDto newUserUpdate) throws UserAlreadyExistsException, EntityNotFoundException;
+    void updateUserProfile(
+       User authUser, 
+        @Valid UserUpdateProfileDto newUserUpdateDto) throws UserAlreadyExistsException, EntityNotFoundException;
+    void updateUserSettings(
+       User authUser,  
+        @Valid UserUpdateSettingsDto newUserUpdateDto) throws UserAlreadyExistsException, EntityNotFoundException;
     void deleteUserById(@NotNull Long id);
 }

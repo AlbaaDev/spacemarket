@@ -11,6 +11,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,7 @@ import com.org.back.exceptions.UserAlreadyExistsException;
 import com.org.back.mapper.UserMapper;
 import com.org.back.models.User;
 import com.org.back.services.AuthenticationService;
-import com.org.back.services.JwtService;
+import com.org.back.security.jwt.JwtService;
 import com.org.back.services.UserServiceImpl;
 
 import jakarta.servlet.http.Cookie;
@@ -76,29 +77,40 @@ public class AuthenticationController {
             return ResponseEntity.ok(userResponseDto);
     }
 
-    @PostMapping("/logout")
-    public void logout(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response ) {
-        boolean isSecure = false;
-        String contextPath = null;
-        if (request != null) {
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                session.invalidate();
-            }
-            isSecure = request.isSecure();
-            contextPath = request.getContextPath();
-        }
-        SecurityContext context = SecurityContextHolder.getContext();
-        SecurityContextHolder.clearContext();
-        context.setAuthentication(null);
-        if (response != null) {
-            Cookie jwtCookie = new Cookie("jwt", null);
-            String cookiePath = StringUtils.hasText(contextPath) ? contextPath : "/";
-            jwtCookie.setPath(cookiePath);
-            jwtCookie.setMaxAge(0);
-            jwtCookie.setHttpOnly(true);
-            jwtCookie.setSecure(isSecure);
-            response.addCookie(jwtCookie);
-        }
+    // @PostMapping("/logout")
+    // public void logout(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response ) {
+    //     boolean isSecure = false;
+    //     String contextPath = null;
+    //     if (request != null) {
+    //         HttpSession session = request.getSession(false);
+    //         if (session != null) {
+    //             session.invalidate();
+    //         }
+    //         isSecure = request.isSecure();
+    //         contextPath = request.getContextPath();
+    //     }
+    //     SecurityContext context = SecurityContextHolder.getContext();
+    //     SecurityContextHolder.clearContext();
+    //     context.setAuthentication(null);
+    //     if (response != null) {
+    //         Cookie jwtCookie = new Cookie("jwt", null);
+    //         String cookiePath = StringUtils.hasText(contextPath) ? contextPath : "/";
+    //         jwtCookie.setPath(cookiePath);
+    //         jwtCookie.setMaxAge(0);
+    //         jwtCookie.setHttpOnly(true);
+    //         jwtCookie.setSecure(isSecure);
+    //         response.addCookie(jwtCookie);
+    //     }
+    // }
+
+    @GetMapping("/csrf")
+    public ResponseEntity<Void> csrf() {
+        return ResponseEntity.ok().build();
     }
+
+    // @GetMapping("/csrf")
+    // public CsrfToken csrf(CsrfToken csrfToken) {
+    //     return csrfToken;
+    // }
+    
 }

@@ -3,6 +3,10 @@ package com.org.back.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.org.back.dto.User.UserCreateDto;
 import com.org.back.dto.User.UserUpdateProfileDto;
 import com.org.back.dto.User.UserUpdateSettingsDto;
@@ -17,10 +21,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -43,30 +43,26 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getUserById(@NotNull Long userId) {
         return userRepository.findById(userId);
     }
+    @Transactional(readOnly = true)
+    public void updateUserProfile(
+        User authUser, 
+        @Valid UserUpdateProfileDto newUserUpdateDto) throws EntityNotFoundException {
 
-    public void updateUserProfile(@NotNull Long userId, @Valid UserUpdateProfileDto newUserUpdateDto) throws UserAlreadyExistsException, EntityNotFoundException {
-        Optional<User> userFound = getUserById(userId);
-        if(userFound.isPresent()) {
-             userMapper.updateEntityProfileFromDto(newUserUpdateDto, userFound.get());
-             userRepository.save(userFound.get());
-        } else {
-            throw new EntityNotFoundException("User not found with this ID.");
-        }
+             userMapper.updateEntityProfileFromDto(newUserUpdateDto, authUser);
+             userRepository.save(authUser);
     }
+    @Transactional()
+    public void updateUserSettings (
+        User authUser,  
+        @Valid UserUpdateSettingsDto newUserUpdateDto) throws UserAlreadyExistsException, EntityNotFoundException {
 
-    public void updateUserSettings(@NotNull Long userId, @Valid UserUpdateSettingsDto newUserUpdateDto) throws UserAlreadyExistsException, EntityNotFoundException {
         Optional<User> userOptional = findUserByEmail(newUserUpdateDto.email());
-        if(userOptional.isPresent() && !userOptional.get().getId().equals(userId)) {
+        if(userOptional.isPresent() && !userOptional.get().getId().equals(authUser.getId())) {
             throw new UserAlreadyExistsException("User already exist with this email. Please choose another one.");
         } 
-        Optional<User> userFound = getUserById(userId);
-        if(userFound.isPresent()) {
-            userMapper.updateEntitySettingsFromDto(newUserUpdateDto, userFound.get());
-            userFound.get().setPassword(passwordEncoder.encode(newUserUpdateDto.password()));
-            userRepository.save(userFound.get());
-       } else {
-           throw new EntityNotFoundException("User not found with this ID.");
-       }
+        userMapper.updateEntitySettingsFromDto(newUserUpdateDto, authUser);
+        authUser.setPassword(passwordEncoder.encode(newUserUpdateDto.password()));
+        userRepository.save(authUser);
     }
 
     @Transactional(readOnly = true)

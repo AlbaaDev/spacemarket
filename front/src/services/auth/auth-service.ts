@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { finalize, Observable, tap, throwError } from 'rxjs';
+import { finalize, Observable, switchMap, tap, throwError } from 'rxjs';
 import { User } from '../../interfaces/User';
 
 @Injectable({
@@ -22,19 +22,29 @@ export class AuthService {
       }
   }
 
-  login(loginForm: FormGroup) : Observable<User> {
-    if(loginForm.invalid) {
-      return throwError(() => new Error('Invalid form'));
+    login(loginForm: FormGroup): Observable<User> {
+      if (loginForm.invalid) {
+        return throwError(() => new Error('Invalid form'));
+      }
+
+      return this.http.get('http://localhost:8080/auth/csrf', { withCredentials: true })
+        .pipe(
+          switchMap(() => {
+            const { email, password } = loginForm.value;
+            // 2) Envoyer la requête de login
+            return this.http.post<User>(
+              'http://localhost:8080/auth/login',
+              { email, password },
+              { withCredentials: true }
+            );
+          }),
+          tap(user => {
+            this._isAuthenticated.set(true);
+            this._currentUser.set(user);
+            localStorage.setItem('user', JSON.stringify(user));
+          })
+        );
     }
-    const {email, password} = loginForm.value;
-    return this.http.post<User>('http://localhost:8080/auth/login', { email, password }, {withCredentials: true}).pipe(
-      tap((user) => {
-        this._isAuthenticated.set(true);
-        this._currentUser.set(user);
-        localStorage.setItem('user', JSON.stringify(user));
-      })
-    );   
-  }
 
   signUp(signUpForm: FormGroup) {
     if(signUpForm.invalid) {
@@ -44,24 +54,10 @@ export class AuthService {
     return this.http.post<void>('http://localhost:8080/auth/register', {email, password, firstName, lastName});
   }
 
-  // getCurrentUser() {
-  //   return this.http.get<User>('http://localhost:8080/users/me', {withCredentials: true}).pipe(
-  //     tap({
-  //       next: (user) => {
-  //         this._isAuthenticated.set(true); 
-  //         this._currentUser.set(user)
-  //       },
-  //       error: () => this.clearSession()
-  //     })
-  //   );
-  // }
-
   isAuth() {
-    console.log('currentUser ', this.currentUser(), "isAuthenticated ", this.isAuthenticated());
     return this.http.get<User>('http://localhost:8080/users/me', {withCredentials: true}).pipe(
       tap({
         next: (responseIsAuth) => {
-          console.log(responseIsAuth);
           this._isAuthenticated.set(true); 
           this._currentUser.set(responseIsAuth);
         },
@@ -80,14 +76,14 @@ export class AuthService {
   }
 
   setCurrentUser(user: User): void {
-      this._currentUser.set(user);
-      this._isAuthenticated.set(true);
-      localStorage.setItem('user', JSON.stringify(user));
+    this._currentUser.set(user);
+    this._isAuthenticated.set(true);
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
   private clearSession(): void {
-      this._isAuthenticated.set(false);
-      this._currentUser.set(null);
-      localStorage.removeItem('user');
+    this._isAuthenticated.set(false);
+    this._currentUser.set(null);
+    localStorage.removeItem('user');
   } 
 }

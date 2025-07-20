@@ -19,9 +19,7 @@ export class UserService {
    updateProfile(profileData: User) : Observable<User> {
       return this.http.put<User>("http://localhost:8080/users/update/profile", profileData, {withCredentials: true}).pipe(
         tap(() => {
-          console.log('profileData ', profileData);
           this.authService.setCurrentUser(profileData);
-          console.log('currentUser ', this.authService.currentUser(), "isAuthenticated ", this.authService.isAuthenticated());
         })
       )
    }
@@ -32,6 +30,6 @@ export class UserService {
         this.authService.setCurrentUser(settingsData);
       })
     )
- }
   }
+}
 
