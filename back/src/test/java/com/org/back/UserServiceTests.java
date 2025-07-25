@@ -1,6 +1,7 @@
 package com.org.back;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -58,10 +59,10 @@ class UserServiceTests {
         Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
         // when
-        User result = userServiceImpl.findUserByEmail(email).get();
+        Boolean result = userServiceImpl.findUserByEmail(email).isPresent();
 
         // then
-        assertNull(result);
+        assertFalse(result);
     }
     
     @Test
@@ -91,10 +92,10 @@ class UserServiceTests {
         Mockito.when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
         // when 
-        User result = userServiceImpl.getUserById(userId).get();
+        Boolean result = userServiceImpl.getUserById(userId).isPresent();
 
         // then
-        assertNull(result);
+        assertFalse(result);
     }
 
     // @Test
