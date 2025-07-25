@@ -50,7 +50,6 @@ public class UserController {
     public void updateProfile(
         @RequestBody UserUpdateProfileDto newUserProfile,
         @AuthenticationPrincipal User authUser) throws EntityNotFoundException {
-
             userService.updateUserProfile(authUser, newUserProfile);
     }
 

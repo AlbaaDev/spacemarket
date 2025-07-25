@@ -43,26 +43,27 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getUserById(@NotNull Long userId) {
         return userRepository.findById(userId);
     }
-    @Transactional(readOnly = true)
+    @Transactional
     public void updateUserProfile(
-        User authUser, 
+        User user, 
         @Valid UserUpdateProfileDto newUserUpdateDto) throws EntityNotFoundException {
-
-             userMapper.updateEntityProfileFromDto(newUserUpdateDto, authUser);
-             userRepository.save(authUser);
+            User userToUpdate = userRepository.findByEmail(user.getEmail()).orElseThrow();
+            userMapper.updateEntityProfileFromDto(newUserUpdateDto, userToUpdate);
+            userRepository.save(userToUpdate);
     }
+    
     @Transactional()
     public void updateUserSettings (
-        User authUser,  
+        User user,  
         @Valid UserUpdateSettingsDto newUserUpdateDto) throws UserAlreadyExistsException, EntityNotFoundException {
 
         Optional<User> userOptional = findUserByEmail(newUserUpdateDto.email());
-        if(userOptional.isPresent() && !userOptional.get().getId().equals(authUser.getId())) {
+        if(userOptional.isPresent() && !userOptional.get().getId().equals(user.getId())) {
             throw new UserAlreadyExistsException("User already exist with this email. Please choose another one.");
         } 
-        userMapper.updateEntitySettingsFromDto(newUserUpdateDto, authUser);
-        authUser.setPassword(passwordEncoder.encode(newUserUpdateDto.password()));
-        userRepository.save(authUser);
+        userMapper.updateEntitySettingsFromDto(newUserUpdateDto, user);
+        user.setPassword(passwordEncoder.encode(newUserUpdateDto.password()));
+        userRepository.save(user);
     }
 
     @Transactional(readOnly = true)
@@ -70,6 +71,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(email);
     }
 
+    @Transactional
     public User addUser(@Valid UserCreateDto userCreateDto) throws UserAlreadyExistsException {
         if (userRepository.findByEmail(userCreateDto.email()).isPresent()) {
             throw new UserAlreadyExistsException("Email is already in use. Please use a different email adress.");
@@ -80,6 +82,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(userToSave);
     }
 
+    @Transactional
     public void deleteUserById(@NotNull Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         optionalUser.ifPresent(userRepository::delete);

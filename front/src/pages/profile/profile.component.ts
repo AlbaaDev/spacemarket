@@ -53,10 +53,13 @@ export class ProfileComponent {
   onSubmit() {
     this.errorMessage = null;
     this.userService.updateProfile(this.profileForm.value).subscribe({
-            next: (response: any) => {
-                this.authService.setCurrentUser(response);
-                this.formHasChanged.set(false);
-                this.router.navigate(['/app-profile']);
+            next: () => {
+                this.authService.logout().subscribe({
+                    next: () => {
+                      this.formHasChanged.set(false);
+                      this.router.navigate(['/app-login']);
+                    }
+                });
             },
             error: (reponseError: any) => {
                 this.errorMessage = reponseError.error.message;

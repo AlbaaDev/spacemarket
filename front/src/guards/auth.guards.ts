@@ -13,7 +13,6 @@ export class AuthGuard implements CanActivate {
     private readonly router: Router
   ) {}
 
-
   canActivate(): boolean | UrlTree {
     if (this.authService.isAuthenticated()) {
       return true;
