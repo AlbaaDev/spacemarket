@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth-service';
 import { UserService } from '../../services/user/user.service';
+import { switchMap } from 'rxjs';
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -53,17 +53,9 @@ export class ProfileComponent {
   onSubmit() {
     this.errorMessage = null;
     this.userService.updateProfile(this.profileForm.value).subscribe({
-            next: () => {
-                this.authService.logout().subscribe({
-                    next: () => {
-                      this.formHasChanged.set(false);
-                      this.router.navigate(['/app-login']);
-                    }
-                });
-            },
-            error: (reponseError: any) => {
-                this.errorMessage = reponseError.error.message;
-            }
+      error: (responseError: any) => {
+        this.errorMessage = responseError.error.message;
+      }
     });
   }
 }

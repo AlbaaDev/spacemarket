@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.org.back.dto.User.UserCreateDto;
+import com.org.back.dto.User.UserUpdatePasswordDto;
 import com.org.back.dto.User.UserUpdateProfileDto;
 import com.org.back.dto.User.UserUpdateSettingsDto;
 import com.org.back.exceptions.EntityNotFoundException;
@@ -47,6 +48,7 @@ public class UserServiceImpl implements UserService {
     public void updateUserProfile(
         User user, 
         @Valid UserUpdateProfileDto newUserUpdateDto) throws EntityNotFoundException {
+            
             User userToUpdate = userRepository.findByEmail(user.getEmail()).orElseThrow();
             userMapper.updateEntityProfileFromDto(newUserUpdateDto, userToUpdate);
             userRepository.save(userToUpdate);
@@ -57,12 +59,11 @@ public class UserServiceImpl implements UserService {
         User user,  
         @Valid UserUpdateSettingsDto newUserUpdateDto) throws UserAlreadyExistsException, EntityNotFoundException {
 
-        Optional<User> userOptional = findUserByEmail(newUserUpdateDto.email());
-        if(userOptional.isPresent() && !userOptional.get().getId().equals(user.getId())) {
+        Optional<User> userOptional = userRepository.findByEmail(newUserUpdateDto.email());
+        if(userOptional.isPresent() && !(userOptional.get().getId().equals(user.getId()))) {
             throw new UserAlreadyExistsException("User already exist with this email. Please choose another one.");
         } 
         userMapper.updateEntitySettingsFromDto(newUserUpdateDto, user);
-        user.setPassword(passwordEncoder.encode(newUserUpdateDto.password()));
         userRepository.save(user);
     }
 
@@ -86,5 +87,9 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(@NotNull Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         optionalUser.ifPresent(userRepository::delete);
+    }
+
+    public void updateUserPassword(User authUser, UserUpdatePasswordDto newUserPassowrd) {
+        throw new UnsupportedOperationException("Unimplemented method 'updateUserPassword'");
     }
 }

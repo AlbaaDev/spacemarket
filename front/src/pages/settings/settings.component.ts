@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-settings',
@@ -26,7 +27,7 @@ export class SettingsComponent {
 
   settingsForm: FormGroup = this.formBuilder.group({
     email: ['', [Validators.email, Validators.required]],
-    password: ['', Validators.required, Validators.minLength(8)],
+    // password: ['', Validators.required, Validators.minLength(8)],
   });
 
   get email() {
@@ -37,9 +38,7 @@ export class SettingsComponent {
     return this.settingsForm.get('password');
   }
 
-  constructor() {
-
-  }
+  constructor() {}
 
   ngOnInit(): void {
     const currentUser = this.authService.currentUser();
@@ -55,14 +54,13 @@ export class SettingsComponent {
 
   onSubmit() {
     this.errorMessage = null;
-    this.userService.updateSettings(this.settingsForm.value).subscribe({
-            next: () => {
-                this.authService.logout();
-                this.router.navigate(['/app-login']);
-            },
-            error: (reponseError: any) => {
-                this.errorMessage = reponseError.error.message;
-            }
+    this.userService.updateSettings(this.settingsForm.value).pipe(
+      switchMap(() => this.authService.logout()),
+      switchMap(() => this.router.navigate(['/app-login']))
+    ).subscribe({
+      error: (responseError: any) => {
+        this.errorMessage = responseError.error.message;
+      }
     });
   }
 }

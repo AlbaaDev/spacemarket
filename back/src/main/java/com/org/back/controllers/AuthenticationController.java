@@ -25,6 +25,7 @@ import com.org.back.services.AuthenticationService;
 import com.org.back.services.UserServiceImpl;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
@@ -47,14 +48,14 @@ public class AuthenticationController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<UserResponseDto> registerUser(@RequestBody UserCreateDto userCreateDto) throws UserAlreadyExistsException {
+    public ResponseEntity<UserResponseDto> registerUser(@Valid @RequestBody UserCreateDto userCreateDto) throws UserAlreadyExistsException {
         User savedUser = userService.addUser(userCreateDto);
         UserResponseDto createdUser = userMapper.toUserResponseDto(savedUser);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDto> authenticate(@RequestBody UserLoginDto loginUserDto, HttpServletResponse response) throws BadCredentialsException {
+    public ResponseEntity<UserResponseDto> authenticate(@Valid @RequestBody UserLoginDto loginUserDto, HttpServletResponse response) throws BadCredentialsException {
             User authenticatedUser = authenticationService.authenticate(loginUserDto);
             UserResponseDto userResponseDto = userMapper.toUserResponseDto(authenticatedUser);
             String jwtToken = jwtService.generateToken(authenticatedUser);

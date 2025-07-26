@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.org.back.dto.User.UserLoginDto;
 import com.org.back.dto.User.UserResponseDto;
+import com.org.back.dto.User.UserUpdatePasswordDto;
 import com.org.back.dto.User.UserUpdateProfileDto;
 import com.org.back.dto.User.UserUpdateSettingsDto;
 import com.org.back.exceptions.EntityNotFoundException;
@@ -22,6 +23,8 @@ import com.org.back.mapper.UserMapper;
 import com.org.back.models.User;
 import com.org.back.repositories.UserRepository;
 import com.org.back.services.UserServiceImpl;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
@@ -48,21 +51,31 @@ public class UserController {
 
     @PutMapping("/update/profile")
     public void updateProfile(
-        @RequestBody UserUpdateProfileDto newUserProfile,
+        @Valid @RequestBody UserUpdateProfileDto newUserProfile,
         @AuthenticationPrincipal User authUser) throws EntityNotFoundException {
+
             userService.updateUserProfile(authUser, newUserProfile);
     }
 
     @PutMapping("/update/settings")
     public void updateSettings(
-        @RequestBody UserUpdateSettingsDto newUserSettings,
+        @Valid @RequestBody UserUpdateSettingsDto newUserSettings,
         @AuthenticationPrincipal User authUser) throws UserAlreadyExistsException, EntityNotFoundException {
 
             userService.updateUserSettings(authUser, newUserSettings);
     }
+
+    @PutMapping("/update/password")
+    public void updateSettings(
+        @Valid @RequestBody UserUpdatePasswordDto newUserPassowrd,
+        @AuthenticationPrincipal User authUser) {
+
+            userService.updateUserPassword(authUser, newUserPassowrd);
+    }
     
    @GetMapping("/me")
    public ResponseEntity<UserResponseDto> isAuth(@AuthenticationPrincipal User user) {
+
         Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
         if(userOptional.isPresent()) {
             return ResponseEntity.ok(userMapper.toUserResponseDto(userOptional.get()));

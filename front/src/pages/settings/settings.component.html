@@ -14,7 +14,7 @@
                 </mat-error>
             }
         </mat-form-field>
-        <mat-form-field>
+        <!-- <mat-form-field>
             <mat-label for="password">Password</mat-label>    
             <input type="password" id="password" name="password" formControlName="password" matInput autocomplete="off"/>
             @if (password?.hasError('required') && password?.invalid && (password?.dirty || password?.touched)) { 
@@ -27,7 +27,7 @@
                     Password must be at least 8 characters long
                 </mat-error>
             }
-        </mat-form-field>
+        </mat-form-field> -->
     </div>
     <button mat-raised-button type="submit" color="primary" [disabled]="settingsForm.invalid || !formHasChanged()">Confirm</button>
 </form>
