@@ -3,10 +3,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth-service';
 import { UserService } from '../../services/user/user.service';
-import { switchMap } from 'rxjs';
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -20,6 +20,7 @@ export class ProfileComponent {
   protected readonly formBuilder = inject(FormBuilder);
   protected readonly router = inject(Router);
   protected readonly formHasChanged = signal<boolean>(false);
+  private _snackBar = inject(MatSnackBar);
 
   profileForm: FormGroup = this.formBuilder.group({
     firstName: ['', Validators.required],
@@ -53,6 +54,9 @@ export class ProfileComponent {
   onSubmit() {
     this.errorMessage = null;
     this.userService.updateProfile(this.profileForm.value).subscribe({
+      next: () => {
+        this._snackBar.open("Profile updated successfully", "Close", {panelClass: ['snackbar-success'], duration: 10000});
+      },
       error: (responseError: any) => {
         this.errorMessage = responseError.error.message;
       }

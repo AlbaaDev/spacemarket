@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
         optionalUser.ifPresent(userRepository::delete);
     }
 
-    public void updateUserPassword(User authUser, UserUpdatePasswordDto newUserPassowrd) {
+    public void updateUserPassword(User authUser, @Valid UserUpdatePasswordDto newUserPassowrd) {
         throw new UnsupportedOperationException("Unimplemented method 'updateUserPassword'");
     }
 }
