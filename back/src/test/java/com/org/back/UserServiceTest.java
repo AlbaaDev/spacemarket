@@ -18,14 +18,13 @@ import com.org.back.repositories.UserRepository;
 import com.org.back.services.UserServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceTests {
+class UserServiceTest {
     
     @InjectMocks
     private UserServiceImpl userServiceImpl;
 
     @Mock
     private UserRepository userRepository;
-
 
     @Mock
     private UserMapper userMapper;
