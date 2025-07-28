@@ -1,13 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
-import { UserService } from '../../services/user/user.service';
-import { AuthService } from '../../services/auth/auth-service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { Router } from '@angular/router';
 import { switchMap } from 'rxjs';
+import { AuthService } from '../../services/auth/auth-service';
+import { UserService } from '../../services/user/user.service';
+import { MustMatch } from '../../validators/MustMatch';
 
 @Component({
   selector: 'app-settings',
@@ -21,21 +21,35 @@ export class SettingsComponent {
   protected readonly authService = inject(AuthService);
   protected readonly formBuilder = inject(FormBuilder);
   protected readonly router = inject(Router);
-  protected readonly formHasChanged = signal<boolean>(false);
 
+  protected readonly usernameFromHasChanged = signal<boolean>(false);
+  protected readonly passwordFormHasChanged = signal<boolean>(false);
   errorMessage : string | null = null;
 
-  settingsForm: FormGroup = this.formBuilder.group({
+  userNameForm: FormGroup = this.formBuilder.group({
     email: ['', [Validators.email, Validators.required]],
-    // password: ['', Validators.required, Validators.minLength(8)],
   });
 
+  passwordForm: FormGroup = this.formBuilder.group({
+    password: ['', [Validators.required, Validators.minLength(8)]],
+    newPassword: ['', [Validators.required, Validators.minLength(8)]],
+    confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
+  }, { validators: MustMatch('newPassword', 'confirmPassword') });
+
   get email() {
-    return this.settingsForm.get('email');
+    return this.userNameForm.get('email');
   }
 
   get password() {
-    return this.settingsForm.get('password');
+    return this.passwordForm.get('password');
+  }
+
+  get newPassword() {
+    return this.passwordForm.get('newPassword');
+  }
+
+  get confirmPassword() {
+    return this.passwordForm.get('confirmPassword');
   }
 
   constructor() {}
@@ -43,18 +57,33 @@ export class SettingsComponent {
   ngOnInit(): void {
     const currentUser = this.authService.currentUser();
     if (currentUser) {
-      this.settingsForm.patchValue({
+      this.userNameForm.patchValue({
         email: currentUser.email,
       });
     }
-    this.settingsForm.valueChanges.subscribe(() => {
-      this.formHasChanged.set(true);
+    this.userNameForm.valueChanges.subscribe(() => {
+      this.usernameFromHasChanged.set(true);
+    });
+    this.passwordForm.valueChanges.subscribe(() => {
+      this.passwordFormHasChanged.set(true);
     });
   }
 
-  onSubmit() {
+  onSubmitUserName() {
     this.errorMessage = null;
-    this.userService.updateSettings(this.settingsForm.value).pipe(
+    this.userService.updateSettings(this.userNameForm.value).pipe(
+      switchMap(() => this.authService.logout()),
+      switchMap(() => this.router.navigate(['/app-login']))
+    ).subscribe({
+      error: (responseError: any) => {
+        this.errorMessage = responseError.error.message;
+      }
+    });
+  }
+
+  onSubmitPassword() {
+    this.errorMessage = null;
+    this.userService.updatePassword(this.passwordForm.value).pipe(
       switchMap(() => this.authService.logout()),
       switchMap(() => this.router.navigate(['/app-login']))
     ).subscribe({
@@ -64,3 +93,4 @@ export class SettingsComponent {
     });
   }
 }
+

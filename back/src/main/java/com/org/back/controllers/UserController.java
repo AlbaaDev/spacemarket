@@ -42,6 +42,8 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
+
+    // @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     public ResponseEntity<List<UserLoginDto>> allUsers() {
 
@@ -49,7 +51,7 @@ public class UserController {
         return ResponseEntity.ok(userList);
     }
 
-    @PutMapping("/update/profile")
+    @PutMapping("/me/profile")
     public void updateProfile(
         @Valid @RequestBody UserUpdateProfileDto newUserProfile,
         @AuthenticationPrincipal User authUser) throws EntityNotFoundException {
@@ -57,7 +59,7 @@ public class UserController {
             userService.updateUserProfile(authUser, newUserProfile);
     }
 
-    @PutMapping("/update/settings")
+    @PutMapping("/me/settings")
     public void updateSettings(
         @Valid @RequestBody UserUpdateSettingsDto newUserSettings,
         @AuthenticationPrincipal User authUser) throws UserAlreadyExistsException, EntityNotFoundException {
@@ -65,12 +67,12 @@ public class UserController {
             userService.updateUserSettings(authUser, newUserSettings);
     }
 
-    @PutMapping("/update/password")
-    public void updateSettings(
-        @Valid @RequestBody UserUpdatePasswordDto newUserPassowrd,
+    @PutMapping("/me/password")
+    public void updatePassword(
+        @Valid @RequestBody UserUpdatePasswordDto newUserPassword,
         @AuthenticationPrincipal User authUser) {
 
-            userService.updateUserPassword(authUser, newUserPassowrd);
+            userService.updateUserPassword(authUser, newUserPassword);
     }
     
    @GetMapping("/me")

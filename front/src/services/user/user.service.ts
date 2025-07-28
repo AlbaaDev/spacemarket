@@ -16,20 +16,24 @@ export class UserService {
 
    }
 
-   updateProfile(profileData: User) : Observable<User> {
-      return this.http.put<User>("http://localhost:8080/users/update/profile", profileData, {withCredentials: true}).pipe(
+  updateProfile(profileData: User) : Observable<User> {
+      return this.http.put<User>("http://localhost:8080/users/me/profile", profileData, {withCredentials: true}).pipe(
         tap(() => {
           this.authService.setCurrentUser(profileData);
         })
       )
    }
 
-   updateSettings(settingsData: User) : Observable<User> {
-    return this.http.put<User>("http://localhost:8080/users/update/settings", settingsData, {withCredentials: true}).pipe(
+  updateSettings(userNameData: User) : Observable<User> {
+    return this.http.put<User>("http://localhost:8080/users/me/username", userNameData, {withCredentials: true}).pipe(
       tap(() => {
-        this.authService.setCurrentUser(settingsData);
+        this.authService.setCurrentUser(userNameData);
       })
     )
+  }
+
+  updatePassword(passwordData: User) : Observable<User> {
+    return this.http.put<User>("http://localhost:8080/users/me/password", passwordData, {withCredentials: true});
   }
 }
 
