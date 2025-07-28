@@ -66,9 +66,9 @@ export class AuthService {
 
   logout() : Observable<void> {
     return this.http.post<void>('http://localhost:8080/auth/logout', {}, {withCredentials: true})
-          .pipe(
-            tap(() => this.clearSession())
-          );
+      .pipe(
+        tap(() => this.clearSession())
+      );
   }
 
   setCurrentUser(user: User) : void {

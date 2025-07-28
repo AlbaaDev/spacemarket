@@ -24,8 +24,8 @@ export class UserService {
       )
    }
 
-  updateSettings(userNameData: User) : Observable<User> {
-    return this.http.put<User>("http://localhost:8080/users/me/username", userNameData, {withCredentials: true}).pipe(
+   updateSettings(userNameData: User) : Observable<User> {
+    return this.http.put<User>("http://localhost:8080/users/me/settings", userNameData, {withCredentials: true}).pipe(
       tap(() => {
         this.authService.setCurrentUser(userNameData);
       })

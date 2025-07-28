@@ -12,6 +12,8 @@ import com.org.back.dto.User.UserUpdatePasswordDto;
 import com.org.back.dto.User.UserUpdateProfileDto;
 import com.org.back.dto.User.UserUpdateSettingsDto;
 import com.org.back.exceptions.EntityNotFoundException;
+import com.org.back.exceptions.PasswordAlreadyInUseException;
+import com.org.back.exceptions.PasswordDoesntMatchException;
 import com.org.back.exceptions.UserAlreadyExistsException;
 import com.org.back.interfaces.UserService;
 import com.org.back.mapper.UserMapper;
@@ -67,6 +69,19 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    public void updateUserPassword(User authUser, @Valid UserUpdatePasswordDto newUserPassowrd) throws PasswordAlreadyInUseException, PasswordDoesntMatchException {
+        boolean passwordMatches = passwordEncoder.matches(newUserPassowrd.currentPassword(), authUser.getPassword());
+        boolean passwordAlreadyInUse = passwordEncoder.matches(newUserPassowrd.newPassword(), authUser.getPassword());
+        if(!passwordMatches) {
+            throw new PasswordDoesntMatchException("The current password doesn't match. Please try again.");
+        } else if(passwordAlreadyInUse) {
+            throw new PasswordAlreadyInUseException("Password is already in use please choose another one.");
+        } else {
+            authUser.setPassword(passwordEncoder.encode(newUserPassowrd.newPassword()));
+            userRepository.save(authUser);
+        }
+    }
+
     @Transactional(readOnly = true)
     public Optional<User> findUserByEmail(@NotBlank @Email String email) {
         return userRepository.findByEmail(email);
@@ -89,7 +104,5 @@ public class UserServiceImpl implements UserService {
         optionalUser.ifPresent(userRepository::delete);
     }
 
-    public void updateUserPassword(User authUser, @Valid UserUpdatePasswordDto newUserPassowrd) {
-        throw new UnsupportedOperationException("Unimplemented method 'updateUserPassword'");
-    }
+   
 }

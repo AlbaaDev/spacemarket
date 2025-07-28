@@ -24,17 +24,17 @@
         </form>
       </div>
       <div class="col">
-        <form [formGroup]="passwordForm" (ngSubmit)="onSubmitUserName()" class="mt-5 example-full-width">
+        <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()" class="mt-5 example-full-width">
             <div class="d-flex flex-column gap-3">
                 <mat-form-field>
                     <mat-label for="password">Current password</mat-label>    
-                    <input type="password" id="password" name="password" formControlName="password" matInput autocomplete="off"/>
-                    @if (password?.hasError('required') && password?.invalid && (password?.dirty || password?.touched)) { 
+                    <input type="password" id="currentPassword" name="currentPassword" formControlName="currentPassword" matInput autocomplete="off"/>
+                    @if (currentPassword?.hasError('required') && currentPassword?.invalid && (currentPassword?.dirty || currentPassword?.touched)) { 
                         <mat-error>
                             Password is required
                         </mat-error> 
                     }   
-                    @if(password?.hasError('minlength') && password?.invalid && (password?.dirty || password?.touched)) {
+                    @if(currentPassword?.hasError('minlength') && currentPassword?.invalid && (currentPassword?.dirty || currentPassword?.touched)) {
                         <mat-error>
                             Password must be at least 8 characters long
                         </mat-error>

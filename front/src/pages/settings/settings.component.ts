@@ -31,7 +31,7 @@ export class SettingsComponent {
   });
 
   passwordForm: FormGroup = this.formBuilder.group({
-    password: ['', [Validators.required, Validators.minLength(8)]],
+    currentPassword: ['', [Validators.required, Validators.minLength(8)]],
     newPassword: ['', [Validators.required, Validators.minLength(8)]],
     confirmPassword: ['', [Validators.required, Validators.minLength(8)]],
   }, { validators: MustMatch('newPassword', 'confirmPassword') });
@@ -40,8 +40,8 @@ export class SettingsComponent {
     return this.userNameForm.get('email');
   }
 
-  get password() {
-    return this.passwordForm.get('password');
+  get currentPassword() {
+    return this.passwordForm.get('currentPassword');
   }
 
   get newPassword() {

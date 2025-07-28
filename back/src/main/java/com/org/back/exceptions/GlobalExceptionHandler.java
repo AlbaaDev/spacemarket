@@ -27,4 +27,16 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleEntityNotFound(EntityNotFoundException ex) {
         return new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage(), LocalDateTime.now().toString());
     }
+
+    @ExceptionHandler(PasswordAlreadyInUseException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleEntityNotFound(PasswordAlreadyInUseException ex) {
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now().toString());
+    }
+
+    @ExceptionHandler(PasswordDoesntMatchException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleEntityNotFound(PasswordDoesntMatchException ex) {
+        return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), ex.getMessage(), LocalDateTime.now().toString());
+    }
 } 

@@ -18,6 +18,8 @@ import com.org.back.dto.User.UserUpdatePasswordDto;
 import com.org.back.dto.User.UserUpdateProfileDto;
 import com.org.back.dto.User.UserUpdateSettingsDto;
 import com.org.back.exceptions.EntityNotFoundException;
+import com.org.back.exceptions.PasswordAlreadyInUseException;
+import com.org.back.exceptions.PasswordDoesntMatchException;
 import com.org.back.exceptions.UserAlreadyExistsException;
 import com.org.back.mapper.UserMapper;
 import com.org.back.models.User;
@@ -70,7 +72,7 @@ public class UserController {
     @PutMapping("/me/password")
     public void updatePassword(
         @Valid @RequestBody UserUpdatePasswordDto newUserPassword,
-        @AuthenticationPrincipal User authUser) {
+        @AuthenticationPrincipal User authUser) throws PasswordAlreadyInUseException, PasswordDoesntMatchException {
 
             userService.updateUserPassword(authUser, newUserPassword);
     }

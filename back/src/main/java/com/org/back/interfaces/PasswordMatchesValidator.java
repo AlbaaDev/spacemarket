@@ -9,7 +9,7 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
 
     @Override
     public boolean isValid(UserUpdatePasswordDto dto, ConstraintValidatorContext context) {
-        return dto.password() != null &&
-               dto.password().equals(dto.confirmPassword());
+        return dto.currentPassword() != null &&
+               !(dto.currentPassword().equals(dto.newPassword()));
     }
 }
