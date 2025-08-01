@@ -24,13 +24,13 @@ public class AuthenticationService {
         try {
             authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    inputForm.getEmail(),
-                    inputForm.getPassword()
+                    inputForm.email(),
+                    inputForm.password()
                 )
             );
         } catch(AuthenticationException exception) {
             throw new BadCredentialsException("Login attempt failed : Invalid email or password.");
         }
-        return userRepository.findByEmail(inputForm.getEmail()).orElseThrow();
+        return userRepository.findByEmail(inputForm.email()).orElseThrow();
     }
 }

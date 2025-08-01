@@ -26,7 +26,8 @@ export class SignUpComponent {
           email: ['', [Validators.required, Validators.email]],
           password: ['', [Validators.required, Validators.minLength(8)]],
           firstName: ['', [Validators.required]],
-          lastName: ['', [Validators.required]]
+          lastName: ['', [Validators.required]],
+          phoneNumber: ['', [Validators.required]],
       });
     }
 
@@ -44,6 +45,10 @@ export class SignUpComponent {
 
     get lastName() {
       return this.signUpForm.get('lastName') as FormControl | null;
+    }
+
+    get phoneNumber() {
+      return this.signUpForm.get('phoneNumber') as FormControl | null;
     }
 
     onSubmit() {

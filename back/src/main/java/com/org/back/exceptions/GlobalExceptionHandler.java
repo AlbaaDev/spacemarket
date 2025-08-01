@@ -34,9 +34,9 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now().toString());
     }
 
-    @ExceptionHandler(PasswordDoesntMatchException.class)
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public ErrorResponse handleEntityNotFound(PasswordDoesntMatchException ex) {
-        return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), ex.getMessage(), LocalDateTime.now().toString());
+    @ExceptionHandler(ConnectException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleConnectionFailed(ConnectException ex) {
+        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(), LocalDateTime.now().toString());
     }
-} 
+}

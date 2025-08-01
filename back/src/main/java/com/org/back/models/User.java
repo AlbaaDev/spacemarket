@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.List;
 
+import jakarta.validation.constraints.Size;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import lombok.*;
@@ -44,13 +45,14 @@ public class User implements UserDetails {
     @NotBlank
     private String password;
 
+    @NotBlank
+    @Column(unique = true, nullable = false)
+    @Size(min = 10, max = 12, message = "Phone number should be between 10 and 12")
+    private String phoneNumber;
+
     @Override
     public String getUsername() {
         return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     @Override

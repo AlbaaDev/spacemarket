@@ -18,7 +18,7 @@
        
         <mat-form-field>
             <mat-label for="password">Password</mat-label>    
-            <input type="password" id="password" name="password" formControlName="password" matInput />
+            <input type="password" id="password" name="password" formControlName="password" matInput autocomplete="off" />
             @if(password?.hasError('required') && password?.invalid && (password?.dirty || password?.touched)) {
                 <mat-error>
                     Password is required
@@ -34,7 +34,7 @@
         <mat-form-field>
             <mat-label for="firstName">First name</mat-label>    
             <input type="text" id="firstName" name="firstName" formControlName="firstName" matInput />
-            @if(firstName?.hasError('required') && password?.invalid && (password?.dirty || password?.touched)) {
+            @if(firstName?.hasError('required') && firstName?.invalid && (firstName?.dirty || firstName?.touched)) {
                 <mat-error>
                     First name is required
                 </mat-error>
@@ -44,10 +44,20 @@
         <mat-form-field>
             <mat-label for="lastName">Last name</mat-label>    
             <input type="text" id="lastName" name="lastName" formControlName="lastName" matInput />
-            @if(lastName?.hasError('required') && password?.invalid && (password?.dirty || password?.touched)) {
+            @if(lastName?.hasError('required') && lastName?.invalid && (lastName?.dirty || lastName?.touched)) {
                 <mat-error>
                     Last name is required
                 </mat-error>
+            }
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label for="phoneNumber">Phone number</mat-label>
+            <input type="text" id="phoneNumber" name="phoneNumber" formControlName="phoneNumber" matInput />
+            @if(phoneNumber?.hasError('required') && phoneNumber?.invalid && (phoneNumber?.dirty || phoneNumber?.touched)) {
+            <mat-error>
+                Phone number is required
+            </mat-error>
             }
         </mat-form-field>
         

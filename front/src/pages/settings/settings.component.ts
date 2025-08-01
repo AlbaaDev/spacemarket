@@ -28,6 +28,7 @@ export class SettingsComponent {
 
   userNameForm: FormGroup = this.formBuilder.group({
     email: ['', [Validators.email, Validators.required]],
+    phoneNumber: ['', [Validators.required]],
   });
 
   passwordForm: FormGroup = this.formBuilder.group({
@@ -38,6 +39,10 @@ export class SettingsComponent {
 
   get email() {
     return this.userNameForm.get('email');
+  }
+
+  get phoneNumber() {
+        return this.userNameForm.get('phoneNumber');
   }
 
   get currentPassword() {
@@ -59,6 +64,7 @@ export class SettingsComponent {
     if (currentUser) {
       this.userNameForm.patchValue({
         email: currentUser.email,
+        phoneNumber: currentUser.phoneNumber,
       });
     }
     this.userNameForm.valueChanges.subscribe(() => {

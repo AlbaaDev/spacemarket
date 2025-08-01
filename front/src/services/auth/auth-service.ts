@@ -49,8 +49,8 @@ export class AuthService {
     if(signUpForm.invalid) {
       return throwError(() => new Error('Invalid signup Form'));
     }
-    const {email, password, firstName, lastName} = signUpForm.value
-    return this.http.post<void>('http://localhost:8080/auth/register', {email, password, firstName, lastName});
+    const user : User = signUpForm.value;
+    return this.http.post<void>('http://localhost:8080/auth/register', user);
   }
 
   getCurrentUser() : Observable<User> {
