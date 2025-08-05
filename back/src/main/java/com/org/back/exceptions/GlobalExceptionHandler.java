@@ -28,6 +28,12 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage(), LocalDateTime.now().toString());
     }
 
+    @ExceptionHandler(PasswordDoesntMatchException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleEntityNotFound(PasswordDoesntMatchException ex) {
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now().toString());
+    }
+
     @ExceptionHandler(PasswordAlreadyInUseException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public ErrorResponse handleEntityNotFound(PasswordAlreadyInUseException ex) {

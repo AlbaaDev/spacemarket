@@ -5,5 +5,4 @@ import jakarta.validation.constraints.Size;
 public record UserUpdateProfileDto(
     @Size(min = 2, max = 45) @NotBlank String firstName, 
     @Size(min = 2, max = 45) @NotBlank String lastName) {
-    
 }

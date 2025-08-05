@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
         userMapper.updateEntitySettingsFromDto(newUserUpdateDto, user);
         userRepository.save(user);
     }
-
+    
     public void updateUserPassword(User authUser, @Valid UserUpdatePasswordDto newUserPassowrd) throws PasswordAlreadyInUseException, PasswordDoesntMatchException {
         boolean passwordMatches = passwordEncoder.matches(newUserPassowrd.currentPassword(), authUser.getPassword());
         boolean passwordAlreadyInUse = passwordEncoder.matches(newUserPassowrd.newPassword(), authUser.getPassword());

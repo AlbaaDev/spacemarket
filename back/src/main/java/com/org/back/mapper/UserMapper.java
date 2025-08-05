@@ -21,6 +21,7 @@ public interface UserMapper {
     @Mapping(target = "authorities", ignore = true)
     @Mapping(target = "email", ignore = true)
     @Mapping(target = "password", ignore = true)
+    @Mapping(target = "phoneNumber", ignore = true)
     void updateEntityProfileFromDto(UserUpdateProfileDto userUpdaDto, @MappingTarget User user);
 
     @Mapping(target = "id", ignore = true)

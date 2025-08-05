@@ -28,6 +28,7 @@ import com.org.back.repositories.UserRepository;
         user.setFirstName("John");
         user.setLastName("Doe");
         user.setPassword("12345678");
+        user.setPhoneNumber("12345678910");
 
         User addedUser = userRepository.save(user);
         assertEquals(entityManager.find(User.class, addedUser.getId()), addedUser);
