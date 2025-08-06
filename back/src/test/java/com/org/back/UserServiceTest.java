@@ -105,7 +105,7 @@ class UserServiceTest {
     }
 
     @Test
-    void testAddUser() throws UserAlreadyExistsException {
+    void testAddUser() throws Exception {
     // given
     UserCreateDto userDto = new UserCreateDto(
         "John", 

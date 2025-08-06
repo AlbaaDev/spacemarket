@@ -1,7 +1,12 @@
 package com.org.back;
 
-import static org.mockito.Mockito.when;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -18,7 +23,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.org.back.controllers.UserController;
+import com.org.back.dto.User.UserUpdateProfileDto;
 import com.org.back.mapper.UserMapper;
 import com.org.back.models.User;
 import com.org.back.repositories.UserRepository;
@@ -29,6 +36,9 @@ import com.org.back.services.UserServiceImpl;
 @Import(SecurityConfiguration.class)
 @WebMvcTest(UserController.class)
 class UserControllerTest {
+    
+   @Autowired
+    private ObjectMapper objectMapper;
 
     @Autowired
     private MockMvc mockMvc;
@@ -71,5 +81,27 @@ class UserControllerTest {
         response
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    @WithMockUser
+    void updateProfile_should_update_user_profile() throws Exception { 
+        // GIVEN
+        UserUpdateProfileDto updateProfileDto = new UserUpdateProfileDto("abi", "faz");
+
+        User authUser = new User();
+        authUser.setId(1L);
+        authUser.setFirstName("abi");
+        authUser.setLastName("faz");
+        doNothing().when(userService).updateUserProfile(any(User.class), eq(updateProfileDto) );
+
+        // WHEN
+        ResultActions response =  mockMvc.perform(put("/users/me/profile")
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf())
+                .content(objectMapper.writeValueAsString(updateProfileDto)));
+
+        // THEN
+        response.andExpect(status().isOk());
     }
 }
