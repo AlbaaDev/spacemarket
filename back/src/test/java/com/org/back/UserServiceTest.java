@@ -3,6 +3,9 @@ package com.org.back;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -11,7 +14,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.org.back.dto.User.UserCreateDto;
+import com.org.back.exceptions.UserAlreadyExistsException;
 import com.org.back.mapper.UserMapper;
 import com.org.back.models.User;
 import com.org.back.repositories.UserRepository;
@@ -19,9 +25,12 @@ import com.org.back.services.UserServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
-    
+
     @InjectMocks
     private UserServiceImpl userServiceImpl;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @Mock
     private UserRepository userRepository;
@@ -38,10 +47,10 @@ class UserServiceTest {
         user.setFirstName("John");
         user.setLastName("Doe");
         Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-    
+
         // when
         User result = userServiceImpl.findUserByEmail(email).get();
-    
+
         // then
         assertNotNull(result);
         assertEquals(user.getEmail(), result.getEmail());
@@ -61,7 +70,7 @@ class UserServiceTest {
         // then
         assertFalse(result);
     }
-    
+
     @Test
     void testGetUserById() {
         // given
@@ -88,26 +97,68 @@ class UserServiceTest {
         Long userId = 99L;
         Mockito.when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        // when 
+        // when
         Boolean result = userServiceImpl.getUserById(userId).isPresent();
 
         // then
         assertFalse(result);
     }
 
-    // @Test
-    // public void testAddUser() {
-    //     // given
-    //     User userToSave = new User();
-    //     userToSave.setEmail("john.doe@live.fr");
-    //     userToSave.setFirstName("John");
-    //     userToSave.setLastName("Doe");
-    //     Mockito.when(userRepository.save(userToSave)).thenReturn(userToSave);
+    @Test
+    void testAddUser() throws UserAlreadyExistsException {
+    // given
+    UserCreateDto userDto = new UserCreateDto(
+        "John", 
+        "Doe", 
+        "john.doe@live.fr",
+        "password123",
+        "0637894567"
+        );
+        
+    User expectedUser = new User();
+    expectedUser.setFirstName("John");
+    expectedUser.setLastName("Doe");
+    expectedUser.setEmail("john.doe@live.fr");
+    expectedUser.setPhoneNumber("0637894567");
+    expectedUser.setPassword("encodedPassword");
+    when(userRepository.findByEmail(userDto.email())).thenReturn(Optional.empty());
+    Mockito.doAnswer(invocation -> {
+        User user = invocation.getArgument(1);
+        user.setFirstName(userDto.firstName());
+        user.setLastName(userDto.lastName());
+        user.setEmail(userDto.email());
+        user.setPhoneNumber(userDto.phoneNumber());
+        return null;
+    }).when(userMapper).createEntityFromDto(Mockito.eq(userDto), Mockito.any(User.class));
+    Mockito.when(passwordEncoder.encode(userDto.password())).thenReturn("encodedPassword");
+    Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(expectedUser);
 
-    //     // when
-    //     User user = userServiceImpl.addUser(userToSave);
+    // when
+    User savedUser = userServiceImpl.addUser(userDto);
 
-    //     // then
-    //     assertNotNull(userToSave);;
-    // }
-}
+    // then
+    assertNotNull(savedUser);
+    assertEquals(expectedUser.getFirstName(), savedUser.getFirstName());
+    assertEquals(expectedUser.getLastName(), savedUser.getLastName());
+    assertEquals(expectedUser.getEmail(), savedUser.getEmail());
+    assertEquals(expectedUser.getPhoneNumber(), savedUser.getPhoneNumber());
+    assertEquals("encodedPassword", savedUser.getPassword());
+    }
+
+    @Test
+    void  testAddUser_EmailAlreadyExists() {
+        // given
+        UserCreateDto userDto = new UserCreateDto(
+            "John", 
+            "Doe", 
+            "john.doe@live.fr",
+            "password123",
+            "063789456"
+        );
+
+        when(userRepository.findByEmail(userDto.email())).thenReturn(Optional.of(new User()));
+        assertThrows(UserAlreadyExistsException.class, () -> {
+            userServiceImpl.addUser(userDto);
+        });
+    }
+}   
