@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth-service';
 import { UserService } from '../../services/user/user.service';
+
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -18,9 +19,9 @@ export class ProfileComponent {
   protected readonly userService = inject(UserService);
   protected readonly authService = inject(AuthService);
   protected readonly formBuilder = inject(FormBuilder);
-  protected readonly router = inject(Router);
+  protected readonly router      = inject(Router);
+  private   readonly _snackBar   = inject(MatSnackBar);
   protected readonly formHasChanged = signal<boolean>(false);
-  private _snackBar = inject(MatSnackBar);
 
   profileForm: FormGroup = this.formBuilder.group({
     firstName: ['', Validators.required],

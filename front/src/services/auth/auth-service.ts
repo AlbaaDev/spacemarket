@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { finalize, Observable, switchMap, tap, throwError } from 'rxjs';
+import { Observable, switchMap, tap, throwError } from 'rxjs';
 import { User } from '../../interfaces/User';
 
 @Injectable({
@@ -10,12 +10,12 @@ import { User } from '../../interfaces/User';
 export class AuthService {
 
   private readonly _isAuthenticated = signal<boolean>(false);
-  private readonly _currentUser = signal<any | null>(null)
+  private readonly _currentUser = signal<User | null>(null)
 
   readonly isAuthenticated = this._isAuthenticated.asReadonly();
   readonly currentUser = this._currentUser.asReadonly();
 
-  constructor(private http: HttpClient) {
+  constructor(private readonly http: HttpClient) {
       if(localStorage.getItem('user')) {
         this._isAuthenticated.set(true);
         this._currentUser.set(JSON.parse(localStorage.getItem('user')!))

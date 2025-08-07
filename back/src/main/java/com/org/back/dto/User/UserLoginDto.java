@@ -2,14 +2,11 @@ package com.org.back.dto.User;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 
 public record UserLoginDto(
-        @NotBlank(message = "First name is mandatory.") String firstName,
-        @NotBlank(message = "Last name is mandatory.") String lastName,
         @Email(message = "Email must be a valid email adress.") String email,
-        @NotBlank(message = "Password cannot be blank.") String password,
-        @NotBlank(message = "Phone number is mandatory.") String phoneNumber
+        @NotBlank(message = "Password cannot be blank.")  @Size(min = 8, max = 128) String password
 ) {
-
 }

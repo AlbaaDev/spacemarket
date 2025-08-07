@@ -15,6 +15,7 @@ export class NoAuthGaurd implements CanActivate {
 
  
   canActivate(): boolean | UrlTree {
+    console.log("notok");
     if (this.authService.isAuthenticated()) {
       return this.router.parseUrl('/app-dashboard');
     }

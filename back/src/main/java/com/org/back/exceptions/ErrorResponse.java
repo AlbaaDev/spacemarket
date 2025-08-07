@@ -1,7 +1,5 @@
 package com.org.back.exceptions;
 
-import java.time.LocalDateTime;
-
 public class ErrorResponse {
     private int statusCode;
     private String message;
@@ -10,7 +8,7 @@ public class ErrorResponse {
     public ErrorResponse(int statusCode, String message, String timeStamp) {
         this.statusCode = statusCode;
         this.message = message;
-        this.timeStamp = LocalDateTime.now().toString();
+        this.timeStamp = timeStamp;
     }
 
     public String getTimeStamp() {
