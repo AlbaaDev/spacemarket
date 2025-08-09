@@ -1,4 +1,4 @@
-import { Component, Inject, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,10 +7,10 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth/auth-service';
 
 @Component({
-  selector: 'app-login',
-  imports: [RouterLink, ReactiveFormsModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+    selector: 'app-login',
+    imports: [RouterLink, ReactiveFormsModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.css'
 })
 export class LoginComponent {
     private readonly formBuilder = inject(FormBuilder);
@@ -38,12 +38,12 @@ export class LoginComponent {
     onSubmit() {
         this.errorMessage = null;
         this.authService.login(this.loginForm).subscribe({
-                next: () => {
-                    this.router.navigate(['/app-dashboard']);
-                },
-                error: (reponseError) => {
-                    this.errorMessage = reponseError.error.message;
-                }
+            next: () => {
+                this.router.navigate(['/app-dashboard']);
+            },
+            error: (reponseError) => {
+                this.errorMessage = reponseError.error.message;
+            }
         });
     }
 }

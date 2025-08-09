@@ -22,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebM
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,6 +31,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.org.back.controllers.UserController;
 import com.org.back.dto.User.UserUpdateProfileDto;
+import com.org.back.dto.User.UserUpdateSettingsDto;
 import com.org.back.mapper.UserMapper;
 import com.org.back.models.User;
 import com.org.back.repositories.UserRepository;
@@ -88,15 +90,10 @@ class UserControllerTest {
 
     @Test
     @WithMockUser
-    @DisplayName("Should successfully update user profile  when valid data is provided")
-    void updateProfile_should_update_user_profile() throws Exception { 
+    @DisplayName("Should return 200 when user tries to update profile with valid data")
+    void updateProfile_should_return_200_when_profile_data_is_valid_and_user_is_authenticated() throws Exception { 
         // GIVEN
         UserUpdateProfileDto updateProfileDto = new UserUpdateProfileDto("abi", "faz");
-
-        User authUser = new User();
-        authUser.setId(1L);
-        authUser.setFirstName("abi");
-        authUser.setLastName("faz");
         doNothing().when(userService).updateUserProfile(any(User.class), eq(updateProfileDto) );
 
         // WHEN
@@ -142,7 +139,66 @@ class UserControllerTest {
 
         // THEN
         response.andExpect(status().isBadRequest());
-        // Vérifiez que le service n'est jamais appelé
         verify(userService, never()).updateUserProfile(any(), any());
+    }
+
+    @Test
+    @WithAnonymousUser
+    @DisplayName("Should return 401 when user tries to update profile without authentication")
+    void updateProfile_should_return_401_when_user_not_authenticated() throws Exception {
+        // GIVEN
+        UserUpdateProfileDto updateProfileDto = new UserUpdateProfileDto("abi", "faz");
+        doNothing().when(userService).updateUserProfile((any(User.class)), eq(updateProfileDto));
+      
+        // WHEN
+        ResultActions response =  mockMvc.perform(put("/users/me/profile")
+        .contentType(MediaType.APPLICATION_JSON)
+        .with(csrf())
+        .content(objectMapper.writeValueAsString(updateProfileDto)));
+
+
+        // THEN
+        response.andExpect(status().isUnauthorized());
+        verify(userService, never()).updateUserProfile(null, updateProfileDto);
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("Should return 200 when user tries to update settings with valid data")
+    void updateSettings_should_return_200_when_settings_data_is_valid() throws Exception { 
+        // GIVEN
+        UserUpdateSettingsDto updateSettingsDto = new UserUpdateSettingsDto("test4@live.fr", "0637166248");
+        doNothing().when(userService).updateUserSettings(any(User.class), eq(updateSettingsDto));
+
+        // WHEN
+        ResultActions response = mockMvc.perform(put("/users/me/settings")
+            .contentType(MediaType.APPLICATION_JSON)
+            .with(csrf())
+            .content(objectMapper.writeValueAsString(updateSettingsDto))
+        );
+
+        // THEN
+        response.andExpect(status().isOk());
+    }
+
+
+    @Test
+    @WithMockUser
+    @DisplayName("Should return 400 when user tries to update settings with invalid data")
+    void updateSettings_should_return_400_when_invalid_data_is_provided() throws Exception {
+        // GIVEN
+        UserUpdateSettingsDto updateSettingsDto = new UserUpdateSettingsDto("", "");
+        doNothing().when(userService).updateUserSettings(any(User.class), eq(updateSettingsDto));
+
+        // WHEN
+        ResultActions response = mockMvc.perform(put("/users/me/settings")
+            .contentType(MediaType.APPLICATION_JSON)
+            .with(csrf())
+            .content(objectMapper.writeValueAsString(updateSettingsDto))
+        );
+
+        // THEN
+        response.andExpect(status().isBadRequest());
+        verify(userService, never()).updateUserSettings(any(), any());
     }
 }

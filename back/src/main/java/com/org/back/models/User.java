@@ -28,24 +28,24 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "First name cannot be blank")
     @Column(nullable = false, length = 45)
     private String firstName;
 
-    @NotBlank
+    @NotBlank(message = "Last name cannot be blank")
     @Column(nullable = false, length = 45)
     private String lastName;
 
     @Column(unique = true, nullable = false, length = 128)
-    @NotBlank
+    @NotBlank(message = "Emailcannot be blank")
     @Email(message = "Invalid email format")
     private String email;
 
     @Column(unique = true, nullable = false, length = 128)
-    @NotBlank
+    @NotBlank(message = "Password cannot be blank")
     private String password;
 
-    @NotBlank
+    @NotBlank(message = "Phone number cannot be blank")
     @Column(unique = true, nullable = false)
     @Size(min = 10, max = 12, message = "Phone number should be between 10 and 12")
     private String phoneNumber;

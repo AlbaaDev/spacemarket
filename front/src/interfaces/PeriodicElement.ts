@@ -1,6 +1,6 @@
 export interface PeriodicElement {
   name: string;
-  phone: string;
-  email: string;
-  tags: string;
+  position: number;
+  weight: number;
+  symbol: string;
 }
