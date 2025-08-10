@@ -40,3 +40,4 @@ build/
 front/node_modules/
 front/.angular/
 .env
+application.properties

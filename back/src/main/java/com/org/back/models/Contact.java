@@ -48,9 +48,17 @@ public class Contact {
     @Email(message = "Invalid email format")
     private String email;
 
-    @NotBlank(message = "Birth day name cannot be blank")
-    @Column(nullable = false, length = 45)
+    @NotBlank(message = "Birthday name cannot be blank")
+    @Column(nullable = false, length = 12)
     private String birthDate;
+
+    @NotBlank(message = "City cannot be blank")
+    @Column(nullable = false, length = 45)
+    private String city;
+
+    @NotBlank(message = "Adress cannot be blank")
+    @Column(nullable = false, length = 45)
+    private String adress;
 
     @NotBlank(message = "Country cannot be blank")
     @Column(nullable = false, length = 45)
@@ -68,5 +76,4 @@ public class Contact {
         opportunities.remove(opportunity);
         opportunity.setContact(null);
     }
-
 }
