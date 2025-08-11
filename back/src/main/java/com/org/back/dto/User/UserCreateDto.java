@@ -9,6 +9,4 @@ public record UserCreateDto(
         @Email String email,
         @NotBlank String password,
         @NotBlank String phoneNumber
-        ) {
-
-}
+        ) {}

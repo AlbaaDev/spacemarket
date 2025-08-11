@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
@@ -15,6 +15,8 @@ import {
   MatTableDataSource
 } from '@angular/material/table';
 import { Contact, ContactKeys } from '../../interfaces/Contact';
+import { AuthService } from '../../services/auth/auth-service';
+import { ContactService } from '../../services/contact/contact.service';
 
 @Component({
   selector: 'app-contact',
@@ -39,17 +41,8 @@ import { Contact, ContactKeys } from '../../interfaces/Contact';
   styleUrl: './contact.component.css'
 })
 export class ContactComponent {
-
-  readonly dataTable: Contact[] = [
-    { firstName: 'Toto',     lastName: 'Titi', email: 'titi@live.fr', phoneNumber: '0638154689', birthDay: '24.12.1990', city: 'Paris', adress: 'ABC', country: 'France' },
-    { firstName: 'gdgdfgdg', lastName: 'Titi', email: 'titi@live.fr', phoneNumber: '0638154689', birthDay: '24.12.1990', city: 'Paris', adress: 'ABC', country: 'France' },
-    { firstName: 'gdgdfgdg', lastName: 'Titi', email: 'titi@live.fr', phoneNumber: '0638154689', birthDay: '24.12.1990', city: 'Paris', adress: 'ABC', country: 'France' },
-    { firstName: 'gdgdfgdg', lastName: 'Titi', email: 'titi@live.fr', phoneNumber: '0638154689', birthDay: '24.12.1990', city: 'Paris', adress: 'ABC', country: 'France' },
-    { firstName: 'gdgdfgdg', lastName: 'Titi', email: 'titi@live.fr', phoneNumber: '0638154689', birthDay: '24.12.1990', city: 'Paris', adress: 'ABC', country: 'France' },
-    { firstName: 'gettfgdg', lastName: 'Titi', email: 'titi@live.fr', phoneNumber: '0638154689', birthDay: '24.12.1990', city: 'Paris', adress: 'ABC', country: 'France' },
-    { firstName: 'Tetesert', lastName: 'Titi', email: 'titi@live.fr', phoneNumber: '0638154689', birthDay: '24.12.1990', city: 'Paris', adress: 'ABC', country: 'France' },
-    { firstName: 'Tetewert', lastName: 'Titi', email: 'titi@live.fr', phoneNumber: '0638154689', birthDay: '24.12.1990', city: 'Paris', adress: 'ABC', country: 'France' },
-  ];
+  private readonly contactService = inject(ContactService);
+  dataTable: Contact[] = [];
   readonly columns = {
     firstName: 'First name',
     lastName: 'Last name',
@@ -70,6 +63,7 @@ export class ContactComponent {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    console.log("contactData", this.getContact());
   }
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -85,6 +79,17 @@ export class ContactComponent {
   }
   deleteSelected() {
     this.selection.clear();
+  }
+  getContact() {
+    this.contactService.getContacts().subscribe({
+      next: (contacts) => {
+        console.log(contacts);
+        this.dataSource.data = contacts;
+      },
+      error: (error) => {
+        console.error('Error fetching contacts:', error);
+      }
+    });
   }
 }
 

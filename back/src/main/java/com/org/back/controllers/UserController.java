@@ -23,7 +23,6 @@ import com.org.back.exceptions.PasswordDoesntMatchException;
 import com.org.back.exceptions.UserAlreadyExistsException;
 import com.org.back.mapper.UserMapper;
 import com.org.back.models.User;
-import com.org.back.repositories.UserRepository;
 import com.org.back.services.UserServiceImpl;
 
 import jakarta.validation.Valid;
@@ -33,14 +32,11 @@ import jakarta.validation.Valid;
 public class UserController {
 
     private final UserServiceImpl userService;
-    private final UserRepository userRepository;
     private final UserMapper userMapper;
 
     public UserController(UserServiceImpl userService, 
-                          UserRepository userRepository,
                           UserMapper userMapper) {
         this.userService = userService;
-        this.userRepository = userRepository;
         this.userMapper = userMapper;
     }
 
@@ -80,7 +76,7 @@ public class UserController {
    @GetMapping("/me")
    public ResponseEntity<UserResponseDto> isAuth(@AuthenticationPrincipal User user) {
 
-        Optional<User> userOptional = userRepository.findByEmail(user.getEmail());
+        Optional<User> userOptional = userService.findUserByEmail(user.getEmail());
         if(userOptional.isPresent()) {
             return ResponseEntity.ok(userMapper.toUserResponseDto(userOptional.get()));
         }

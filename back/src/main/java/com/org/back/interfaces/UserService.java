@@ -3,7 +3,6 @@ package com.org.back.interfaces;
 import java.util.List;
 import java.util.Optional;
 
-
 import com.org.back.dto.User.UserCreateDto;
 import com.org.back.dto.User.UserUpdateProfileDto;
 import com.org.back.dto.User.UserUpdateSettingsDto;

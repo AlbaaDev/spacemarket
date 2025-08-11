@@ -8,7 +8,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -54,6 +53,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.PUT, "/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/logout").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/contacts/**").authenticated()
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")
@@ -63,7 +63,8 @@ public class SecurityConfiguration {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 // Allow H2 console to be accessed without authentication + Clickjacking protection
                 .headers(h -> h
-                        .frameOptions(fo -> fo.sameOrigin()));
+                        .frameOptions(fo -> fo.sameOrigin())
+                );
 
         return http.build();
     }
