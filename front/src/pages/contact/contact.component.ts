@@ -47,8 +47,8 @@ export class ContactComponent {
     firstName: 'First name',
     lastName: 'Last name',
     email: 'Email',
-    phoneNumber: 'Phone number',
-    birthDay: 'Birth day',
+    phone: 'Phone number',
+    birthDate: 'Birth date',
     city: 'City',
     adress: 'Adress',
     country: 'Country'

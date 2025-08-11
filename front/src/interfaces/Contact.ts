@@ -2,11 +2,11 @@ export interface Contact {
     firstName: string;
     lastName: string;
     email: string;
-    phoneNumber: string;
-    birthDay: string;
+    phone: string;
+    birthDate: string;
     city: string;
     adress: string;
     country: string;
 }
 
-export type ContactKeys = 'firstName' | 'lastName' | 'email' | 'phoneNumber' | 'birthDay' | 'city' | 'adress' | 'country';
+export type ContactKeys = 'firstName' | 'lastName' | 'email' | 'phone' | 'birthDate' | 'city' | 'adress' | 'country';
