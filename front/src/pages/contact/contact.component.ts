@@ -76,7 +76,6 @@ export class ContactComponent {
     const numRows = this.dataSource.data.length;
     return numSelected === numRows;
   }
-
   toggleAllRows() {
     if (this.isAllSelected()) {
       this.selection.clear();
@@ -84,10 +83,7 @@ export class ContactComponent {
     }
     this.selection.select(...this.dataSource.data);
   }
-
   deleteSelected() {
-    const selectedContacts = this.selection.selected;
-    console.log('Contacts à supprimer:', selectedContacts);
     this.selection.clear();
   }
 }

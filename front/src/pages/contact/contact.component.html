@@ -25,7 +25,7 @@
       </mat-checkbox>
     </td>
   </ng-container>
-  @for (column of dataColumns ; track column) {
+  @for (column of dataColumns; track column) {
     <ng-container [matColumnDef]="column">
       <th mat-header-cell *matHeaderCellDef> {{ columns[column] }} </th>
       <td mat-cell *matCellDef="let element"> {{ element[column] }} </td>

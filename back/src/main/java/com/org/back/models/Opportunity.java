@@ -18,8 +18,8 @@ import lombok.ToString;
 @ToString
 @Setter
 @Getter
-@Entity
 @RequiredArgsConstructor
+@Entity
 @Table(name = "Opportunity")
 public class Opportunity {
 
@@ -35,7 +35,7 @@ public class Opportunity {
     @Column(nullable = false, length = 124)
     private String businessName;
 
-    @Column(nullable = false)
+    @Column(name = "opportunity_value", nullable = false)
     private Long value;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -59,5 +59,4 @@ public class Opportunity {
     public int hashCode() {
         return getClass().hashCode();
     }
-
 }

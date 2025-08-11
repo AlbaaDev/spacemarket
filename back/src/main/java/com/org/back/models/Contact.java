@@ -22,8 +22,8 @@ import lombok.ToString;
 @ToString
 @Setter
 @Getter
-@Entity
 @RequiredArgsConstructor
+@Entity
 @Table(name = "Contact")
 public class Contact {
 
@@ -34,7 +34,7 @@ public class Contact {
 
     @NotBlank(message = "Last name cannot be blank")
     @Column(nullable = false, length = 45)
-    private String firstName;
+    private String firstName; 
 
     @NotBlank(message = "First name cannot be blank")
     @Column(nullable = false, length = 45)
