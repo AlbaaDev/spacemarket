@@ -18,6 +18,7 @@ import { PageNotFoundComponent } from '../pages/page-not-found/page-not-found.co
 import { PasswordForgottenComponent } from '../pages/password-forgotten/password-forgotten.component';
 
 export const routes: Routes = [
+  { path: '', component: HomeComponent },
   { path: 'app-home', component: HomeComponent },
   { path: 'app-login', component: LoginComponent, canActivate: [NoAuthGaurd] },
   { path: 'app-sign-up', component: SignUpComponent, canActivate: [NoAuthGaurd] },
