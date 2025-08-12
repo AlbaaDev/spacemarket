@@ -15,8 +15,8 @@ import {
   MatTableDataSource
 } from '@angular/material/table';
 import { Contact, ContactKeys } from '../../interfaces/Contact';
-import { AuthService } from '../../services/auth/auth-service';
 import { ContactService } from '../../services/contact/contact.service';
+import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 
 @Component({
   selector: 'app-contact',
@@ -58,12 +58,12 @@ export class ContactComponent {
   readonly displayedColumns = ['select', ...this.dataColumns] as const;
   readonly dataSource = new MatTableDataSource<Contact>(this.dataTable);
   readonly selection = new SelectionModel<Contact>(true, []);
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    console.log("contactData", this.getContact());
+    this.getContacts();
+
   }
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -78,12 +78,23 @@ export class ContactComponent {
     this.selection.select(...this.dataSource.data);
   }
   deleteSelected() {
-    this.selection.clear();
+    const contactObs = this.selection.selected.map(contact => this.contactService.deleteContactById(contact.id));
+    forkJoin (
+      contactObs
+    ).subscribe({
+      error: (error) => {
+        console.error('Error deleting contacts:', error);
+      },
+      complete: () => { 
+        console.log()
+        this.selection.clear();
+        this.getContacts();
+      }
+    })
   }
-  getContact() {
+  getContacts() {
     this.contactService.getContacts().subscribe({
       next: (contacts) => {
-        console.log(contacts);
         this.dataSource.data = contacts;
       },
       error: (error) => {

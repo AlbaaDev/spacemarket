@@ -3,7 +3,9 @@ package com.org.back.controllers;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,5 +24,10 @@ public class ContactController {
     @GetMapping("/")
     public ResponseEntity<List<Contact>> getAllContacts() {
         return ResponseEntity.ok(contactService.getAllContacts());
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteContact(@PathVariable Long id) {
+        contactService.deleteContactById(id);
     }
 }

@@ -54,6 +54,8 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.DELETE, "/h2-console/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/logout").authenticated()
                         .requestMatchers(HttpMethod.GET, "/contacts/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/contacts/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/contacts/**").authenticated()
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")

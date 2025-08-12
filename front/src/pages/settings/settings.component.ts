@@ -24,7 +24,7 @@ export class SettingsComponent {
 
   protected readonly usernameFromHasChanged = signal<boolean>(false);
   protected readonly passwordFormHasChanged = signal<boolean>(false);
-  errorMessage : string | null = null;
+  errorMessage: string | null = null;
 
   userNameForm: FormGroup = this.formBuilder.group({
     email: ['', [Validators.email, Validators.required]],
@@ -42,7 +42,7 @@ export class SettingsComponent {
   }
 
   get phoneNumber() {
-        return this.userNameForm.get('phoneNumber');
+    return this.userNameForm.get('phoneNumber');
   }
 
   get currentPassword() {
@@ -57,7 +57,7 @@ export class SettingsComponent {
     return this.passwordForm.get('confirmPassword');
   }
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
     const currentUser = this.authService.currentUser();
