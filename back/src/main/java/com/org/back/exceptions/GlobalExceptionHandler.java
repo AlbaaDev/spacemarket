@@ -20,6 +20,12 @@ public class GlobalExceptionHandler {
         return new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage(), LocalDateTime.now().toString());
     }
 
+    @ExceptionHandler(ContactAlreadyExistException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    public ErrorResponse handleContactAlreadyExist(ConnectException ex) {
+        return new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage(), LocalDateTime.now().toString());
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public ErrorResponse handleBadCredentials(BadCredentialsException ex) {
@@ -56,11 +62,11 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(
-            error -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
+                error -> {
+                    String fieldName = ((FieldError) error).getField();
+                    String errorMessage = error.getDefaultMessage();
+                    errors.put(fieldName, errorMessage);
+                });
         return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), errors.toString(), LocalDateTime.now().toString());
     }
 }

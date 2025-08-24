@@ -1,21 +1,12 @@
-// export type ColumnName =
-//     'firstName'
-//     | 'lastName'
-//     | 'email'
-//     | 'phoneNumber'
-//     | 'birthDay'
-//     | 'city'
-//     | 'adress'
-//     | 'country'
 export class ContactComponent {
   readonly columns = {
-    firstName: 'Prénom',
-    lastName: 'Nom',
+    firstName: 'First name',
+    lastName: 'Last name',
     email: 'Email',
-    phoneNumber: 'Téléphone',
-    birthDay: 'Date de naissance',
-    city: 'Ville',
-    adress: 'Adresse',
-    country: 'Pays'
+    phone: 'Phone number',
+    birthDate: 'Birth date',
+    city: 'City',
+    adress: 'Adress',
+    country: 'Country'
   } as const;
 }

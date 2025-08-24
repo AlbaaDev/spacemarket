@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.org.back.exceptions.ContactAlreadyExistException;
 import com.org.back.exceptions.EntityNotFoundException;
 import com.org.back.interfaces.ContactService;
 import com.org.back.models.Contact;
@@ -27,7 +28,13 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public Contact addContact(Contact contact) {
+    public Contact addContact(Contact contact) throws ContactAlreadyExistException {
+        if (contactRepository.findByEmail(contact.getEmail()).isPresent()) {
+            throw new ContactAlreadyExistException("Contact email is already in use. Please use a different email adress.");
+        }
+        if (contactRepository.findByPhone(contact.getPhone()).isPresent()) {
+            throw new ContactAlreadyExistException("Contact phone number is already in use. Please use a different phone number.");
+        }
         return contactRepository.save(contact);
     }
 

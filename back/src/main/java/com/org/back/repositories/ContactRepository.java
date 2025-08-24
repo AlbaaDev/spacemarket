@@ -10,4 +10,5 @@ import com.org.back.models.Contact;
 @Repository
 public interface ContactRepository extends JpaRepository<Contact, Long> {
     Optional<Contact> findByEmail(String email);
+    Optional<Contact> findByPhone(String phone);
 }

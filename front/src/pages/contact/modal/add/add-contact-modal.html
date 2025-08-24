@@ -1,0 +1,106 @@
+<h2 mat-dialog-title>Add contact</h2>
+<form [formGroup]="contactAddForm" (ngSubmit)="onSubmitContactForm()">
+  <mat-dialog-content class="mat-typography">
+    <mat-form-field appearance="fill">
+      <mat-label>First Name</mat-label>
+      <input id="firstName" type="text" formControlName="firstName" matInput fiedmatInput placeholder="Placeholder">
+      <mat-icon matSuffix></mat-icon>
+      @if(firstName?.hasError('required') && firstName?.invalid && (firstName?.dirty || firstName?.touched)) {
+      <mat-error>
+        First Name is required
+      </mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Last Name</mat-label>
+      <input id="lastName" type="text" formControlName="lastName" matInput placeholder="Placeholder">
+      <mat-icon matSuffix></mat-icon>
+      @if(lastName?.hasError('required') && lastName?.invalid && (lastName?.dirty || lastName?.touched)) {
+      <mat-error>
+        Last name is required
+      </mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input id="email" type="email" formControlName="email" matInput placeholder="Placeholder">
+      <mat-icon matSuffix></mat-icon>
+      @if(email?.hasError('required') && email?.invalid && (email?.dirty || email?.touched)) {
+      <mat-error>
+        Email is required
+      </mat-error>
+      }
+      @if(email?.hasError('email') && email?.invalid && (email?.dirty || email?.touched)) {
+      <mat-error>
+        Email is not valid
+      </mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Phone</mat-label>
+      <input id="phone" type="text" formControlName="phone" matInput placeholder="Placeholder">
+      <mat-icon matSuffix></mat-icon>
+      @if(phone?.hasError('required') && phone?.invalid && (phone?.dirty || phone?.touched)) {
+      <mat-error>
+        Phone is required
+      </mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Choose a date</mat-label>
+      <input formControlName="birthDate" [max]="maxDate" id="birthDate" matInput #pickerInput [matDatepicker]="picker">
+      <mat-hint>MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      @if(birthDate?.hasError('required') && birthDate?.invalid && (birthDate?.dirty || birthDate?.touched)) {
+      <mat-error>
+        Birth date is required
+      </mat-error>
+      }
+      @if(birthDate?.hasError('wrongFormat')) {
+      <mat-error>
+        Date should be in format MM/DD/YYYY
+      </mat-error>
+      }
+      @if(birthDate?.hasError('maxDate')) {
+      <mat-error>
+        Date cannot be greater than the current date.
+      </mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>City</mat-label>
+      <input id="city" type="text" formControlName="city" matInput placeholder="Placeholder">
+      <mat-icon matSuffix></mat-icon>
+      @if(city?.hasError('required') && city?.invalid && (city?.dirty || city?.touched)) {
+      <mat-error>
+        City is required
+      </mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Adress</mat-label>
+      <input id="adress" type="text" formControlName="adress" matInput placeholder="Placeholder">
+      <mat-icon matSuffix></mat-icon>
+      @if(adress?.hasError('required') && adress?.invalid && (adress?.dirty || adress?.touched)) {
+      <mat-error>
+        Adress is required
+      </mat-error>
+      }
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Country</mat-label>
+      <input id="country" type="text" formControlName="country" matInput placeholder="Placeholder">
+      <mat-icon matSuffix></mat-icon>
+      @if(country?.hasError('required') && country?.invalid && (country?.dirty || country?.touched)) {
+      <mat-error>
+        Country is required
+      </mat-error>
+      }
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button matButton mat-dialog-close>Cancel</button>
+    <button matButton type="submit" [mat-dialog-close]="true" [disabled]="this.contactAddForm.invalid">Confirm</button>
+  </mat-dialog-actions>
+</form>

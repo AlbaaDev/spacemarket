@@ -1,104 +1,115 @@
-
-
 <div class="container text-center">
     <div class="row">
-      <div class="col">
-        <form [formGroup]="userNameForm" (ngSubmit)="onSubmitUserName()" class="mt-5 example-full-width">
-            <div class="d-flex flex-column gap-3">
-                <mat-form-field>
-                    <mat-label for="email">Email :</mat-label>
-                    <input matInput id="email" type="email" formControlName="email" required />
-                    @if(email?.hasError('required') && email?.invalid && (email?.dirty || email?.touched)) {
+        <div class="col">
+            <form [formGroup]="userNameForm" (ngSubmit)="onSubmitUserName()" class="mt-5 example-full-width">
+                <div class="d-flex flex-column gap-3">
+                    <mat-form-field>
+                        <mat-label for="email">Email :</mat-label>
+                        <input matInput id="email" type="email" formControlName="email" required />
+                        @if(email?.hasError('required') && email?.invalid && (email?.dirty || email?.touched)) {
                         <mat-error>
                             Email is required
                         </mat-error>
-                    } 
-                    @if(email?.hasError('email') && email?.invalid && (email?.dirty || email?.touched)) {
+                        }
+                        @if(email?.hasError('email') && email?.invalid && (email?.dirty || email?.touched)) {
                         <mat-error>
                             Email is not valid
                         </mat-error>
-                    }
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label for="phoneNumber">Phone Number :</mat-label>
-                    <input matInput id="phoneNumber" type="phoneNumber" formControlName="phoneNumber" required />
-                    @if(phoneNumber?.hasError('required') && phoneNumber?.invalid && (phoneNumber?.dirty || phoneNumber?.touched)) {
-                    <mat-error>
-                        Phone number is required
-                    </mat-error>
-                    }
-                    @if(phoneNumber?.hasError('phoneNumber') && phoneNumber?.invalid && (phoneNumber?.dirty || phoneNumber?.touched)) {
-                    <mat-error>
-                        Phone number is not valid
-                    </mat-error>
-                    }
-                </mat-form-field>
-            </div>
-            <button mat-raised-button type="submit" color="primary" [disabled]="userNameForm.invalid || !usernameFromHasChanged()">Confirm</button>
-        </form>
-      </div>
-      <div class="col">
-        <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()" class="mt-5 example-full-width">
-            <div class="d-flex flex-column gap-3">
-                <mat-form-field>
-                    <mat-label for="password">Current password</mat-label>    
-                    <input type="password" id="currentPassword" name="currentPassword" formControlName="currentPassword" matInput autocomplete="off"/>
-                    @if (currentPassword?.hasError('required') && currentPassword?.invalid && (currentPassword?.dirty || currentPassword?.touched)) { 
+                        }
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label for="phoneNumber">Phone Number :</mat-label>
+                        <input matInput id="phoneNumber" type="phoneNumber" formControlName="phoneNumber" required />
+                        @if(phoneNumber?.hasError('required') && phoneNumber?.invalid && (phoneNumber?.dirty ||
+                        phoneNumber?.touched)) {
                         <mat-error>
-                            Password is required
-                        </mat-error> 
-                    }   
-                    @if(currentPassword?.hasError('minlength') && currentPassword?.invalid && (currentPassword?.dirty || currentPassword?.touched)) {
-                        <mat-error>
-                            Password must be at least 8 characters long
+                            Phone number is required
                         </mat-error>
-                    }
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label for="newPassword">New password</mat-label>    
-                    <input type="password" id="newPassword" name="newPassword" formControlName="newPassword" matInput autocomplete="off"/>
-                    @if (newPassword?.hasError('required') && newPassword?.invalid && (newPassword?.dirty || newPassword?.touched)) { 
+                        }
+                        @if(phoneNumber?.hasError('phoneNumber') && phoneNumber?.invalid && (phoneNumber?.dirty ||
+                        phoneNumber?.touched)) {
                         <mat-error>
-                            Password is required
-                        </mat-error> 
-                    }   
-                    @if(newPassword?.hasError('minlength') && newPassword?.invalid && (newPassword?.dirty || newPassword?.touched)) {
-                        <mat-error>
-                            Password must be at least 8 characters long
+                            Phone number is not valid
                         </mat-error>
-                    }
-                    @if(confirmPassword?.hasError('mustMatch') && !(confirmPassword?.hasError('minlength'))) {
-                        <mat-error>
-                            Passwords do not match
-                        </mat-error>
-                    }
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label for="confirmPassword">Confirm new password</mat-label>    
-                    <input type="password" id="confirmPassword" name="confirmPassword" formControlName="confirmPassword" matInput autocomplete="off"/>
-                     @if (confirmPassword?.hasError('required') && (confirmPassword?.dirty || confirmPassword?.touched)) { 
-                        <mat-error>
-                            Password is required
-                        </mat-error> 
-                    }    
-                    @if(confirmPassword?.hasError('minlength') && confirmPassword?.invalid && (confirmPassword?.dirty || confirmPassword?.touched)) {
-                        <mat-error>
-                            Password must be at least 8 characters long
-                        </mat-error>
-                    }
-                    @if(confirmPassword?.hasError('mustMatch') && !(confirmPassword?.hasError('minlength'))) {
-                        <mat-error>
-                            Passwords do not match
-                        </mat-error>
-                    }
-                </mat-form-field>
-            </div>
-            <button mat-raised-button type="submit" color="primary" [disabled]="passwordForm.invalid || !passwordFormHasChanged()">Confirm</button>
-            
-            @if (errorMessage !== null) {
+                        }
+                    </mat-form-field>
+                </div>
+                <button mat-raised-button type="submit" color="primary"
+                    [disabled]="userNameForm.invalid || !usernameFromHasChanged()">Confirm</button>
+            </form>
+        </div>
+        <div class="col">
+            <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()" class="mt-5 example-full-width">
+                <div class="d-flex flex-column gap-3">
+                    <mat-form-field>
+                        <mat-label for="password">Current password</mat-label>
+                        <input type="password" id="currentPassword" name="currentPassword"
+                            formControlName="currentPassword" matInput autocomplete="off" />
+                        @if (currentPassword?.hasError('required') && currentPassword?.invalid &&
+                        (currentPassword?.dirty || currentPassword?.touched)) {
+                            <mat-error>
+                                Password is required
+                            </mat-error>
+                        }
+                        @if(currentPassword?.hasError('minlength') && currentPassword?.invalid &&
+                        (currentPassword?.dirty || currentPassword?.touched)) {
+                            <mat-error>
+                                Password must be at least 8 characters long
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label for="newPassword">New password</mat-label>
+                        <input type="password" id="newPassword" name="newPassword" formControlName="newPassword"
+                            matInput autocomplete="off" />
+                        @if (newPassword?.hasError('required') && newPassword?.invalid && (newPassword?.dirty ||
+                        newPassword?.touched)) {
+                            <mat-error>
+                                Password is required
+                            </mat-error>
+                        }
+                        @if(newPassword?.hasError('minlength') && newPassword?.invalid && (newPassword?.dirty ||
+                        newPassword?.touched)) {
+                            <mat-error>
+                                Password must be at least 8 characters long
+                            </mat-error>
+                        }
+                        @if(confirmPassword?.hasError('mustMatch') && !(confirmPassword?.hasError('minlength'))) {
+                            <mat-error>
+                                Passwords do not match
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                    <mat-form-field>
+                        <mat-label for="confirmPassword">Confirm new password</mat-label>
+                        <input type="password" id="confirmPassword" name="confirmPassword"
+                            formControlName="confirmPassword" matInput autocomplete="off" />
+                        @if (confirmPassword?.hasError('required') && (confirmPassword?.dirty ||
+                        confirmPassword?.touched)) {
+                            <mat-error>
+                                Password is required
+                            </mat-error>
+                        }
+                        @if(confirmPassword?.hasError('minlength') && confirmPassword?.invalid &&
+                        (confirmPassword?.dirty || confirmPassword?.touched)) {
+                            <mat-error>
+                                Password must be at least 8 characters long
+                            </mat-error>
+                            }
+                        @if(confirmPassword?.hasError('mustMatch') && !(confirmPassword?.hasError('minlength'))) {
+                            <mat-error>
+                                Passwords do not match
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+                <button mat-raised-button type="submit" color="primary"
+                    [disabled]="passwordForm.invalid || !passwordFormHasChanged()">Confirm</button>
+
+                @if (errorMessage !== null) {
                 <mat-error class="mt-4">{{errorMessage}}</mat-error>
-            } 
-        </form>
-      </div>
+                }
+            </form>
+        </div>
     </div>
 </div>

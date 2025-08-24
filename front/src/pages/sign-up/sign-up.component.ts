@@ -4,7 +4,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
-import { throwError } from 'rxjs';
 import { AuthService } from '../../services/auth/auth-service';
 
 @Component({
@@ -14,9 +13,9 @@ import { AuthService } from '../../services/auth/auth-service';
   styleUrl: './sign-up.component.css'
 })
 export class SignUpComponent {
-    private formBuilder = inject(FormBuilder);
-    private authService = inject(AuthService);
-    private router = inject(Router);
+    private readonly formBuilder = inject(FormBuilder);
+    private readonly authService = inject(AuthService);
+    private readonly router = inject(Router);
     signUpForm : FormGroup;
 
     errorMessage: string | null = null;

@@ -20,12 +20,11 @@ export class SettingsComponent {
   protected readonly userService = inject(UserService);
   protected readonly authService = inject(AuthService);
   protected readonly formBuilder = inject(FormBuilder);
-  protected readonly router = inject(Router);
+  protected readonly router      = inject(Router);
 
   protected readonly usernameFromHasChanged = signal<boolean>(false);
   protected readonly passwordFormHasChanged = signal<boolean>(false);
   errorMessage: string | null = null;
-
   userNameForm: FormGroup = this.formBuilder.group({
     email: ['', [Validators.email, Validators.required]],
     phoneNumber: ['', [Validators.required]],
