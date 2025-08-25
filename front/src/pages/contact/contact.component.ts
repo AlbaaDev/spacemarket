@@ -66,7 +66,6 @@ export class ContactComponent {
   readonly dataColumns = Object.keys(this.columns) as ContactKeys[];
   readonly displayedColumns = ['select', ...this.dataColumns] as const;
   readonly dataSource = new MatTableDataSource<Contact>(this.contacts());
-  readonly dataSourceComput = computed(() => this.dataSource);
   readonly selection = new SelectionModel<Contact>(true, []);
 
   private readonly _currentYear = new Date().getFullYear();
@@ -77,7 +76,7 @@ export class ContactComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    this.getContacts();
+    this.dataSource.data = this.contacts();
   }
 
   constructor() {
@@ -111,7 +110,7 @@ export class ContactComponent {
       },
       complete: () => {
         this.selection.clear();
-        this.getContacts();
+         this.dataSource.data = this.contactService.contacts();
       }
     })
   }
