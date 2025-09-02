@@ -19,10 +19,6 @@ import { dateValidator } from "../../../../validators/DateValidator";
 export class AddContactModal {
   private readonly contactService = inject(ContactService);
   private readonly formBuilder = inject(FormBuilder);
-  private readonly _currentYear = new Date().getFullYear();
-  private readonly _currentMonth = new Date().getMonth();
-  private readonly _currentDay = new Date().getDay();
-  
   readonly maxDate = new Date();
 
   contactAddForm: FormGroup = this.formBuilder.group({

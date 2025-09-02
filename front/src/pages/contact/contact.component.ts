@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, computed, effect, inject, ViewChild } from '@angular/core';
+import { Component, effect, inject, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -21,6 +21,7 @@ import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { Contact, ContactKeys } from '../../interfaces/Contact';
 import { ContactService } from '../../services/contact/contact.service';
 import { AddContactModal } from './modal/add/add-modal-component';
+import { DeleteContacModal } from './modal/delete/delete-contact-modal';
 
 @Component({
   selector: 'app-contact',
@@ -52,6 +53,8 @@ export class ContactComponent {
   readonly dialog = inject(MatDialog);
 
   contacts = this.contactService.contacts;
+  canDeleteContacts = this.contactService.canDeleteContacts;
+
   readonly columns = {
     firstName: 'First name',
     lastName: 'Last name',
@@ -76,15 +79,15 @@ export class ContactComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    this.dataSource.data = this.contacts();
   }
-
   constructor() {
     effect(() => {
       this.dataSource.data = this.contacts();
+      if (this.canDeleteContacts()) {
+        this.confirmDeleteContact();
+      }
     });
   }
-
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
@@ -97,20 +100,30 @@ export class ContactComponent {
     }
     this.selection.select(...this.dataSource.data);
   }
-  openDialog() {
+  openAddDialog() {
     this.dialog.open(AddContactModal);
   }
-  deleteSelected() {
+  openDeleteDialog() {
+    if (this.selection.selected) {
+      this.dialog.open(DeleteContacModal);
+    }
+  }
+  openEditDialog() {
+    if (this.selection.selected) {
+      this.dialog.open(DeleteContacModal);
+    }
+  }
+  confirmDeleteContact() {
     const contactObs = this.selection.selected.map(contact => this.contactService.deleteContactById(contact.id));
     forkJoin(
       contactObs
     ).subscribe({
       error: (error) => {
-        console.error('Error deleting contactss: ', error);
+        console.error('Error deleting contacts: ', error);
       },
       complete: () => {
         this.selection.clear();
-         this.dataSource.data = this.contactService.contacts();
+        this.dataSource.data = this.contactService.contacts();
       }
     })
   }

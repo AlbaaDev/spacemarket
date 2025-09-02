@@ -11,6 +11,7 @@ export class ContactService {
   private readonly http = inject(HttpClient);
   private readonly _contacts = signal<Contact[]>([]);
   readonly contacts = this._contacts.asReadonly();
+  canDeleteContacts = signal<boolean>(false);
 
   constructor() {
     this.fetchContacts();
@@ -29,7 +30,12 @@ export class ContactService {
   }
 
   deleteContactById(id: number) {
-    return this.http.delete<void>(`http://localhost:8080/contacts/${id}`, { withCredentials: true });
+    return this.http.delete<void>(`http://localhost:8080/contacts/${id}`, { withCredentials: true }).pipe(
+      tap(() => {
+        this._contacts.update(contacts => contacts.filter((contact) => contact.id !== id));
+        this.canDeleteContacts.set(false);
+      })
+    );
   }
 
   private fetchContacts(): void {
@@ -42,6 +48,4 @@ export class ContactService {
       }
     });
   }
-
-
 }
