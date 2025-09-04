@@ -23,7 +23,7 @@ export class ProfileComponent {
   private   readonly _snackBar   = inject(MatSnackBar);
   protected readonly formHasChanged = signal<boolean>(false);
 
-  profileForm: FormGroup = this.formBuilder.group({
+  protected readonly profileForm: FormGroup = this.formBuilder.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required]
   });

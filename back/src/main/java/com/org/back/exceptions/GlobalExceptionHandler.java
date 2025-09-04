@@ -16,13 +16,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    public ErrorResponse handleUserAlreadyExists(UserAlreadyExistsException ex) {
+    public ErrorResponse handleUserAlreadyExist(UserAlreadyExistsException ex) {
         return new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage(), LocalDateTime.now().toString());
     }
 
     @ExceptionHandler(ContactAlreadyExistException.class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    public ErrorResponse handleContactAlreadyExist(ConnectException ex) {
+    public ErrorResponse handleContactAlreadyExist(ContactAlreadyExistException ex) {
         return new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage(), LocalDateTime.now().toString());
     }
 

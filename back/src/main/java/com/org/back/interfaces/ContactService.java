@@ -11,6 +11,6 @@ public interface ContactService {
     List<Contact> getAllContacts();
     Contact addContact(Contact contact) throws ContactAlreadyExistException;
     Optional<Contact> getContactById(Long id);
-    void updateContact(Long id, Contact contact) throws EntityNotFoundException;
+    void updateContact(Contact contact) throws EntityNotFoundException;
     void deleteContactById(Long id);
 }

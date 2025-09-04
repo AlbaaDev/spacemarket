@@ -25,12 +25,12 @@ export class SettingsComponent {
   protected readonly usernameFromHasChanged = signal<boolean>(false);
   protected readonly passwordFormHasChanged = signal<boolean>(false);
   errorMessage: string | null = null;
-  userNameForm: FormGroup = this.formBuilder.group({
+  protected readonly userNameForm: FormGroup = this.formBuilder.group({
     email: ['', [Validators.email, Validators.required]],
     phoneNumber: ['', [Validators.required]],
   });
 
-  passwordForm: FormGroup = this.formBuilder.group({
+  protected readonly passwordForm: FormGroup = this.formBuilder.group({
     currentPassword: ['', [Validators.required, Validators.minLength(8)]],
     newPassword: ['', [Validators.required, Validators.minLength(8)]],
     confirmPassword: ['', [Validators.required, Validators.minLength(8)]],

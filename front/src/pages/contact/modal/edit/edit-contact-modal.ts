@@ -22,7 +22,7 @@ export class EditContactModal {
     private readonly selectedContact = inject(MAT_DIALOG_DATA);
     readonly maxDate = new Date();
 
-    protected readonly editContactForm: FormGroup = this.formBuilder.group({
+    readonly editContactForm: FormGroup = this.formBuilder.group({
         firstName: [this.selectedContact.firstName, [Validators.required]],
         lastName: [this.selectedContact.lastName, [Validators.required]],
         email: [this.selectedContact.email, [Validators.email, Validators.required]],
@@ -30,7 +30,8 @@ export class EditContactModal {
         birthDate: [this.selectedContact.birthDate, [Validators.required, dateValidator]],
         city: [this.selectedContact.city, Validators.required],
         adress: [this.selectedContact.adress, Validators.required],
-        country: [this.selectedContact.country, Validators.required]
+        country: [this.selectedContact.country, Validators.required],
+        id: [this.selectedContact.id]
     });
 
     get email() {
@@ -69,6 +70,11 @@ export class EditContactModal {
     }
 
     confirmEditContact() {
-
+        this.contactService.editContact(this.editContactForm).subscribe({
+            next: () => console.log('ok'),
+            error: (error) => {
+                throw new Error("Error while adding contact: ", error)
+            }
+        });
     }
 }   

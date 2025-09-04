@@ -18,9 +18,20 @@ export class ContactService {
   }
 
   addContact(contactToAdd: FormGroup) {
-    return this.http.post<Contact>("http://localhost:8080/contacts/add", contactToAdd, { withCredentials: true }).pipe(
+    return this.http.post<Contact>("http://localhost:8080/contacts/", contactToAdd, { withCredentials: true }).pipe(
       tap(newContact => {
         this._contacts.update(contacts => [...contacts, newContact]);
+      })
+    );
+  }
+
+  editContact(contactToEdit: FormGroup) {
+    return this.http.put<Contact>("http://localhost:8080/contacts/", contactToEdit.value, {withCredentials : true}).pipe(
+      tap(() => {
+        let contactIndex = this._contacts().findIndex(contact => contact.id == contactToEdit.value.id);
+        let updatedContacts = this._contacts()[contactIndex] = contactToEdit.value;
+        let filteredContacts = this._contacts().filter((contact) => contact.id !== contactToEdit.value.id);
+        this._contacts.update(contacts => [...filteredContacts, updatedContacts]);
       })
     );
   }

@@ -21,7 +21,7 @@ export class AddContactModal {
   private readonly formBuilder = inject(FormBuilder);
   readonly maxDate = new Date();
 
-  contactAddForm: FormGroup = this.formBuilder.group({
+  protected readonly contactAddForm: FormGroup = this.formBuilder.group({
     firstName: ['', [Validators.required]],
     lastName: ['', [Validators.required]],
     email: ['', [Validators.email, Validators.required]],
@@ -68,9 +68,7 @@ export class AddContactModal {
     this.contactService.addContact(this.contactAddForm.value).subscribe({
       next: (contact) => {
       },
-      error: (error) => {
-        console.error('Error while adding contact', error);
-      }
+    
     });
   }
 }

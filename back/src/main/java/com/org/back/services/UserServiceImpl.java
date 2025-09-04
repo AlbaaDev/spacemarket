@@ -103,6 +103,4 @@ public class UserServiceImpl implements UserService {
         Optional<User> optionalUser = userRepository.findById(id);
         optionalUser.ifPresent(userRepository::delete);
     }
-
-   
 }

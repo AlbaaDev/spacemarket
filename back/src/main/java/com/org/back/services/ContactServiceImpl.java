@@ -30,10 +30,12 @@ public class ContactServiceImpl implements ContactService {
     @Override
     public Contact addContact(Contact contact) throws ContactAlreadyExistException {
         if (contactRepository.findByEmail(contact.getEmail()).isPresent()) {
-            throw new ContactAlreadyExistException("Contact email is already in use. Please use a different email adress.");
+            throw new ContactAlreadyExistException(
+                    "Contact email is already in use. Please use a different email adress.");
         }
         if (contactRepository.findByPhone(contact.getPhone()).isPresent()) {
-            throw new ContactAlreadyExistException("Contact phone number is already in use. Please use a different phone number.");
+            throw new ContactAlreadyExistException(
+                    "Contact phone number is already in use. Please use a different phone number.");
         }
         return contactRepository.save(contact);
     }
@@ -44,13 +46,24 @@ public class ContactServiceImpl implements ContactService {
         return contactRepository.findById(id);
     }
 
+    @Transactional()
     @Override
-    public void updateContact(Long id, Contact contact) throws EntityNotFoundException {
-        if (!contactRepository.existsById(id)) {
-            throw new EntityNotFoundException("Contact not found with id: " + id);
+    public void updateContact(Contact contact) throws EntityNotFoundException {
+        Contact editedcontact = contactRepository.findById(contact.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Contact not found with id: " + contact.getId()));
+        editedcontact.setFirstName(contact.getFirstName());
+        editedcontact.setLastName(contact.getLastName());
+        editedcontact.setAdress(contact.getAdress());
+        editedcontact.setCity(contact.getCity());
+        editedcontact.setBirthDate(contact.getBirthDate());
+        editedcontact.setCountry(contact.getCountry());
+        editedcontact.setEmail(contact.getEmail());
+        editedcontact.setPhone(contact.getPhone());
+        if (contact.getOpportunities() != null && !(contact.getOpportunities().isEmpty())) {
+            editedcontact.getOpportunities().addAll(contact.getOpportunities());
         }
-        contact.setId(id);
-        contactRepository.save(contact);
+    
+        contactRepository.save(editedcontact);
     }
 
     @Override
