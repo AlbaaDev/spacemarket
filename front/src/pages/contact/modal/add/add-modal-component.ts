@@ -73,17 +73,4 @@ export class AddContactModal {
       }
     });
   }
-
-  getErrorMessage(val: string): string {
-    const regexPattern = /^(0?[1-9]|1[0-2])\/(0?[1-9]|[12][0-9]|3[01])\/\d{4}$/;
-    const value = val.replace(/\s+/g, '');
-    const isValid = regexPattern.test(value);
-    const date = new Date(value);
-    if (!isValid && val !== '') {
-      return 'Date of Birth must in the format MM/DD/YYYY';
-    } else if (date < this.maxDate) {
-      return 'Date must be before the current date';
-    }
-    return '';
-  }
 }

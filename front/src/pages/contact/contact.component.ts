@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, effect, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, inject, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -22,6 +22,7 @@ import { Contact, ContactKeys } from '../../interfaces/Contact';
 import { ContactService } from '../../services/contact/contact.service';
 import { AddContactModal } from './modal/add/add-modal-component';
 import { DeleteContacModal } from './modal/delete/delete-contact-modal';
+import { EditContactModal } from './modal/edit/edit-contact-modal';
 
 @Component({
   selector: 'app-contact',
@@ -46,7 +47,7 @@ import { DeleteContacModal } from './modal/delete/delete-contact-modal';
   templateUrl: './contact.component.html',
   styleUrl: './contact.component.css'
 })
-export class ContactComponent {
+export class ContactComponent implements AfterViewInit {
   private readonly formBuilder = inject(FormBuilder)
   private readonly contactService = inject(ContactService);
   private readonly _snackBar = inject(MatSnackBar);
@@ -110,7 +111,7 @@ export class ContactComponent {
   }
   openEditDialog() {
     if (this.selection.selected) {
-      this.dialog.open(DeleteContacModal);
+      this.dialog.open(EditContactModal, { data: this.selection.selected[0] });
     }
   }
   confirmDeleteContact() {
