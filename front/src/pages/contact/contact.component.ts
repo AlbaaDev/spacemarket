@@ -73,7 +73,7 @@ export class ContactComponent {
 
   private readonly _currentYear = new Date().getFullYear();
   private readonly _currentMonth = new Date().getMonth();
-  private readonly _currentDay = new Date().getDay();
+  private readonly _currentDay = new Date().getDate();
   private readonly maxDate = new Date(this._currentYear, this._currentMonth, this._currentDay);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

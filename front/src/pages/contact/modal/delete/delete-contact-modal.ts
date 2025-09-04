@@ -18,7 +18,7 @@ import { ContactService } from "../../../../services/contact/contact.service";
 export class DeleteContacModal {
     private readonly contactService = inject(ContactService);
     private readonly formBuilder = inject(FormBuilder);
-
+    
     constructor() {}
 
     confirmDeleteContact() {

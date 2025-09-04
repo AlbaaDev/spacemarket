@@ -18,7 +18,7 @@ export function dateValidator(control: AbstractControl): { [key: string]: boolea
     if (!isValid) {
         return { wrongFormat: true };
     } else if (dateInput > currentDate) {
-        return { maxDAte: true }
+        return { maxDate: true }
     }
     return null;
 }
