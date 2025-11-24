@@ -1,16 +1,17 @@
 package com.org.back.models;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -66,16 +67,24 @@ public class Contact {
     @Column(nullable = false, length = 45)
     private String country;
 
-    @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Opportunity> opportunities = new ArrayList<>();
+    // @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, orphanRemoval = true)
+    // private List<Opportunity> opportunities = new ArrayList<>();
 
-    public void addOpportunity(Opportunity opportunity) {
-        opportunities.add(opportunity);
-        opportunity.setContact(this);
-    }
+    // public void addOpportunity(Opportunity opportunity) {
+    //     opportunities.add(opportunity);
+    //     opportunity.setContact(this);
+    // }
 
-    public void removeOpportunity(Opportunity opportunity) {
-        opportunities.remove(opportunity);
-        opportunity.setContact(null);
-    }
+    // public void removeOpportunity(Opportunity opportunity) {
+    //     opportunities.remove(opportunity);
+    //     opportunity.setContact(null);
+    // }
+
+    @ManyToMany
+    @JoinTable(
+        name = "contact_opportunity",
+        joinColumns = @JoinColumn(name = "contact_id"),
+        inverseJoinColumns = @JoinColumn(name = "opportunity_id")
+    )
+    private Set<Opportunity> opportunities = new HashSet<>();
 }

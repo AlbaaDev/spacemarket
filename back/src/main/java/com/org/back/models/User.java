@@ -24,6 +24,7 @@ import lombok.*;
 @NoArgsConstructor
 @Table(name = "users")
 public class User implements UserDetails {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -53,6 +54,11 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+     @Override
+    public String getPassword() {
+        return password;
     }
 
     @Override

@@ -12,6 +12,7 @@ export class ContactService {
   private readonly _contacts = signal<Contact[]>([]);
   readonly contacts = this._contacts.asReadonly();
   canDeleteContacts = signal<boolean>(false);
+  canClearSelection = signal<boolean>(false);
 
   constructor() {
     this.fetchContacts();
@@ -26,12 +27,13 @@ export class ContactService {
   }
 
   editContact(contactToEdit: FormGroup) {
-    return this.http.put<Contact>("http://localhost:8080/contacts/", contactToEdit.value, {withCredentials : true}).pipe(
+    return this.http.put<Contact>("http://localhost:8080/contacts/", contactToEdit.value, { withCredentials: true }).pipe(
       tap(() => {
         let contactIndex = this._contacts().findIndex(contact => contact.id == contactToEdit.value.id);
         let updatedContacts = this._contacts()[contactIndex] = contactToEdit.value;
         let filteredContacts = this._contacts().filter((contact) => contact.id !== contactToEdit.value.id);
         this._contacts.update(contacts => [...filteredContacts, updatedContacts]);
+        this.canClearSelection.set(true);
       })
     );
   }

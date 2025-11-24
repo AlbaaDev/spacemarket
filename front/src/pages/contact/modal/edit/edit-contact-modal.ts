@@ -71,7 +71,6 @@ export class EditContactModal {
 
     confirmEditContact() {
         this.contactService.editContact(this.editContactForm).subscribe({
-            next: () => console.log('ok'),
             error: (error) => {
                 throw new Error("Error while adding contact: ", error)
             }

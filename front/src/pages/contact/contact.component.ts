@@ -55,6 +55,7 @@ export class ContactComponent implements AfterViewInit {
 
   contacts = this.contactService.contacts;
   canDeleteContacts = this.contactService.canDeleteContacts;
+  canClearSelection = this.contactService.canClearSelection;
 
   readonly columns = {
     firstName: 'First name',
@@ -86,6 +87,9 @@ export class ContactComponent implements AfterViewInit {
       this.dataSource.data = this.contacts();
       if (this.canDeleteContacts()) {
         this.confirmDeleteContact();
+      }
+      if(this.canClearSelection()) {
+        this.selection.clear();
       }
     });
   }

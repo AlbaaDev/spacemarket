@@ -40,7 +40,6 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
-
     // @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     public ResponseEntity<List<UserLoginDto>> allUsers() {
