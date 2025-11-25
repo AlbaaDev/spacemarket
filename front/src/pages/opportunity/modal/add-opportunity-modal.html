@@ -7,7 +7,7 @@
         [matAutocomplete]="auto">
       <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
         @for (contact of filteredContactOptions | async; track contact) {
-          <mat-option [value]="contact.firstName">{{contact.firstName}} {{contact.lastName}}</mat-option>
+          <mat-option [value]="contact.firstName"  (onSelectionChange)="_contactIsSelected($event)">{{contact.firstName}} {{contact.lastName}}</mat-option>
         }
       </mat-autocomplete>
     </mat-form-field>

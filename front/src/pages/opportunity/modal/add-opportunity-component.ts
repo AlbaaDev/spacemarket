@@ -37,29 +37,35 @@ export class AddOpportunityModal implements OnInit {
   });
   protected contactOptions: Contact[];
   protected filteredContactOptions: Observable<Contact[]> | null | undefined;
+  protected contactIsSelected: boolean = false;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {contacts: Contact[]}) { 
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { contacts: Contact[] }) {
     this.contactOptions = data.contacts;
   }
   ngOnInit() {
     this.filteredContactOptions = this.contact?.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value || '')),
+      map(value => this._filter(value)),
     );
     this.filteredContactOptions?.subscribe(
       {
         next: (filteredContact) => {
-          this.opportunityAddForm.patchValue(
-            {
-              firstName: filteredContact[0].firstName,
-              lastName: filteredContact[0].lastName,
-              email: filteredContact[0].email,
-              contact: filteredContact[0].firstName + " " + filteredContact[0].lastName
-            }
-          );
+          if (this.contactIsSelected) {
+            this.opportunityAddForm.patchValue(
+              {
+                firstName: filteredContact[0].firstName,
+                lastName: filteredContact[0].lastName,
+                email: filteredContact[0].email,
+                phone: filteredContact[0].phone,
+              }
+            );
+          }
         }
       }
     );
+  }
+
+  protected _contactIsSelected(evt: any) {
+    this.contactIsSelected = true;
   }
 
   private _filter(value: string): Contact[] {
