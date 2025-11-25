@@ -49,13 +49,14 @@ export class AddOpportunityModal implements OnInit {
     this.filteredContactOptions?.subscribe(
       {
         next: (filteredContact) => {
-          if (this.contactIsSelected) {
+          if (this.contactIsSelected && filteredContact.length > 0) {
             this.opportunityAddForm.patchValue(
               {
                 firstName: filteredContact[0].firstName,
                 lastName: filteredContact[0].lastName,
                 email: filteredContact[0].email,
                 phone: filteredContact[0].phone,
+                contact: filteredContact[0].firstName + " - " + filteredContact[0].lastName,
               }
             );
           }
