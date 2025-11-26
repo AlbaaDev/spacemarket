@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.org.back.dto.User.UserLoginDto;
-import com.org.back.dto.User.UserResponseDto;
-import com.org.back.dto.User.UserUpdatePasswordDto;
-import com.org.back.dto.User.UserUpdateProfileDto;
-import com.org.back.dto.User.UserUpdateSettingsDto;
+import com.org.back.dto.user.UserLoginDto;
+import com.org.back.dto.user.UserResponseDto;
+import com.org.back.dto.user.UserUpdatePasswordDto;
+import com.org.back.dto.user.UserUpdateProfileDto;
+import com.org.back.dto.user.UserUpdateSettingsDto;
 import com.org.back.exceptions.EntityNotFoundException;
 import com.org.back.exceptions.PasswordAlreadyInUseException;
 import com.org.back.exceptions.PasswordDoesntMatchException;

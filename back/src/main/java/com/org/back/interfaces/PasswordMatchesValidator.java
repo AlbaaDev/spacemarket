@@ -1,6 +1,6 @@
 package com.org.back.interfaces;
 
-import com.org.back.dto.User.UserUpdatePasswordDto;
+import com.org.back.dto.user.UserUpdatePasswordDto;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

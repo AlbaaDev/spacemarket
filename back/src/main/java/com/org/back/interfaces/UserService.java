@@ -3,9 +3,9 @@ package com.org.back.interfaces;
 import java.util.List;
 import java.util.Optional;
 
-import com.org.back.dto.User.UserCreateDto;
-import com.org.back.dto.User.UserUpdateProfileDto;
-import com.org.back.dto.User.UserUpdateSettingsDto;
+import com.org.back.dto.user.UserCreateDto;
+import com.org.back.dto.user.UserUpdateProfileDto;
+import com.org.back.dto.user.UserUpdateSettingsDto;
 import com.org.back.exceptions.EntityNotFoundException;
 import com.org.back.exceptions.UserAlreadyExistsException;
 import com.org.back.models.User;

@@ -30,8 +30,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.org.back.controllers.UserController;
-import com.org.back.dto.User.UserUpdateProfileDto;
-import com.org.back.dto.User.UserUpdateSettingsDto;
+import com.org.back.dto.user.UserUpdateProfileDto;
+import com.org.back.dto.user.UserUpdateSettingsDto;
 import com.org.back.mapper.UserMapper;
 import com.org.back.models.User;
 import com.org.back.repositories.UserRepository;

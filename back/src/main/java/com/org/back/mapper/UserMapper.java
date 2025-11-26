@@ -4,11 +4,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import com.org.back.dto.User.UserCreateDto;
-import com.org.back.dto.User.UserLoginDto;
-import com.org.back.dto.User.UserResponseDto;
-import com.org.back.dto.User.UserUpdateProfileDto;
-import com.org.back.dto.User.UserUpdateSettingsDto;
+import com.org.back.dto.user.UserCreateDto;
+import com.org.back.dto.user.UserLoginDto;
+import com.org.back.dto.user.UserResponseDto;
+import com.org.back.dto.user.UserUpdateProfileDto;
+import com.org.back.dto.user.UserUpdateSettingsDto;
 import com.org.back.models.User;
 
 @Mapper(componentModel = "spring")

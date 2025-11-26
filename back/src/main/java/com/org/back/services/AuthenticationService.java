@@ -3,7 +3,7 @@ package com.org.back.services;
 import org.springframework.stereotype.Service;
 
 import com.org.back.repositories.UserRepository;
-import com.org.back.dto.User.UserLoginDto;
+import com.org.back.dto.user.UserLoginDto;
 import com.org.back.exceptions.BadCredentialsException;
 import com.org.back.models.User;
 import org.springframework.security.authentication.AuthenticationManager;

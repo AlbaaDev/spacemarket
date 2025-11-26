@@ -16,7 +16,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.org.back.dto.User.UserCreateDto;
+import com.org.back.dto.user.UserCreateDto;
 import com.org.back.exceptions.UserAlreadyExistsException;
 import com.org.back.mapper.UserMapper;
 import com.org.back.models.User;

@@ -1,4 +1,4 @@
-package com.org.back.dto.User;
+package com.org.back.dto.user;
 
 public record UserResponseDto(
         String firstName,

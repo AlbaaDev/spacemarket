@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.org.back.dto.User.UserCreateDto;
-import com.org.back.dto.User.UserLoginDto;
-import com.org.back.dto.User.UserResponseDto;
+import com.org.back.dto.user.UserCreateDto;
+import com.org.back.dto.user.UserLoginDto;
+import com.org.back.dto.user.UserResponseDto;
 import com.org.back.exceptions.BadCredentialsException;
 import com.org.back.exceptions.UserAlreadyExistsException;
 import com.org.back.mapper.UserMapper;
