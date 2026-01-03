@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.org.back.exceptions.ContactAlreadyExistException;
+import com.org.back.exceptions.EntityNotFoundException;
 import com.org.back.models.Contact;
 import com.org.back.services.ContactServiceImpl;
 
@@ -33,12 +34,13 @@ public class ContactController {
     }
 
     @PutMapping("/")
-    public void editContact(@Valid @RequestBody Contact contact) throws com.org.back.exceptions.EntityNotFoundException {
+    public void editContact(@Valid @RequestBody Contact contact) throws EntityNotFoundException {
        contactService.updateContact(contact);
     }
 
     @GetMapping("/")
     public ResponseEntity<List<Contact>> getAllContacts() {
+         
         return ResponseEntity.ok(contactService.getAllContacts());
     }
 

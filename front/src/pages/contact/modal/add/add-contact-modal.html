@@ -45,6 +45,16 @@
         Phone is required
       </mat-error>
       }
+      @if(phone?.hasError('minlength') && phone?.invalid && (phone?.dirty || phone?.touched)) {
+      <mat-error>
+        Phone number must be at least 10 characters
+      </mat-error>
+      }
+      @if(phone?.hasError('maxlength') && phone?.invalid && (phone?.dirty || phone?.touched)) {
+      <mat-error>
+        Phone number cannot exceed 12 characters
+      </mat-error>
+      }
     </mat-form-field>
     <mat-form-field>
       <mat-label>Choose a date</mat-label>

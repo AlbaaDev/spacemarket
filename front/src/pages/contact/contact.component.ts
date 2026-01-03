@@ -8,14 +8,14 @@ import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
-  MatCell, MatCellDef,
-  MatColumnDef,
-  MatHeaderCell,
-  MatHeaderCellDef,
-  MatHeaderRow, MatHeaderRowDef,
-  MatRow, MatRowDef,
-  MatTable,
-  MatTableDataSource
+    MatCell, MatCellDef,
+    MatColumnDef,
+    MatHeaderCell,
+    MatHeaderCellDef,
+    MatHeaderRow, MatHeaderRowDef,
+    MatRow, MatRowDef,
+    MatTable,
+    MatTableDataSource
 } from '@angular/material/table';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { Contact, ContactKeys } from '../../interfaces/Contact';
@@ -83,6 +83,7 @@ export class ContactComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
   constructor() {
+    
     effect(() => {
       this.dataSource.data = this.contacts();
       if (this.canDeleteContacts()) {

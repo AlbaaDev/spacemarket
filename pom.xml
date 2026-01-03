@@ -10,6 +10,5 @@
   <modules>
     <module>back-utils</module>
     <module>back</module>
-  
   </modules>
 </project>

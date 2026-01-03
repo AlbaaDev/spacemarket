@@ -25,7 +25,7 @@ export class AddContactModal {
     firstName: ['', [Validators.required]],
     lastName: ['', [Validators.required]],
     email: ['', [Validators.email, Validators.required]],
-    phone: ['', Validators.required],
+    phone: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(12)]],
     birthDate: ['', [Validators.required, dateValidator]],
     city: ['', Validators.required],
     adress: ['', Validators.required],
