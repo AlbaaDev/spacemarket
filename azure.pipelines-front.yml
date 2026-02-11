@@ -17,7 +17,7 @@ pr:
       - front/**
 
 pool:
-  name: 'New pool'     
+  name: 'Newpool'     
 
 stages:
 - stage: Build
