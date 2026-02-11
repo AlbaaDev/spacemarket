@@ -8,7 +8,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Opportunity } from '../../interfaces/Opportunity';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCheckbox } from '@angular/material/checkbox';
 import { AddOpportunityModal } from './modal/add-opportunity-component';
 import { ContactService } from '../../services/contact/contact.service';
 
@@ -18,9 +17,8 @@ import { ContactService } from '../../services/contact/contact.service';
     MatIconModule,
     MatIcon,
     MatButtonModule,
-    MatCheckbox,
     ReactiveFormsModule
-  ],
+],
   templateUrl: './opportunity.component.html',
   styleUrl: './opportunity.component.css'
 })

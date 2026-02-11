@@ -15,7 +15,7 @@ import com.org.back.services.OpportunityServiceImpl;
 @RestController
 @RequestMapping("/opportunities")
 public class OpportunityController {
-
+  
     private final OpportunityServiceImpl opportunityServiceImpl;
 
     public OpportunityController(OpportunityServiceImpl opportunityServiceImpl) {

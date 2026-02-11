@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { User } from '../../interfaces/User';
 import { Observable, tap } from 'rxjs';
 import { AuthService } from '../auth/auth-service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class UserService {
    }
 
   updateProfile(profileData: User) : Observable<User> {
-      return this.http.put<User>("http://localhost:8080/users/me/profile", profileData, {withCredentials: true}).pipe(
+      return this.http.put<User>(environment.baseUrl + '/users/me/profile', profileData, {withCredentials: true}).pipe(
         tap(() => {
           this.authService.setCurrentUser(profileData);
         })
@@ -25,7 +26,7 @@ export class UserService {
    }
 
    updateSettings(userNameData: User) : Observable<User> {
-    return this.http.put<User>("http://localhost:8080/users/me/settings", userNameData, {withCredentials: true}).pipe(
+    return this.http.put<User>(environment.baseUrl + '/users/me/settings', userNameData, {withCredentials: true}).pipe(
       tap(() => {
         this.authService.setCurrentUser(userNameData);
       })
@@ -33,7 +34,7 @@ export class UserService {
   }
 
   updatePassword(passwordData: User) : Observable<User> {
-    return this.http.put<User>("http://localhost:8080/users/me/password", passwordData, {withCredentials: true});
+    return this.http.put<User>(environment.baseUrl + '/users/me/password', passwordData, {withCredentials: true});
   }
 }
 

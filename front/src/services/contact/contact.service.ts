@@ -3,6 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable, tap } from 'rxjs';
 import { Contact } from '../../interfaces/Contact';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class ContactService {
   }
 
   addContact(contactToAdd: FormGroup) {
-    return this.http.post<Contact>("http://localhost:8080/contacts/", contactToAdd, { withCredentials: true }).pipe(
+    return this.http.post<Contact>(environment.baseUrl + '/contacts/', contactToAdd, { withCredentials: true }).pipe(
       tap(newContact => {
         this._contacts.update(contacts => [...contacts, newContact]);
       })
@@ -27,7 +28,7 @@ export class ContactService {
   }
 
   editContact(contactToEdit: FormGroup) {
-    return this.http.put<Contact>("http://localhost:8080/contacts/", contactToEdit.value, { withCredentials: true }).pipe(
+    return this.http.put<Contact>(environment.baseUrl + '/contacts/', contactToEdit.value, { withCredentials: true }).pipe(
       tap(() => {
         let contactIndex = this._contacts().findIndex(contact => contact.id == contactToEdit.value.id);
         let updatedContacts = this._contacts()[contactIndex] = contactToEdit.value;
@@ -39,11 +40,11 @@ export class ContactService {
   }
 
   getContacts(): Observable<Contact[]> {
-    return this.http.get<Contact[]>("http://localhost:8080/contacts/", { withCredentials: true });
+    return this.http.get<Contact[]>(environment.baseUrl + '/contacts/', { withCredentials: true });
   }
 
   deleteContactById(id: number) {
-    return this.http.delete<void>(`http://localhost:8080/contacts/${id}`, { withCredentials: true }).pipe(
+    return this.http.delete<void>(environment.baseUrl + `/contacts/${id}`, { withCredentials: true }).pipe(
       tap(() => {
         this._contacts.update(contacts => contacts.filter((contact) => contact.id !== id));
         this.canDeleteContacts.set(false);

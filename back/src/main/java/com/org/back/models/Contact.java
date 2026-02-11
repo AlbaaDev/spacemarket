@@ -27,7 +27,7 @@ import lombok.ToString;
 @Getter
 @RequiredArgsConstructor
 @Entity
-@Table(name = "Contact")
+@Table(name = "CONTACT")
 public class Contact {
 
     @Id

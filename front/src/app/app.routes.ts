@@ -7,7 +7,6 @@ import { ContactComponent } from '../pages/contact/contact.component';
 import { DashboardComponent } from '../pages/dashboard/dashboard.component';
 import { HomeComponent } from '../pages/home/home.component';
 import { LoginComponent } from '../pages/login/login.component';
-import { MediaComponent } from '../pages/media/media.component';
 import { OpportunityComponent } from '../pages/opportunity/opportunity.component';
 import { PageNotFoundComponent } from '../pages/page-not-found/page-not-found.component';
 import { PasswordForgottenComponent } from '../pages/password-forgotten/password-forgotten.component';
@@ -16,6 +15,8 @@ import { ReportingComponent } from '../pages/reporting/reporting.component';
 import { SettingsComponent } from '../pages/settings/settings.component';
 import { SignUpComponent } from '../pages/sign-up/sign-up.component';
 import { WorkflowComponent } from '../pages/workflow/workflow.component';
+import { DocumentsComponent } from '../pages/documents/documents.component';
+import { CompaniesComponent } from '../pages/companies/companies.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -25,17 +26,17 @@ export const routes: Routes = [
   { path: 'app-password-forgotten', component: PasswordForgottenComponent},
   { path: 'app-logout', redirectTo: '/app-login' },
 
+  { path: 'app-dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'app-companies', component: CompaniesComponent, canActivate: [AuthGuard] },
   { path: 'app-settings', component: SettingsComponent, canActivate: [AuthGuard] },
   { path: 'app-profile', component: ProfileComponent, canActivate: [AuthGuard] },
   { path: 'app-contact', component: ContactComponent, canActivate: [AuthGuard] },
-  { path: 'app-calendrier', component: CalendrierComponent, canActivate: [AuthGuard] },
   { path: 'app-opportunity', component: OpportunityComponent, canActivate: [AuthGuard] },
+  { path: 'app-calendrier', component: CalendrierComponent, canActivate: [AuthGuard] },
   { path: 'app-automation', component: AutomationComponent, canActivate: [AuthGuard] },
   { path: 'app-workflow', component: WorkflowComponent, canActivate: [AuthGuard] },
   { path: 'app-reporting', component: ReportingComponent, canActivate: [AuthGuard] },
-  { path: 'app-media', component: MediaComponent, canActivate: [AuthGuard] },
-  { path: 'app-dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-
+  { path: 'app-document', component: DocumentsComponent, canActivate: [AuthGuard] },
 
   { path: '**', component: PageNotFoundComponent},
 

@@ -47,7 +47,7 @@ public class AuthenticationController {
         this.userMapper = userMapper;
     }
 
-    @PostMapping("register")
+    @PostMapping("/register")
     public ResponseEntity<UserResponseDto> registerUser(@Valid @RequestBody UserCreateDto userCreateDto) throws UserAlreadyExistsException {
         User savedUser = userService.addUser(userCreateDto);
         UserResponseDto createdUser = userMapper.toUserResponseDto(savedUser);
@@ -62,7 +62,7 @@ public class AuthenticationController {
             ResponseCookie jwtCookie = ResponseCookie.from("jwt", jwtToken)
                                                      .httpOnly(true)
                                                      .secure(true)
-                                                     .sameSite("Strict")
+                                                     .sameSite("None")
                                                      .maxAge(Duration.ofHours(2))
                                                      .path("/")
                                                      .build();

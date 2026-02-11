@@ -49,6 +49,7 @@ public class ContactServiceImpl implements ContactService {
     @Transactional()
     @Override
     public void updateContact(Contact contact) throws EntityNotFoundException {
+        
         Contact editedcontact = contactRepository.findById(contact.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Contact not found with id: " + contact.getId()));
         editedcontact.setFirstName(contact.getFirstName());

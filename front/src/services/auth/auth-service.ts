@@ -3,6 +3,7 @@ import { Injectable, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable, switchMap, tap, throwError } from 'rxjs';
 import { User } from '../../interfaces/User';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -27,12 +28,12 @@ export class AuthService {
       return throwError(() => new Error('Invalid form'));
     }
 
-    return this.http.get('http://localhost:8080/auth/csrf', { withCredentials: true })
+    return this.http.get(environment.baseUrl + '/auth/csrf', { withCredentials: true })
       .pipe(
         switchMap(() => {
           const { email, password } = loginForm.value;
           return this.http.post<User>(
-            'http://localhost:8080/auth/login',
+            environment.baseUrl + '/auth/login',
             { email, password },
             { withCredentials: true }
           );
@@ -50,11 +51,11 @@ export class AuthService {
       return throwError(() => new Error('Invalid signup Form'));
     }
     const user : User = signUpForm.value;
-    return this.http.post<void>('http://localhost:8080/auth/register', user);
+    return this.http.post<void>(environment.baseUrl + '/auth/register', user);
   }
 
   getCurrentUser() : Observable<User> {
-    return this.http.get<User>('http://localhost:8080/users/me', {withCredentials: true}).pipe(
+    return this.http.get<User>(environment.baseUrl + '/users/me', {withCredentials: true}).pipe(
       tap({
         next: (user) => {
           this.setCurrentUser(user);
@@ -65,7 +66,7 @@ export class AuthService {
   };
 
   logout() : Observable<void> {
-    return this.http.post<void>('http://localhost:8080/auth/logout', {}, {withCredentials: true})
+    return this.http.post<void>(environment.baseUrl + '/auth/logout', {}, {withCredentials: true})
       .pipe(
         tap(() => this.clearSession())
       );

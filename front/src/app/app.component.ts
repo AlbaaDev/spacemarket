@@ -6,6 +6,7 @@ import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '../components/header/header.component';
 import { SidebarComponent } from '../components/sidebar/sidebar.component';
 import { AuthService } from '../services/auth/auth-service';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -14,9 +15,12 @@ import { AuthService } from '../services/auth/auth-service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+    
+
   title = 'front';
   protected readonly authService = inject(AuthService);
 
   constructor() {
+
   }
 }

@@ -20,17 +20,17 @@ class UserRepositoryTest {
     TestEntityManager entityManager;
 
 
-    // @Test
-    // void givenNewUser_whenSave_thenSuccess() {
+    @Test
+    void givenNewUser_whenSave_thenSuccess() {
 
-    //     User user = new User();
-    //     user.setEmail("John@live.fr");
-    //     user.setFirstName("John");
-    //     user.setLastName("Doe");
-    //     user.setPassword("12345678");
-    //     user.setPhoneNumber("12345678910");
+        User user = new User();
+        user.setEmail("John@live.fr");
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setPassword("12345678");
+        user.setPhoneNumber("12345678910");
 
-    //     User addedUser = userRepository.save(user);
-    //     assertEquals(entityManager.find(User.class, addedUser.getId()), addedUser);
-    // }
+        User addedUser = userRepository.save(user);
+        assertEquals(entityManager.find(User.class, addedUser.getId()), addedUser);
+    }
 }

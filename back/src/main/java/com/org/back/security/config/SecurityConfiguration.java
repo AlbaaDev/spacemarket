@@ -24,65 +24,71 @@ import jakarta.servlet.http.HttpServletResponse;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final AuthenticationProvider authenticationProvider;
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        private final AuthenticationProvider authenticationProvider;
 
-    public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter,
-            AuthenticationProvider authenticationProvider) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.authenticationProvider = authenticationProvider;
-    }
+        public SecurityConfiguration(JwtAuthenticationFilter jwtAuthenticationFilter,
+                        AuthenticationProvider authenticationProvider) {
+                this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+                this.authenticationProvider = authenticationProvider;
+        }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
-        requestHandler.setCsrfRequestAttributeName(null);
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
+                requestHandler.setCsrfRequestAttributeName(null);
 
-        http
-                .sessionManagement(sm -> sm
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/auth/login", "/auth/register", "/h2-console/**")
-                        .csrfTokenRepository(
-                                CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .csrfTokenRequestHandler(requestHandler))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register", "/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/auth/csrf", "/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/logout").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/contacts/**").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/contacts/**").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/contacts/**").authenticated()
-                        .anyRequest().authenticated())
-                .logout(logout -> logout
-                        .logoutUrl("/auth/logout")
-                        .deleteCookies("jwt")
-                        .logoutSuccessHandler((_, res, _) -> res.setStatus(HttpServletResponse.SC_OK)))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                // Allow H2 console to be accessed without authentication + Clickjacking protection
-                .headers(h -> h
-                        .frameOptions(fo -> fo.sameOrigin())
-                );
+                http
+                                .sessionManagement(sm -> sm
+                                                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                                .csrf(csrf -> csrf
+                                                .ignoringRequestMatchers("/auth/login", "/auth/register",
+                                                                "/h2-console/**")
+                                                .csrfTokenRepository(
+                                                                CookieCsrfTokenRepository.withHttpOnlyFalse())
+                                                .csrfTokenRequestHandler(requestHandler))
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register",
+                                                                "/h2-console/**")
+                                                .permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/auth/csrf", "/h2-console/**",
+                                                                "/hello")
+                                                .permitAll()
+                                                .requestMatchers(HttpMethod.PUT, "/h2-console/**").permitAll()
+                                                .requestMatchers(HttpMethod.DELETE, "/h2-console/**").permitAll()
+                                                .requestMatchers(HttpMethod.POST, "/auth/logout").authenticated()
+                                                .requestMatchers(HttpMethod.GET, "/contacts/**").authenticated()
+                                                .requestMatchers(HttpMethod.DELETE, "/contacts/**").authenticated()
+                                                .requestMatchers(HttpMethod.PUT, "/contacts/**").authenticated()
+                                                .requestMatchers(HttpMethod.POST, "/contacts/**").authenticated()
+                                                .anyRequest().authenticated())
+                                .logout(logout -> logout
+                                                .logoutUrl("/auth/logout")
+                                                .deleteCookies("jwt")
+                                                .logoutSuccessHandler((_, res, _) -> res
+                                                                .setStatus(HttpServletResponse.SC_OK)))
+                                .authenticationProvider(authenticationProvider)
+                                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                                // Allow H2 console to be accessed without authentication + Clickjacking
+                                // protection
+                                .headers(h -> h
+                                                .frameOptions(fo -> fo.sameOrigin()));
 
-        return http.build();
-    }
+                return http.build();
+        }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
+        @Bean
+        CorsConfigurationSource corsConfigurationSource() {
 
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(
-                List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "X-XSRF-TOKEN"));
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+                CorsConfiguration configuration = new CorsConfiguration();
+                configuration.setAllowedOrigins(List.of("http://marketspace-front.s3-website-us-east-1.amazonaws.com"));
+                configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                configuration.setAllowedHeaders(
+                                List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "X-XSRF-TOKEN"));
+                configuration.setAllowCredentials(true);
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", configuration);
+                return source;
+        }
 }

@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth/auth-service';
+import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-login',
@@ -41,8 +42,27 @@ export class LoginComponent {
             next: () => {
                 this.router.navigate(['/app-dashboard']);
             },
-            error: (reponseError) => {
-                this.errorMessage = reponseError.error.message;
+            error: (responseError) => {
+                 // Gestion robuste des différents types d'erreurs
+            if (responseError.status === 0) {
+                // Erreur réseau (serveur inaccessible, CORS, etc.)
+                this.errorMessage = 'Impossible de contacter le serveur. Vérifiez que le backend est démarré sur ' + environment.baseUrl;
+            } else if (responseError.status === 401 || responseError.status === 403) {
+                // Identifiants incorrects
+                this.errorMessage = responseError.error?.message || 'Identifiants incorrects';
+            } else if (responseError.error && typeof responseError.error === 'object' && responseError.error.message) {
+                // Message d'erreur du serveur
+                this.errorMessage = responseError.error.message;
+            } else if (responseError.error && typeof responseError.error === 'string') {
+                // Message d'erreur simple en string
+                this.errorMessage = responseError.error;
+            } else if (responseError.message) {
+                // Message d'erreur HTTP générique
+                this.errorMessage = responseError.message;
+            } else {
+                // Erreur inconnue
+                this.errorMessage = 'Une erreur inattendue est survenue lors de la connexion';
+            }
             }
         });
     }
