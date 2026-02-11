@@ -62,6 +62,13 @@ stages:
         buildType: 'current'
         artifactName: 'spacemarket-back'
         downloadPath: '$(Pipeline.Workspace)'
+    - script: |
+        echo "Contenu de Pipeline.Workspace:"
+        ls -la $(Pipeline.Workspace)
+        echo "Contenu de spacemarket-back:"
+        ls -la $(Pipeline.Workspace)/spacemarket-back
+      displayName: 'Debug - List files'
+      
     - task: AzureWebApp@1
       displayName: 'Deploy Spacemarket Back'
       inputs:

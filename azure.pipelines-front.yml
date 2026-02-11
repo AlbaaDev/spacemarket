@@ -64,7 +64,15 @@ stages:
         buildType: 'current'
         artifactName: 'spacemarket'
         downloadPath: '$(Pipeline.Workspace)'
-        
+    - script: |
+        echo "Contenu de Pipeline.Workspace:"
+        ls -la $(Pipeline.Workspace)
+        echo "Contenu de spacemarket-front:"
+        ls -la $(Pipeline.Workspace)/spacemarket-front
+        echo "Fichiers HTML:"
+        find $(Pipeline.Workspace)/spacemarket-front -name "*.html"
+      displayName: 'Debug - List files'
+           
     - task: AzureWebApp@1
       displayName: 'Deploy to Azure Web App'
       inputs:
