@@ -6,7 +6,7 @@ trigger:
       - main
   paths:
     include:
-      - front/*
+      - front/**        
 
 pr:
   branches:
@@ -14,23 +14,62 @@ pr:
       - main
   paths:
     include:
-      - front/*
+      - front/**
 
-jobs:
-- job: build_frontend
-  displayName: 'Build and Deploy React Frontend'
-  pool: Newpool
-  variables:
-  - group: Azure-Static-Web-Apps-icy-desert-079fdf40f-variable-group
-  steps:
-  - checkout: self
-  
-  - task: AzureStaticWebApp@0
-    inputs:
-      azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_ICY_DESERT_079FDF40F)
-      app_location: "/front" 
-      api_location: ""
-      output_location: "build"
-    env:
-      ENABLE_ORYX_BUILD: true
-      WEBSITE_NODE_DEFAULT_VERSION: "~20" 
+pool:
+  name: 'New pool'     
+
+stages:
+- stage: Build
+  displayName: Build Angular Frontend
+  jobs:
+  - job: BuildFrontend
+    displayName: Build Angular App
+    steps:
+    - task: NodeTool@0
+      displayName: 'Install Node.js'
+      inputs:
+        versionSpec: '20.x'
+        
+    - script: |
+        cd front
+        npm install
+        npm run build --configuration production
+      displayName: 'npm install and build'
+      
+    - task: CopyFiles@2
+      displayName: 'Copy dist files'
+      inputs:
+        SourceFolder: 'front/dist/front/browser'  
+        Contents: '**'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+        
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'spacemarket-front'
+
+- stage: Deploy
+  displayName: Deploy to Azure Web App
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - job: DeployFrontend
+    displayName: Deploy Angular to Azure
+    steps:
+    - task: DownloadBuildArtifacts@1
+      displayName: 'Download Artifact'
+      inputs:
+        buildType: 'current'
+        artifactName: 'spacemarket-front'
+        downloadPath: '$(Pipeline.Workspace)'
+        
+    - task: AzureWebApp@1
+      displayName: 'Deploy to Azure Web App'
+      inputs:
+        azureSubscription: 'azure-service-connection' 
+        appType: 'webAppLinux'
+        appName: 'spacemarket-front' 
+        package: '$(Pipeline.Workspace)/spacemarket-front'
+        runtimeStack: 'NODE|20-lts'
