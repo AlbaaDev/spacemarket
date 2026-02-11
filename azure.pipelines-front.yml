@@ -34,7 +34,7 @@ stages:
     - script: |
         cd front
         npm install
-        npm run build --configuration production
+        npx ng build --configuration production
       displayName: 'npm install and build'
       
     - task: CopyFiles@2
