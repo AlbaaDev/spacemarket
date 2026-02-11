@@ -48,7 +48,7 @@ stages:
       displayName: 'Publish Artifact'
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'spacemarket-front'
+        ArtifactName: 'spacemarket'
 
 - stage: Deploy
   displayName: Deploy to Azure Web App
@@ -62,7 +62,7 @@ stages:
       displayName: 'Download Artifact'
       inputs:
         buildType: 'current'
-        artifactName: 'spacemarket-front'
+        artifactName: 'spacemarket'
         downloadPath: '$(Pipeline.Workspace)'
         
     - task: AzureWebApp@1
@@ -70,6 +70,6 @@ stages:
       inputs:
         azureSubscription: 'azure-service-connection' 
         appType: 'webAppLinux'
-        appName: 'spacemarket-front' 
-        package: '$(Pipeline.Workspace)/spacemarket-front'
+        appName: 'spacemarket' 
+        package: '$(Pipeline.Workspace)/spacemarket'
         runtimeStack: 'NODE|20-lts'
