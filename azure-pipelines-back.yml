@@ -6,25 +6,17 @@ trigger:
       - main
   paths:
     include:
-      - back/*         
-    exclude:
-      - front/*
+      - back/** exclude:
+      - front/**
 
-pr:
-  branches:
-    include:
-      - main
-  paths:
-    include:
-      - back/*
-
-pool: Newpool
+pool:
+  name: 'Newpool'
 
 stages:
 - stage: Build
-  displayName: Build stage
+  displayName: Build Stage
   jobs:  
-  - job: Build
+  - job: BuildJob
     displayName: Build Maven Project
     steps:
     - task: Maven@4
@@ -34,45 +26,42 @@ stages:
         goals: 'clean package -DskipTests'
         javaHomeOption: 'Path'     
         jdkDirectory: '/Library/Java/JavaVirtualMachines/jdk-25.jdk/Contents/Home'   
+
     - task: CopyFiles@2
-      displayName: 'Copy JAR to artifact staging directory'
+      displayName: 'Copy JAR for Artifact'
       inputs: 
         SourceFolder: '$(System.DefaultWorkingDirectory)/back/target'
         Contents: |
           *.jar
           !*-plain.jar
-        TargetFolder: $(Build.ArtifactStagingDirectory) 
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
     - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifacts'
+      displayName: 'Publish Artifact'
       inputs:
-        pathToPublish: $(Build.ArtifactStagingDirectory)
-        artifactName: spacemarket-back
+        pathToPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: 'spacemarket-back'
 
 - stage: Deploy
-  displayName: Deploy stage
+  displayName: Deploy Stage
   dependsOn: Build
   condition: succeeded()
   jobs:
-  - job: Deploy
+  - job: DeployJob
     displayName: Deploy to Azure Web App
     steps:
     - task: DownloadBuildArtifacts@0
-      displayName: 'Download build artifacts'
+      displayName: 'Download Artifacts'
       inputs:
         buildType: 'current'
         artifactName: 'spacemarket-back'
         downloadPath: '$(Pipeline.Workspace)'
-    - script: |
-        echo "Contenu de Pipeline.Workspace:"
-        ls -la $(Pipeline.Workspace)
-        echo "Contenu de spacemarket-back:"
-        ls -la $(Pipeline.Workspace)/spacemarket-back
-      displayName: 'Debug - List files'
-      
+
     - task: AzureWebApp@1
       displayName: 'Deploy Spacemarket Back'
       inputs:
         azureSubscription: 'azure-service-connection' 
-        appType: 'webApp' 
-        appName: 'spacemarket'
+        appType: 'webAppLinux'
+        appName: 'spacemarket-back'
         package: '$(Pipeline.Workspace)/spacemarket-back/*.jar'
+        runtimeStack: 'JAVA|17'

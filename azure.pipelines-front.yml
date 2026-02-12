@@ -6,78 +6,23 @@ trigger:
       - main
   paths:
     include:
-      - front/**        
-
-pr:
-  branches:
-    include:
-      - main
-  paths:
-    include:
-      - front/**
-
-pool:
-  name: 'Newpool'     
+      - front/** pool:
+  name: 'Newpool'
 
 stages:
-- stage: Build
-  displayName: Build Angular Frontend
-  jobs:
-  - job: BuildFrontend
-    displayName: Build Angular App
-    steps:
-    - task: NodeTool@0
-      displayName: 'Install Node.js'
-      inputs:
-        versionSpec: '20.x'
-        
-    - script: |
-        cd front
-        npm install
-        npx ng build --configuration production
-      displayName: 'npm install and build'
-      
-    - task: CopyFiles@2
-      displayName: 'Copy dist files'
-      inputs:
-        SourceFolder: 'front/dist/front/browser'  
-        Contents: '**'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
-        
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact'
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'spacemarket'
-
 - stage: Deploy
-  displayName: Deploy to Azure Web App
-  dependsOn: Build
-  condition: succeeded()
+  displayName: Build and Deploy to Azure SWA
   jobs:
-  - job: DeployFrontend
-    displayName: Deploy Angular to Azure
+  - job: DeployJob
+    displayName: Deploy Angular
     steps:
-    - task: DownloadBuildArtifacts@1
-      displayName: 'Download Artifact'
+    - checkout: self
+      submodules: true
+
+    - task: AzureStaticWebApp@0
+      displayName: 'Build and Deploy SWA'
       inputs:
-        buildType: 'current'
-        artifactName: 'spacemarket'
-        downloadPath: '$(Pipeline.Workspace)'
-    - script: |
-        echo "Contenu de Pipeline.Workspace:"
-        ls -la $(Pipeline.Workspace)
-        echo "Contenu de spacemarket-front:"
-        ls -la $(Pipeline.Workspace)/spacemarket-front
-        echo "Fichiers HTML:"
-        find $(Pipeline.Workspace)/spacemarket-front -name "*.html"
-      displayName: 'Debug - List files'
-           
-    - task: AzureWebApp@1
-      displayName: 'Deploy to Azure Web App'
-      inputs:
-        azureSubscription: 'azure-service-connection' 
-        appType: 'webAppLinux'
-        appName: 'spacemarket' 
-        package: '$(Pipeline.Workspace)/spacemarket'
-        runtimeStack: 'NODE|20-lts'
+        app_location: '/front'            
+        api_location: ''                  
+        output_location: 'dist/front/browser' 
+        azure_static_web_apps_api_token: $(SWA_TOKEN)
