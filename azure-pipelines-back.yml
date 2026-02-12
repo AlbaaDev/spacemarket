@@ -6,7 +6,8 @@ trigger:
       - main
   paths:
     include:
-      - back/** exclude:
+      - back/** 
+    exclude:
       - front/**
 
 pool:
