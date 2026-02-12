@@ -6,7 +6,8 @@ trigger:
       - main
   paths:
     include:
-      - front/** pool:
+      - front/** 
+    pool:
   name: 'Newpool'
 
 stages:
