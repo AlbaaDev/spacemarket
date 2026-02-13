@@ -65,4 +65,4 @@ stages:
         appType: 'webAppLinux'
         appName: 'spacemarket-back'
         package: '$(Pipeline.Workspace)/spacemarket-back/*.jar'
-        runtimeStack: 'JAVA|17'
+        runtimeStack: 'JAVA|25'
