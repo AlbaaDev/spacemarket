@@ -40,14 +40,9 @@ public class SecurityConfiguration {
 
                 http
                                 .sessionManagement(sm -> sm
-                                                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                                .csrf(csrf -> csrf
-                                                .ignoringRequestMatchers("/auth/login", "/auth/register",
-                                                                "/h2-console/**")
-                                                .csrfTokenRepository(
-                                                                CookieCsrfTokenRepository.withHttpOnlyFalse())
-                                                .csrfTokenRequestHandler(requestHandler))
+                                .csrf(csrf -> csrf.disable())
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register",
                                                                 "/h2-console/**")
@@ -57,11 +52,12 @@ public class SecurityConfiguration {
                                                 .permitAll()
                                                 .requestMatchers(HttpMethod.PUT, "/h2-console/**").permitAll()
                                                 .requestMatchers(HttpMethod.DELETE, "/h2-console/**").permitAll()
-                                                .requestMatchers(HttpMethod.POST, "/auth/logout/**").authenticated()
+                                                .requestMatchers(HttpMethod.POST, "/auth/logout").authenticated()
                                                 .requestMatchers(HttpMethod.GET, "/contacts/**").authenticated()
                                                 .requestMatchers(HttpMethod.DELETE, "/contacts/**").authenticated()
                                                 .requestMatchers(HttpMethod.PUT, "/contacts/**").authenticated()
                                                 .requestMatchers(HttpMethod.POST, "/contacts/**").authenticated()
+                                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                                 .anyRequest().authenticated())
                                 .logout(logout -> logout
                                                 .logoutUrl("/auth/logout")
@@ -87,6 +83,7 @@ public class SecurityConfiguration {
                 configuration.setAllowedHeaders(
                                 List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "X-XSRF-TOKEN"));
                 configuration.setAllowCredentials(true);
+                configuration.setExposedHeaders(List.of("Set-Cookie"));
                 UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
                 source.registerCorsConfiguration("/**", configuration);
                 return source;
