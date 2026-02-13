@@ -57,7 +57,7 @@ public class SecurityConfiguration {
                                                 .permitAll()
                                                 .requestMatchers(HttpMethod.PUT, "/h2-console/**").permitAll()
                                                 .requestMatchers(HttpMethod.DELETE, "/h2-console/**").permitAll()
-                                                .requestMatchers(HttpMethod.POST, "/auth/logout").authenticated()
+                                                .requestMatchers(HttpMethod.POST, "/auth/logout/**").authenticated()
                                                 .requestMatchers(HttpMethod.GET, "/contacts/**").authenticated()
                                                 .requestMatchers(HttpMethod.DELETE, "/contacts/**").authenticated()
                                                 .requestMatchers(HttpMethod.PUT, "/contacts/**").authenticated()
@@ -82,7 +82,7 @@ public class SecurityConfiguration {
         CorsConfigurationSource corsConfigurationSource() {
 
                 CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOrigins(List.of("https://black-moss-027062103.1.azurestaticapps.net"));
+                configuration.setAllowedOrigins(List.of("https://black-moss-027062103.1.azurestaticapps.net/", "http://localhost:4200/"));
                 configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 configuration.setAllowedHeaders(
                                 List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "X-XSRF-TOKEN"));
