@@ -82,7 +82,7 @@ public class SecurityConfiguration {
         CorsConfigurationSource corsConfigurationSource() {
 
                 CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOrigins(List.of("https://black-moss-027062103.1.azurestaticapps.net/", "http://localhost:4200/"));
+                configuration.setAllowedOrigins(List.of("https://black-moss-027062103.1.azurestaticapps.net", "http://localhost:4200"));
                 configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 configuration.setAllowedHeaders(
                                 List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "X-XSRF-TOKEN"));
