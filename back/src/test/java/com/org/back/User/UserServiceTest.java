@@ -111,15 +111,13 @@ class UserServiceTest {
         "John", 
         "Doe", 
         "john.doe@live.fr",
-        "password123",
-        "0637894567"
+        "password123"
         );
         
     User expectedUser = new User();
     expectedUser.setFirstName("John");
     expectedUser.setLastName("Doe");
     expectedUser.setEmail("john.doe@live.fr");
-    expectedUser.setPhoneNumber("0637894567");
     expectedUser.setPassword("encodedPassword");
     when(userRepository.findByEmail(userDto.email())).thenReturn(Optional.empty());
     Mockito.doAnswer(invocation -> {
@@ -127,7 +125,6 @@ class UserServiceTest {
         user.setFirstName(userDto.firstName());
         user.setLastName(userDto.lastName());
         user.setEmail(userDto.email());
-        user.setPhoneNumber(userDto.phoneNumber());
         return null;
     }).when(userMapper).createEntityFromDto(Mockito.eq(userDto), Mockito.any(User.class));
     Mockito.when(passwordEncoder.encode(userDto.password())).thenReturn("encodedPassword");
@@ -141,7 +138,6 @@ class UserServiceTest {
     assertEquals(expectedUser.getFirstName(), savedUser.getFirstName());
     assertEquals(expectedUser.getLastName(), savedUser.getLastName());
     assertEquals(expectedUser.getEmail(), savedUser.getEmail());
-    assertEquals(expectedUser.getPhoneNumber(), savedUser.getPhoneNumber());
     assertEquals("encodedPassword", savedUser.getPassword());
     }
 
@@ -152,8 +148,7 @@ class UserServiceTest {
             "John", 
             "Doe", 
             "john.doe@live.fr",
-            "password123",
-            "063789456"
+            "password123"
         );
 
         when(userRepository.findByEmail(userDto.email())).thenReturn(Optional.of(new User()));

@@ -23,6 +23,12 @@ public class ContactServiceImpl implements ContactService {
 
     @Transactional(readOnly = true)
     @Override
+    public Optional<Contact> getContactById(Long id) {
+        return contactRepository.findById(id);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public List<Contact> getAllContacts() {
         return contactRepository.findAll();
     }
@@ -38,12 +44,6 @@ public class ContactServiceImpl implements ContactService {
                     "Contact phone number is already in use. Please use a different phone number.");
         }
         return contactRepository.save(contact);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Optional<Contact> getContactById(Long id) {
-        return contactRepository.findById(id);
     }
 
     @Transactional()

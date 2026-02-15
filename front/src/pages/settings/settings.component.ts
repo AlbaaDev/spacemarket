@@ -26,8 +26,7 @@ export class SettingsComponent {
   protected readonly passwordFormHasChanged = signal<boolean>(false);
   errorMessage: string | null = null;
   protected readonly userNameForm: FormGroup = this.formBuilder.group({
-    email: ['', [Validators.email, Validators.required]],
-    phoneNumber: ['', [Validators.required]],
+    email: ['', [Validators.email, Validators.required]]
   });
 
   protected readonly passwordForm: FormGroup = this.formBuilder.group({
@@ -38,10 +37,6 @@ export class SettingsComponent {
 
   get email() {
     return this.userNameForm.get('email');
-  }
-
-  get phoneNumber() {
-    return this.userNameForm.get('phoneNumber');
   }
 
   get currentPassword() {
@@ -63,7 +58,6 @@ export class SettingsComponent {
     if (currentUser) {
       this.userNameForm.patchValue({
         email: currentUser.email,
-        phoneNumber: currentUser.phoneNumber,
       });
     }
     this.userNameForm.valueChanges.subscribe(() => {

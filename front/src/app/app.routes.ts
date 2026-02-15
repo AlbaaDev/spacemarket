@@ -34,7 +34,6 @@ export const routes: Routes = [
   { path: 'app-opportunity', component: OpportunityComponent, canActivate: [AuthGuard] },
   { path: 'app-calendrier', component: CalendrierComponent, canActivate: [AuthGuard] },
   { path: 'app-automation', component: AutomationComponent, canActivate: [AuthGuard] },
-  { path: 'app-workflow', component: WorkflowComponent, canActivate: [AuthGuard] },
   { path: 'app-reporting', component: ReportingComponent, canActivate: [AuthGuard] },
   { path: 'app-document', component: DocumentsComponent, canActivate: [AuthGuard] },
 

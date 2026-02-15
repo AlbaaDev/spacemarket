@@ -2,7 +2,7 @@
   <button matMiniFab aria-label="button with a add icon" (click)="openAddDialog()">
     <mat-icon>add</mat-icon>
   </button>
-  <button matMiniFab aria-label="button with a add icon" class="mx-3" (click)="openEditDialog()" [disabled]="this.selection.selected.length == 0">
+  <button matMiniFab aria-label="button with a add icon" class="mx-3" (click)="openEditDialog()" [disabled]="this.selection.selected.length == 0 || this.selection.selected.length == 2">
     <mat-icon>edit</mat-icon>
   </button>
   <button matMiniFab aria-label="button with a delete" (click)="openDeleteDialog()" [disabled]="this.selection.selected.length < 1">

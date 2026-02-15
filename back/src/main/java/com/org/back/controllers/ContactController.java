@@ -1,6 +1,7 @@
 package com.org.back.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,6 +27,11 @@ public class ContactController {
 
     public ContactController(ContactServiceImpl contactService) {
         this.contactService = contactService;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Contact> getContact(@PathVariable Long id) throws EntityNotFoundException {
+       return ResponseEntity.ok(contactService.getContactById(id).get());
     }
 
     @PostMapping("/")

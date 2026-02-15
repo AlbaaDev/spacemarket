@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/components/header/header.component.css"],
+  "sourcesContent": [".example-fill-remaining-space {\n  flex: 1 1 auto;\n}\n\na {\n  text-decoration: none;\n}\n"],
+  "mappings": ";AAAA,CAAC;AACC,QAAM,EAAE,EAAE;AACZ;AAEA;AACE,mBAAiB;AACnB;",
+  "names": []
+}

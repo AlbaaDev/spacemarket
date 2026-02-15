@@ -165,7 +165,7 @@ class UserControllerTest {
     @DisplayName("Should return 200 when user tries to update settings with valid data")
     void updateSettings_should_return_200_when_settings_data_is_valid() throws Exception { 
         // GIVEN
-        UserUpdateSettingsDto updateSettingsDto = new UserUpdateSettingsDto("test4@live.fr", "0637166248");
+        UserUpdateSettingsDto updateSettingsDto = new UserUpdateSettingsDto("test4@live.fr");
         doNothing().when(userService).updateUserSettings(any(User.class), eq(updateSettingsDto));
 
         // WHEN
@@ -185,7 +185,7 @@ class UserControllerTest {
     @DisplayName("Should return 400 when user tries to update settings with invalid data")
     void updateSettings_should_return_400_when_invalid_data_is_provided() throws Exception {
         // GIVEN
-        UserUpdateSettingsDto updateSettingsDto = new UserUpdateSettingsDto("", "");
+        UserUpdateSettingsDto updateSettingsDto = new UserUpdateSettingsDto("");
         doNothing().when(userService).updateUserSettings(any(User.class), eq(updateSettingsDto));
 
         // WHEN

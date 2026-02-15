@@ -17,22 +17,6 @@
                         </mat-error>
                         }
                     </mat-form-field>
-                    <mat-form-field>
-                        <mat-label for="phoneNumber">Phone Number :</mat-label>
-                        <input matInput id="phoneNumber" type="phoneNumber" formControlName="phoneNumber" required />
-                        @if(phoneNumber?.hasError('required') && phoneNumber?.invalid && (phoneNumber?.dirty ||
-                        phoneNumber?.touched)) {
-                        <mat-error>
-                            Phone number is required
-                        </mat-error>
-                        }
-                        @if(phoneNumber?.hasError('phoneNumber') && phoneNumber?.invalid && (phoneNumber?.dirty ||
-                        phoneNumber?.touched)) {
-                        <mat-error>
-                            Phone number is not valid
-                        </mat-error>
-                        }
-                    </mat-form-field>
                 </div>
                 <button mat-raised-button type="submit" color="primary"
                     [disabled]="userNameForm.invalid || !usernameFromHasChanged()">Confirm</button>

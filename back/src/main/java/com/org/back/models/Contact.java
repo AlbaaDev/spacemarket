@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -67,19 +68,6 @@ public class Contact {
     @Column(nullable = false, length = 45)
     private String country;
 
-    // @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, orphanRemoval = true)
-    // private List<Opportunity> opportunities = new ArrayList<>();
-
-    // public void addOpportunity(Opportunity opportunity) {
-    //     opportunities.add(opportunity);
-    //     opportunity.setContact(this);
-    // }
-
-    // public void removeOpportunity(Opportunity opportunity) {
-    //     opportunities.remove(opportunity);
-    //     opportunity.setContact(null);
-    // }
-
     @ManyToMany
     @JoinTable(
         name = "contact_opportunity",
@@ -87,4 +75,13 @@ public class Contact {
         inverseJoinColumns = @JoinColumn(name = "opportunity_id")
     )
     private Set<Opportunity> opportunities = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
 }

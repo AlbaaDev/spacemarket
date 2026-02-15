@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -47,8 +46,7 @@ public class SecurityConfiguration {
                                                 .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register",
                                                                 "/h2-console/**")
                                                 .permitAll()
-                                                .requestMatchers(HttpMethod.GET, "/auth/csrf", "/h2-console/**",
-                                                                "/hello")
+                                                .requestMatchers(HttpMethod.GET, "/auth/csrf", "/h2-console/**")
                                                 .permitAll()
                                                 .requestMatchers(HttpMethod.PUT, "/h2-console/**").permitAll()
                                                 .requestMatchers(HttpMethod.DELETE, "/h2-console/**").permitAll()
@@ -68,8 +66,7 @@ public class SecurityConfiguration {
                                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                                 // Allow H2 console to be accessed without authentication + Clickjacking
                                 // protection
-                                .headers(h -> h
-                                                .frameOptions(fo -> fo.sameOrigin()));
+                                .headers(h -> h.frameOptions(fo -> fo.sameOrigin()));
 
                 return http.build();
         }

@@ -1,18 +1,21 @@
 package com.org.back.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
-import jakarta.validation.constraints.Size;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import lombok.*;
@@ -46,10 +49,8 @@ public class User implements UserDetails {
     @NotBlank(message = "Password cannot be blank")
     private String password;
 
-    @NotBlank(message = "Phone number cannot be blank")
-    @Column(unique = true, nullable = false)
-    @Size(min = 10, max = 12, message = "Phone number should be between 10 and 12")
-    private String phoneNumber;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Contact> contacts;
 
     @Override
     public String getUsername() {
