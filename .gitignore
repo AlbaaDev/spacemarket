@@ -41,4 +41,3 @@ front/node_modules/
 front/.angular/
 .env
 application.properties
-back/src/main/resources/application.properties

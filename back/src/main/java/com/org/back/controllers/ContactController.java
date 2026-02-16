@@ -46,7 +46,6 @@ public class ContactController {
 
     @GetMapping("/")
     public ResponseEntity<List<Contact>> getAllContacts() {
-         
         return ResponseEntity.ok(contactService.getAllContacts());
     }
 

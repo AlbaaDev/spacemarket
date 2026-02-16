@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/pages/contact/modal/edit/edit-contact-modal.css"],
-  "sourcesContent": ["mat-form-field {\n    width: 100%;\n}\n\nh2 {\n    text-align: center;\n}"],
-  "mappings": ";AAAA;AACI,SAAO;AACX;AAEA;AACI,cAAY;AAChB;",
-  "names": []
-}

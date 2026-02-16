@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/pages/profile/profile.component.css"],
-  "sourcesContent": [".example-full-width {\n    width: 100%;\n}"],
-  "mappings": ";AAAA,CAAC;AACG,SAAO;AACX;",
-  "names": []
-}

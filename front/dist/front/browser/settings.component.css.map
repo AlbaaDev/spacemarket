@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/pages/settings/settings.component.css"],
-  "sourcesContent": [".container {\n    max-width: 600px;\n}\n.card {\n    padding: 1rem;\n}\n"],
-  "mappings": ";AAAA,CAAC;AACG,aAAW;AACf;AACA,CAAC;AACG,WAAS;AACb;",
-  "names": []
-}
