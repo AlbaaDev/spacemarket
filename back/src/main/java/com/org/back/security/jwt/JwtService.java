@@ -14,16 +14,25 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service
 public class JwtService {
 
-    @Value("${security.jwt.secret-key}")
+    @Value("${jwt.secret}")
     private String secretKey;
 
-    @Value("${security.jwt.expiration}")
+    @Value("${jwt.expiration}")
     private long jwtExpiration;
+
+     @PostConstruct
+    public void init() {
+        System.out.println("========================================");
+        System.out.println("JWT_SECRET_KEY loaded: " + (secretKey != null && !secretKey.isEmpty() ? "YES" : "NO"));
+        System.out.println("Secret key length: " + (secretKey != null ? secretKey.length() : 0));
+        System.out.println("========================================");
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
