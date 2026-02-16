@@ -1,14 +1,16 @@
+# ==========================================
+# Java / Maven / Backend
+# ==========================================
 target/
+**/target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+HELP.md
+
 ### IntelliJ IDEA ###
 .idea/
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
 *.iws
 *.iml
 *.ipr
@@ -34,10 +36,27 @@ build/
 
 ### VS Code ###
 .vscode/
+
 ### Mac OS ###
 .DS_Store
 
+# ==========================================
+# Angular / Frontend
+# ==========================================
+front/dist/
 front/node_modules/
 front/.angular/
+**/dist/
+**/node_modules/
+
+# ==========================================
+# Java Spring Boot
+# ==========================================
+back/src/main/resources/application.properties
+back/src/main/resources/application-prod.properties
+back/src/main/resources/application-dev.properties
+
+# Variables d'environnement
 .env
-application.properties
+.env.local
+.env.*.local
