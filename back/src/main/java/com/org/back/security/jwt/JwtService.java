@@ -12,10 +12,9 @@ import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service
 public class JwtService {
@@ -25,14 +24,6 @@ public class JwtService {
 
     @Value("${jwt.expiration}")
     private long jwtExpiration;
-
-     @PostConstruct
-    public void init() {
-        System.out.println("========================================");
-        System.out.println("JWT_SECRET_KEY loaded: " + (secretKey != null && !secretKey.isEmpty() ? "YES" : "NO"));
-        System.out.println("Secret key length: " + (secretKey != null ? secretKey.length() : 0));
-        System.out.println("========================================");
-    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

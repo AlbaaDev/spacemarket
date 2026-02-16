@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,8 +26,6 @@ import com.org.back.models.Contact;
 import com.org.back.repositories.ContactRepository;
 import com.org.back.security.jwt.JwtService;
 import com.org.back.services.ContactServiceImpl;
-
-import jakarta.persistence.Column;
 
 @WebMvcTest(ContactController.class)
 public class ContactControllerTest {
