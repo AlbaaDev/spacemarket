@@ -1,9 +1,7 @@
--- Company (pas d'email, adresse complète)
 INSERT INTO Company (name, country, city, address) VALUES('Google', 'Suisse', 'Genève', '1 California Way');
 INSERT INTO Company (name, country, city, address) VALUES('Microsoft', 'USA', 'Seattle', '1 Microsoft Way');
 INSERT INTO Company (name, country, city, address) VALUES('Apple', 'USA', 'Cupertino', '1 Apple Park Way');
 
--- Contacts
 INSERT INTO Contact (birth_date, country, email, first_name, last_name, phone, city, adress) 
 VALUES('2025-01-01', 'Suisse', 'test@live.fr', 'John1', 'Doe1', '0117684965', 'Genève', 'Rue de Genève');
 

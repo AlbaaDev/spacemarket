@@ -40,20 +40,15 @@ build/
 ### Mac OS ###
 .DS_Store
 
-# ==========================================
-# Angular / Frontend
-# ==========================================
+### Angular ###
 front/dist/
 front/node_modules/
 front/.angular/
 **/dist/
 **/node_modules/
 
-# ==========================================
-# Java Spring Boot
-# ==========================================
+### Java Spring Boot ###
 back/src/main/resources/application.properties
-back/src/main/resources/application-prod.properties
 back/src/main/resources/application-dev.properties
 
 # Variables d'environnement
