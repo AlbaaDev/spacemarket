@@ -64,7 +64,7 @@ export class ContactComponent implements AfterViewInit {
     phone: 'Phone number',
     birthDate: 'Birth date',
     city: 'City',
-    adress: 'Adress',
+    adress: 'Address',
     country: 'Country'
   };
 
