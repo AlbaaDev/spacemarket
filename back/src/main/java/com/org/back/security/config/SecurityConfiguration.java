@@ -23,7 +23,6 @@ import jakarta.servlet.http.HttpServletResponse;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
 
@@ -50,17 +49,14 @@ public class SecurityConfiguration {
                 .logoutUrl("/auth/logout")
                 .logoutSuccessHandler((request, response, auth) -> {
                     boolean isProd = !request.getServerName().contains("localhost");
-
-                    // Crée le cookie JWT vide pour suppression
                     ResponseCookie.ResponseCookieBuilder cookieBuilder = ResponseCookie.from("jwt", "")
                             .httpOnly(true)
-                            .secure(isProd)
+                            .secure(isProd)  
                             .path("/")
                             .maxAge(0);
 
                     if (isProd) {
-                        cookieBuilder.sameSite("None")
-                                     .domain("spacemarket-back-hjapg7ekdub5fzeg.canadacentral-01.azurewebsites.net");
+                        cookieBuilder.sameSite("None"); 
                     }
 
                     response.addHeader("Set-Cookie", cookieBuilder.build().toString());
@@ -78,8 +74,8 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
-            "https://gentle-sky-0e6e37703.2.azurestaticapps.net",
-            "http://localhost:4200"
+            "https://gentle-sky-0e6e37703.2.azurestaticapps.net", 
+            "http://localhost:4200"                                 
         ));
         configuration.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization","Content-Type","X-Requested-With","Accept","X-XSRF-TOKEN"));
@@ -91,6 +87,7 @@ public class SecurityConfiguration {
         return source;
     }
 }
+
 
 
 
