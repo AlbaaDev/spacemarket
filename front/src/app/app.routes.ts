@@ -25,12 +25,11 @@ export const routes: Routes = [
   { path: 'app-sign-up', component: SignUpComponent, canActivate: [NoAuthGaurd] },
   { path: 'app-password-forgotten', component: PasswordForgottenComponent },
   { path: 'app-logout', redirectTo: '/app-login' },
-
   { path: 'app-dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'app-companies', component: CompaniesComponent, canActivate: [AuthGuard] },
   { path: 'app-settings', component: SettingsComponent, canActivate: [AuthGuard] },
   { path: 'app-profile', component: ProfileComponent, canActivate: [AuthGuard] },
-  { path: 'app-contact', component: ContactsComponent, canActivate: [AuthGuard] },
+  { path: 'contacts', component: ContactsComponent, canActivate: [AuthGuard] },
   { path: 'contact/:id', component: ContactDetailsComponent, canActivate: [AuthGuard] },
   { path: 'app-opportunity', component: OpportunityComponent, canActivate: [AuthGuard] },
   { path: 'app-calendrier', component: CalendrierComponent, canActivate: [AuthGuard] },

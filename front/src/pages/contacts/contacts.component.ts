@@ -20,9 +20,10 @@ import {
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { Contact, ContactKeys } from '../../interfaces/Contact';
 import { ContactService } from '../../services/contact/contact.service';
-import { AddContactModal } from './modal/add/add-modal-component';
-import { DeleteContacModal } from './modal/delete/delete-contact-modal';
-import { EditContactModal } from './modal/edit/edit-contact-modal';
+import { AddContactModal } from './modals/add/add-modal-component';
+import { DeleteContacModal } from './modals/delete/delete-contact-modal';
+import { EditContactModal } from './modals/edit/edit-contact-modal';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-contact',
@@ -51,6 +52,8 @@ export class ContactsComponent implements AfterViewInit {
   private readonly formBuilder = inject(FormBuilder)
   private readonly contactService = inject(ContactService);
   private readonly _snackBar = inject(MatSnackBar);
+  private router = inject(Router);
+
   readonly dialog = inject(MatDialog);
 
   contacts = this.contactService.contacts;
@@ -83,13 +86,13 @@ export class ContactsComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
   constructor() {
-    
+
     effect(() => {
       this.dataSource.data = this.contacts();
       if (this.canDeleteContacts()) {
         this.confirmDeleteContact();
       }
-      if(this.canClearSelection()) {
+      if (this.canClearSelection()) {
         this.selection.clear();
       }
     });
@@ -144,7 +147,14 @@ export class ContactsComponent implements AfterViewInit {
     });
   }
 
-  goToDetailsPage() {
-    
+  goToDetailsPage(contact?: Contact) {
+    const selectedContact: Contact | undefined = contact ?? this.selection.selected[0];
+    if (!selectedContact) {
+      return; 
+    }
+    this.router.navigate(['/contact', selectedContact.id], {
+      state: { contact: selectedContact }
+    });
   }
+
 }
