@@ -3,7 +3,7 @@ import { AuthGuard } from '../guards/auth.guards';
 import { NoAuthGaurd } from '../guards/no-auth.guards';
 import { CalendrierComponent } from '../pages/calendrier/calendrier.component';
 import { CompaniesComponent } from '../pages/companies/companies.component';
-import { ContactComponent } from '../pages/contact/contact.component';
+import { ContactsComponent } from '../pages/contacts/contacts.component';
 import { DashboardComponent } from '../pages/dashboard/dashboard.component';
 import { DocumentsComponent } from '../pages/documents/documents.component';
 import { HomeComponent } from '../pages/home/home.component';
@@ -16,6 +16,7 @@ import { ReportingComponent } from '../pages/reporting/reporting.component';
 import { SettingsComponent } from '../pages/settings/settings.component';
 import { SignUpComponent } from '../pages/sign-up/sign-up.component';
 import { WorkflowComponent } from '../pages/workflow/workflow.component';
+import { ContactDetailsComponent } from '../pages/contacts/details/contact.details.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -29,7 +30,8 @@ export const routes: Routes = [
   { path: 'app-companies', component: CompaniesComponent, canActivate: [AuthGuard] },
   { path: 'app-settings', component: SettingsComponent, canActivate: [AuthGuard] },
   { path: 'app-profile', component: ProfileComponent, canActivate: [AuthGuard] },
-  { path: 'app-contact', component: ContactComponent, canActivate: [AuthGuard] },
+  { path: 'app-contact', component: ContactsComponent, canActivate: [AuthGuard] },
+  { path: 'contact/:id', component: ContactDetailsComponent, canActivate: [AuthGuard] },
   { path: 'app-opportunity', component: OpportunityComponent, canActivate: [AuthGuard] },
   { path: 'app-calendrier', component: CalendrierComponent, canActivate: [AuthGuard] },
   { path: 'app-workflow', component: WorkflowComponent, canActivate: [AuthGuard] },

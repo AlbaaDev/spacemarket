@@ -8,14 +8,14 @@ import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
-    MatCell, MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatHeaderRow, MatHeaderRowDef,
-    MatRow, MatRowDef,
-    MatTable,
-    MatTableDataSource
+  MatCell, MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow, MatHeaderRowDef,
+  MatRow, MatRowDef,
+  MatTable,
+  MatTableDataSource
 } from '@angular/material/table';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { Contact, ContactKeys } from '../../interfaces/Contact';
@@ -44,10 +44,10 @@ import { EditContactModal } from './modal/edit/edit-contact-modal';
     MatCheckbox,
     ReactiveFormsModule
   ],
-  templateUrl: './contact.component.html',
-  styleUrl: './contact.component.css'
+  templateUrl: './contacts.component.html',
+  styleUrl: './contacts.component.scss'
 })
-export class ContactComponent implements AfterViewInit {
+export class ContactsComponent implements AfterViewInit {
   private readonly formBuilder = inject(FormBuilder)
   private readonly contactService = inject(ContactService);
   private readonly _snackBar = inject(MatSnackBar);
@@ -142,5 +142,9 @@ export class ContactComponent implements AfterViewInit {
         console.error('Error fetching contacts: ', error);
       }
     });
+  }
+
+  goToDetailsPage() {
+    
   }
 }
