@@ -50,6 +50,7 @@ front/.angular/
 ### Java Spring Boot ###
 back/src/main/resources/application.properties
 back/src/main/resources/application-dev.properties
+back/src/main/resources/application-prod.properties
 
 # Variables d'environnement
 .env
