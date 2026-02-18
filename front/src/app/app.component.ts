@@ -17,7 +17,7 @@ import { environment } from '../environments/environment';
 export class AppComponent {
     
 
-  title = 'front';
+  title = 'SpaceMarket';
   protected readonly authService = inject(AuthService);
 
   constructor() {

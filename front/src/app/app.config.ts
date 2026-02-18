@@ -10,16 +10,22 @@ import { AuthService } from '../services/auth/auth-service';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { of } from 'rxjs/internal/observable/of';
 
+
+
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }), 
+    provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(),
     provideAppInitializer(() => {
       const authService = inject(AuthService);
+      if (!authService.hasJwtCookie()) {
+        return Promise.resolve();
+      }
       return firstValueFrom(
         authService.getCurrentUser().pipe(catchError(() => of(null)))
       );
     }),
   ]
 };
+

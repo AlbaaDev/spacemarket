@@ -74,6 +74,11 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(user));
   }
 
+  hasJwtCookie(): boolean {
+    if (typeof document === 'undefined') return false;
+    return document.cookie.split(';').some(c => c.trim().startsWith('jwt='));
+  }
+
   private clearSession(): void {
     this._isAuthenticated.set(false);
     this._currentUser.set(null);
