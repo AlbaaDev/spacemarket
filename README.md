@@ -1,6 +1,5 @@
 # SpaceMarket
-
-SpaceMarket is a CRM project using **Angular 20**, **Java 24 Spring 3.5.3**, and **PostgreSQL**.
+SpaceMarket is a CRM project currently in development using Angular 20, Java 24 Spring 3.5.3, and PostgreSQL.
 
 ---
 
@@ -12,7 +11,8 @@ SpaceMarket is a CRM project using **Angular 20**, **Java 24 Spring 3.5.3**, and
 
 ```bash
 node start.js
+```
 
-
+## Preview 
 
 ![alt text](preview.png)
