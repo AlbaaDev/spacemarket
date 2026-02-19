@@ -40,7 +40,7 @@ export class LoginComponent {
         this.errorMessage = null;
         this.authService.login(this.loginForm).subscribe({
             next: () => {
-                this.router.navigate(['/app-dashboard']);
+                this.router.navigate(['/contacts']);
             },
             error: (responseError) => {
                  // Gestion robuste des différents types d'erreurs
