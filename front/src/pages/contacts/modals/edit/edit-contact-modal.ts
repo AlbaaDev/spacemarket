@@ -29,7 +29,7 @@ export class EditContactModal {
         phone: [this.selectedContact.phone, Validators.required],
         birthDate: [this.selectedContact.birthDate, [Validators.required, dateValidator]],
         city: [this.selectedContact.city, Validators.required],
-        adress: [this.selectedContact.adress, Validators.required],
+        address: [this.selectedContact.address, Validators.required],
         country: [this.selectedContact.country, Validators.required],
         id: [this.selectedContact.id]
     });
@@ -58,8 +58,8 @@ export class EditContactModal {
         return this.editContactForm.get('city');
     }
 
-    get adress() {
-        return this.editContactForm.get('adress');
+    get address() {
+        return this.editContactForm.get('address');
     }
 
     get country() {

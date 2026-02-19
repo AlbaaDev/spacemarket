@@ -46,9 +46,9 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getUserById(@NotNull Long userId) {
         return userRepository.findById(userId);
     }
+    
     @Transactional
-    public void updateUserProfile(
-        User user, 
+    public void updateUserProfile(User user, 
         @Valid UserUpdateProfileDto newUserUpdateDto) throws EntityNotFoundException {
             
             User userToUpdate = userRepository.findByEmail(user.getEmail()).orElseThrow();
@@ -69,7 +69,9 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
     
-    public void updateUserPassword(User authUser, @Valid UserUpdatePasswordDto newUserPassowrd) throws PasswordAlreadyInUseException, PasswordDoesntMatchException {
+    public void updateUserPassword(User authUser, @Valid UserUpdatePasswordDto newUserPassowrd) 
+    throws PasswordAlreadyInUseException, PasswordDoesntMatchException {
+
         boolean passwordMatches = passwordEncoder.matches(newUserPassowrd.currentPassword(), authUser.getPassword());
         boolean passwordAlreadyInUse = passwordEncoder.matches(newUserPassowrd.newPassword(), authUser.getPassword());
         if(!passwordMatches) {
@@ -90,7 +92,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User addUser(@Valid UserCreateDto userCreateDto) throws UserAlreadyExistsException {
         if (userRepository.findByEmail(userCreateDto.email()).isPresent()) {
-            throw new UserAlreadyExistsException("Email is already in use. Please use a different email adress.");
+            throw new UserAlreadyExistsException("Email is already in use. Please use a different email address.");
         }
         User userToSave = new User();
         userMapper.createEntityFromDto(userCreateDto, userToSave);

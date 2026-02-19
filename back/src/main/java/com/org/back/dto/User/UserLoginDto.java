@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 
 
 public record UserLoginDto(
-        @Email(message = "Email must be a valid email adress.") String email,
+        @Email(message = "Email must be a valid email address.") String email,
         @NotBlank(message = "Password cannot be blank.")  @Size(min = 8, max = 128) String password
 ) {
 }

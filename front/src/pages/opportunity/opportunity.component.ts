@@ -35,7 +35,7 @@ export class OpportunityComponent {
     phone: 'Phone number',
     birthDate: 'Birth date',
     business_name: 'Business name',
-    adress: 'Adress',
+    address: 'Address',
     country: 'Country'
   };
 

@@ -13,4 +13,5 @@ public interface ContactService {
     Optional<Contact> getContactById(Long id);
     void updateContact(Contact contact) throws EntityNotFoundException;
     void deleteContactById(Long id);
+    void assigneCompanyToContact(Long contactId, Long companyId) throws EntityNotFoundException;
 }

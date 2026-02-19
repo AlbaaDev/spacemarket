@@ -6,8 +6,8 @@ export interface Contact {
     phone: string;
     birthDate: Date;
     city: string;
-    adress: string;
+    address: string;
     country: string;
 }
 
-export type ContactKeys = 'firstName' | 'lastName' | 'email' | 'phone' | 'birthDate' | 'city' | 'adress' | 'country';
+export type ContactKeys = 'firstName' | 'lastName' | 'email' | 'phone' | 'birthDate' | 'city' | 'address' | 'country';

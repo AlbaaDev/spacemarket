@@ -28,7 +28,7 @@ export class AddContactModal {
     phone: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(12)]],
     birthDate: ['', [Validators.required, dateValidator]],
     city: ['', Validators.required],
-    adress: ['', Validators.required],
+    address: ['', Validators.required],
     country: ['', Validators.required]
   });
 
@@ -56,8 +56,8 @@ export class AddContactModal {
     return this.contactAddForm.get('city');
   }
 
-  get adress() {
-    return this.contactAddForm.get('adress');
+  get address() {
+    return this.contactAddForm.get('address');
   }
 
   get country() {

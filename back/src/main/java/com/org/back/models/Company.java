@@ -42,7 +42,7 @@ public class Company {
     @Column(nullable = false, length = 45)
     private String city;
 
-    @NotBlank(message = "Adress cannot be blank")
+    @NotBlank(message = "Address cannot be blank")
     @Column(nullable = false, length = 45)
     private String address;
 
