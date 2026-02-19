@@ -52,7 +52,6 @@ public class Contact {
     @Email(message = "Invalid email format")
     private String email;
 
-    @NotNull(message = "Birth date cannot be null")
     @Column(nullable = false, length = 12)
     private LocalDate birthDate;
 
@@ -60,9 +59,8 @@ public class Contact {
     @Column(nullable = false, length = 45)
     private String city;
 
-    @NotBlank(message = "Adress cannot be blank")
     @Column(nullable = false, length = 45)
-    private String adress;
+    private String address;
 
     @NotBlank(message = "Country cannot be blank")
     @Column(nullable = false, length = 45)

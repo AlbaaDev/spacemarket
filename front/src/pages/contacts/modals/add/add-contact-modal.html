@@ -88,12 +88,12 @@
       }
     </mat-form-field>
     <mat-form-field appearance="fill">
-      <mat-label>Adress</mat-label>
-      <input id="adress" type="text" formControlName="adress" matInput placeholder="Placeholder">
+      <mat-label>Address</mat-label>
+      <input id="address" type="text" formControlName="address" matInput placeholder="Placeholder">
       <mat-icon matSuffix></mat-icon>
-      @if(adress?.hasError('required') && adress?.invalid && (adress?.dirty || adress?.touched)) {
+      @if(address?.hasError('required') && address?.invalid && (address?.dirty || address?.touched)) {
       <mat-error>
-        Adress is required
+        Address is required
       </mat-error>
       }
     </mat-form-field>

@@ -5,20 +5,25 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.org.back.exceptions.ContactAlreadyExistException;
 import com.org.back.exceptions.EntityNotFoundException;
 import com.org.back.interfaces.ContactService;
+import com.org.back.models.Company;
 import com.org.back.models.Contact;
+import com.org.back.repositories.CompanyRepository;
 import com.org.back.repositories.ContactRepository;
 
 @Service
 public class ContactServiceImpl implements ContactService {
 
     private final ContactRepository contactRepository;
+    private final CompanyRepository companyRepository;
 
-    public ContactServiceImpl(ContactRepository contactRepository) {
+    public ContactServiceImpl(ContactRepository contactRepository, CompanyRepository companyRepository) {
         this.contactRepository = contactRepository;
+        this.companyRepository = companyRepository;
     }
 
     @Transactional(readOnly = true)
@@ -37,7 +42,7 @@ public class ContactServiceImpl implements ContactService {
     public Contact addContact(Contact contact) throws ContactAlreadyExistException {
         if (contactRepository.findByEmail(contact.getEmail()).isPresent()) {
             throw new ContactAlreadyExistException(
-                    "Contact email is already in use. Please use a different email adress.");
+                    "Contact email is already in use. Please use a different email address.");
         }
         if (contactRepository.findByPhone(contact.getPhone()).isPresent()) {
             throw new ContactAlreadyExistException(
@@ -49,12 +54,12 @@ public class ContactServiceImpl implements ContactService {
     @Transactional()
     @Override
     public void updateContact(Contact contact) throws EntityNotFoundException {
-        
+
         Contact editedcontact = contactRepository.findById(contact.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Contact not found with id: " + contact.getId()));
         editedcontact.setFirstName(contact.getFirstName());
         editedcontact.setLastName(contact.getLastName());
-        editedcontact.setAdress(contact.getAdress());
+        editedcontact.setAddress(contact.getAddress());
         editedcontact.setCity(contact.getCity());
         editedcontact.setBirthDate(contact.getBirthDate());
         editedcontact.setCountry(contact.getCountry());
@@ -63,8 +68,20 @@ public class ContactServiceImpl implements ContactService {
         if (contact.getOpportunities() != null && !(contact.getOpportunities().isEmpty())) {
             editedcontact.getOpportunities().addAll(contact.getOpportunities());
         }
-    
+
         contactRepository.save(editedcontact);
+    }
+
+    public void assigneCompanyToContact(@PathVariable Long contactId,
+            @PathVariable Long companyId) throws EntityNotFoundException {
+        Contact contact = contactRepository.findById(contactId).orElseThrow(() -> new EntityNotFoundException(
+                        "Contact not found with id: " + contactId));
+
+        Company company = companyRepository.findById(companyId).orElseThrow(() -> new EntityNotFoundException(
+                        "Company not found with id: " + companyId));
+        
+        contact.setCompany(company);
+        contactRepository.save(contact);
     }
 
     @Override

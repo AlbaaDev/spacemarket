@@ -6,7 +6,7 @@ export class ContactComponent {
     phone: 'Phone number',
     birthDate: 'Birth date',
     city: 'City',
-    adress: 'Address',
+    address: 'Address',
     country: 'Country'
   } as const;
 }
