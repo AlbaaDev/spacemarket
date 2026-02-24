@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Observable, switchMap, tap, throwError } from 'rxjs';
-import { User } from '../../interfaces/User';
+import { Observable, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../../interfaces/ApiResponse';
+import { User } from '../../interfaces/User';
 
 @Injectable({
   providedIn: 'root'
@@ -24,23 +24,20 @@ export class AuthService {
     }
   }
 
-  login(loginForm: FormGroup): Observable<User> {
+  login(loginForm: FormGroup): Observable<ApiResponse<User>> {
     if (loginForm.invalid) {
       return throwError(() => new Error('Invalid form'));
     }
 
     const { email, password } = loginForm.value;
-    return this.http.post<User>(
-      environment.baseUrl + '/auth/login',
-      { email, password },
-      { withCredentials: true }
-    ).pipe(
-      tap(user => {
-        this._isAuthenticated.set(true);
-        this._currentUser.set(user);
-        localStorage.setItem('user', JSON.stringify(user));
-      })
-    );
+    return this.http.post<ApiResponse<User>>(environment.baseUrl + '/auth/login', { email, password }, { withCredentials: true })
+      .pipe(
+        tap(user => {
+          this._isAuthenticated.set(true);
+          this._currentUser.set(user.data);
+          localStorage.setItem('user', JSON.stringify(user.data));
+        })
+      );
   }
 
   signUp(signUpForm: FormGroup) {
@@ -52,9 +49,12 @@ export class AuthService {
   }
 
   getCurrentUser(): Observable<ApiResponse<User>> {
+    console.log("getCurrentUser  ");
     return this.http.get<ApiResponse<User>>(environment.baseUrl + '/users/me', { withCredentials: true }).pipe(
       tap({
         next: (response) => {
+          console.log("getCurrentUser response ", response);
+
           this.setCurrentUser(response.data);
         },
         error: () => this.clearSession()
@@ -70,6 +70,8 @@ export class AuthService {
   }
 
   setCurrentUser(user: User): void {
+    console.log("setCurrentUser ", user);
+
     this._currentUser.set(user);
     this._isAuthenticated.set(true);
     localStorage.setItem('user', JSON.stringify(user));

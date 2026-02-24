@@ -17,6 +17,7 @@ import { MustMatch } from '../../validators/MustMatch';
   styleUrl: './settings.component.css'
 })
 export class SettingsComponent implements OnInit {
+
   protected readonly userService = inject(UserService);
   protected readonly authService = inject(AuthService);
   protected readonly formBuilder = inject(FormBuilder);

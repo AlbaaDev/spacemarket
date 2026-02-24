@@ -43,26 +43,19 @@ export class LoginComponent {
                 this.router.navigate(['/contacts']);
             },
             error: (responseError) => {
-                 // Gestion robuste des différents types d'erreurs
-            if (responseError.status === 0) {
-                // Erreur réseau (serveur inaccessible, CORS, etc.)
-                this.errorMessage = 'Impossible de contacter le serveur. Vérifiez que le backend est démarré sur ' + environment.baseUrl;
-            } else if (responseError.status === 401 || responseError.status === 403) {
-                // Identifiants incorrects
-                this.errorMessage = responseError.error?.message || 'Identifiants incorrects';
-            } else if (responseError.error && typeof responseError.error === 'object' && responseError.error.message) {
-                // Message d'erreur du serveur
-                this.errorMessage = responseError.error.message;
-            } else if (responseError.error && typeof responseError.error === 'string') {
-                // Message d'erreur simple en string
-                this.errorMessage = responseError.error;
-            } else if (responseError.message) {
-                // Message d'erreur HTTP générique
-                this.errorMessage = responseError.message;
-            } else {
-                // Erreur inconnue
-                this.errorMessage = 'Une erreur inattendue est survenue lors de la connexion';
-            }
+                if (responseError.status === 0) {
+                    this.errorMessage = 'Impossible de contacter le serveur. Vérifiez que le backend est démarré sur ' + environment.baseUrl;
+                } else if (responseError.status === 401 || responseError.status === 403) {
+                    this.errorMessage = responseError.error?.message || 'Identifiants incorrects';
+                } else if (responseError.error && typeof responseError.error === 'object' && responseError.error.message) {
+                    this.errorMessage = responseError.error.message;
+                } else if (responseError.error && typeof responseError.error === 'string') {
+                    this.errorMessage = responseError.error;
+                } else if (responseError.message) {
+                    this.errorMessage = responseError.message;
+                } else {
+                    this.errorMessage = 'Une erreur inattendue est survenue lors de la connexion';
+                }
             }
         });
     }
