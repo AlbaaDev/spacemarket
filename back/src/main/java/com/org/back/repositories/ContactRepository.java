@@ -1,5 +1,6 @@
 package com.org.back.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,6 +10,7 @@ import com.org.back.models.Contact;
 
 @Repository
 public interface ContactRepository extends JpaRepository<Contact, Long> {
-    Optional<Contact> findByEmail(String email);
-    Optional<Contact> findByPhone(String phone);
+    Optional<Contact> findByEmails_Email(String email);
+    Optional<Contact> findByPhones_Phone(String phone);
+    List<Contact> findAllByUser_Id(Long userId);
 }

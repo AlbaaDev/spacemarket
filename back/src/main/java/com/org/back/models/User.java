@@ -1,9 +1,8 @@
 package com.org.back.models;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -49,12 +48,12 @@ public class User implements UserDetails {
     @Email(message = "Invalid email format")
     private String email;
 
-    @Column(unique = true, nullable = false, length = 128)
+    @Column(nullable = false, length = 128)
     @NotBlank(message = "Password cannot be blank")
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Contact> contacts = new HashSet<>();
+    private transient List<Contact> contacts = new ArrayList<>();
 
     @Override
     public String getUsername() {

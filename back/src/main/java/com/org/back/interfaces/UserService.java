@@ -1,9 +1,9 @@
 package com.org.back.interfaces;
 
 import java.util.List;
-import java.util.Optional;
-
+import com.org.back.dto.user.ContactDto;
 import com.org.back.dto.user.UserCreateDto;
+import com.org.back.dto.user.UserResponseDto;
 import com.org.back.dto.user.UserUpdateProfileDto;
 import com.org.back.dto.user.UserUpdateSettingsDto;
 import com.org.back.exceptions.EntityNotFoundException;
@@ -16,15 +16,21 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public interface UserService {
-    List<User> getAllUsers();
-    User addUser(@Valid UserCreateDto userCreateDto) throws UserAlreadyExistsException;
-    Optional<User> getUserById(@NotNull Long id);
-    Optional<User> findUserByEmail(@NotBlank @Email String email);
-    void updateUserProfile(
-       User authUser, 
-        @Valid UserUpdateProfileDto newUserUpdateDto) throws UserAlreadyExistsException, EntityNotFoundException;
-    void updateUserSettings(
-       User authUser,  
-        @Valid UserUpdateSettingsDto newUserUpdateDto) throws UserAlreadyExistsException, EntityNotFoundException;
-    void deleteUserById(@NotNull Long id);
+    List<UserResponseDto> getAllUsers();
+
+    UserResponseDto addUser(@Valid UserCreateDto userCreateDto) throws UserAlreadyExistsException;
+
+    UserResponseDto getUserById(@NotNull Long id) throws EntityNotFoundException;
+
+    UserResponseDto findUserByEmail(@NotBlank @Email String email) throws EntityNotFoundException;
+
+    void updateUserProfile(User authUser, @Valid UserUpdateProfileDto newUserUpdateDto) 
+        throws UserAlreadyExistsException, EntityNotFoundException;
+
+    void updateUserSettings(User authUser, @Valid UserUpdateSettingsDto newUserUpdateDto) 
+        throws UserAlreadyExistsException, EntityNotFoundException;
+
+    void deleteUserById(@NotNull Long id) throws EntityNotFoundException;
+
+    List<ContactDto> getContactsByUserId(Long userId) throws EntityNotFoundException;
 }

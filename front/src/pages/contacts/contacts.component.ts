@@ -17,13 +17,13 @@ import {
   MatTable,
   MatTableDataSource
 } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { Contact, ContactKeys } from '../../interfaces/Contact';
 import { ContactService } from '../../services/contact/contact.service';
 import { AddContactModal } from './modals/add/add-modal-component';
 import { DeleteContacModal } from './modals/delete/delete-contact-modal';
 import { EditContactModal } from './modals/edit/edit-contact-modal';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-contact',
@@ -63,9 +63,8 @@ export class ContactsComponent implements AfterViewInit {
   readonly columns = {
     firstName: 'First name',
     lastName: 'Last name',
-    email: 'Email',
-    phone: 'Phone number',
-    birthDate: 'Birth date',
+    email: 'Emails',
+    phone: 'Phones',
     city: 'City',
     address: 'Address',
     country: 'Country'
@@ -86,7 +85,6 @@ export class ContactsComponent implements AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
   constructor() {
-
     effect(() => {
       this.dataSource.data = this.contacts();
       if (this.canDeleteContacts()) {
@@ -138,8 +136,8 @@ export class ContactsComponent implements AfterViewInit {
   }
   getContacts() {
     this.contactService.getContacts().subscribe({
-      next: (contacts) => {
-        this.dataSource.data = contacts;
+      next: (reponse) => {
+        this.dataSource.data = reponse.data;
       },
       error: (error) => {
         console.error('Error fetching contacts: ', error);
@@ -150,7 +148,7 @@ export class ContactsComponent implements AfterViewInit {
   goToDetailsPage(contact?: Contact) {
     const selectedContact: Contact | undefined = contact ?? this.selection.selected[0];
     if (!selectedContact) {
-      return; 
+      return;
     }
     this.router.navigate(['/contact', selectedContact.id], {
       state: { contact: selectedContact }

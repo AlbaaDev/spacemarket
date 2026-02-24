@@ -15,12 +15,14 @@ import com.org.back.models.User;
 public interface UserMapper {
 
     UserLoginDto toUserLoginDTO(User user);
+
     UserResponseDto toUserResponseDto(User user);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "authorities", ignore = true)
     @Mapping(target = "email", ignore = true)
     @Mapping(target = "password", ignore = true)
+    @Mapping(target = "contacts", ignore = true)
     void updateEntityProfileFromDto(UserUpdateProfileDto userUpdaDto, @MappingTarget User user);
 
     @Mapping(target = "id", ignore = true)
@@ -28,11 +30,12 @@ public interface UserMapper {
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "firstName", ignore = true)
     @Mapping(target = "lastName", ignore = true)
+    @Mapping(target = "contacts", ignore = true)
     void updateEntitySettingsFromDto(UserUpdateSettingsDto userSettingsDto, @MappingTarget User user);
-
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "authorities", ignore = true)
+    @Mapping(target = "contacts", ignore = true)
     void createEntityFromDto(UserCreateDto userCreateDto, @MappingTarget User user);
 
 }

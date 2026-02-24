@@ -1,11 +1,14 @@
 package com.org.back.models;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,10 +16,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -27,7 +29,7 @@ import lombok.ToString;
 @Getter
 @RequiredArgsConstructor
 @Entity
-@Table(name = "Contact")
+@Table(name = "Contacts")
 public class Contact {
 
     @Id
@@ -43,26 +45,13 @@ public class Contact {
     @Column(nullable = false, length = 45)
     private String lastName;
 
-    @NotBlank(message = "Phone cannot be blank")
-    @Size(min = 10, max = 12, message = "Phone number should be between 10 and 12")
-    private String phone;
-
-    @NotBlank(message = "Email cannot be blank")
-    @Email(message = "Invalid email format")
-    private String email;
-
-    @Column(nullable = false, length = 12)
-    private LocalDate birthDate;
-
-    @NotBlank(message = "City cannot be blank")
-    @Column(nullable = false, length = 45)
+    @Column(nullable = true, length = 45)
     private String city;
 
-    @Column(nullable = false, length = 45)
+    @Column(nullable = true, length = 45)
     private String address;
 
-    @NotBlank(message = "Country cannot be blank")
-    @Column(nullable = false, length = 45)
+    @Column(nullable = true, length = 45)
     private String country;
 
     @ManyToMany
@@ -71,14 +60,19 @@ public class Contact {
         joinColumns = @JoinColumn(name = "contact_id"),
         inverseJoinColumns = @JoinColumn(name = "opportunity_id")
     )
-    private Set<Opportunity> opportunities = new HashSet<>();
+    private List<Opportunity> opportunities = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "contact")
+    private List<ContactEmail> emails = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "contact")
+    private List<ContactPhone> phones = new ArrayList<>();
 }

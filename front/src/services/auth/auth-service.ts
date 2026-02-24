@@ -4,6 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { Observable, switchMap, tap, throwError } from 'rxjs';
 import { User } from '../../interfaces/User';
 import { environment } from '../../environments/environment';
+import { ApiResponse } from '../../interfaces/ApiResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -50,11 +51,11 @@ export class AuthService {
     return this.http.post<void>(environment.baseUrl + '/auth/register', user);
   }
 
-  getCurrentUser(): Observable<User> {
-    return this.http.get<User>(environment.baseUrl + '/users/me', { withCredentials: true }).pipe(
+  getCurrentUser(): Observable<ApiResponse<User>> {
+    return this.http.get<ApiResponse<User>>(environment.baseUrl + '/users/me', { withCredentials: true }).pipe(
       tap({
-        next: (user) => {
-          this.setCurrentUser(user);
+        next: (response) => {
+          this.setCurrentUser(response.data);
         },
         error: () => this.clearSession()
       })

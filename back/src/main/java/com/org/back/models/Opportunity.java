@@ -24,7 +24,7 @@ import lombok.ToString;
 @Getter
 @RequiredArgsConstructor
 @Entity
-@Table(name = "Opportunity")
+@Table(name = "Opportunities")
 public class Opportunity {
 
     @Id

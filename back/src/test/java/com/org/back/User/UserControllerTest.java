@@ -1,6 +1,5 @@
 package com.org.back.User;
 
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -29,6 +28,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.org.back.controllers.UserController;
+import com.org.back.dto.user.UserResponseDto;
 import com.org.back.dto.user.UserUpdateProfileDto;
 import com.org.back.dto.user.UserUpdateSettingsDto;
 import com.org.back.mapper.UserMapper;
@@ -39,7 +39,7 @@ import com.org.back.services.UserServiceImpl;
 
 @WebMvcTest(UserController.class)
 class UserControllerTest {
-    
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -65,16 +65,16 @@ class UserControllerTest {
     @WithMockUser
     void allUsers_should_return_all_users() throws Exception {
         // GIVEN
-        User user1 = new User();
-        user1.setId(1L);
-        user1.setFirstName("John");
-        user1.setLastName("Doe");
+        UserResponseDto user1 = new UserResponseDto(
+                "John",
+                "Doe",
+                "john.doe@work.com");
 
-        User user2 = new User();
-        user2.setId(2L);
-        user2.setFirstName("Jane");
-        user2.setLastName("Doe");
-        List<User> userList = List.of(user1, user2);
+        UserResponseDto user2 = new UserResponseDto(
+                "Jane",
+                "Doe",
+                "jane.doe@work.com");
+        List<UserResponseDto> userList = List.of(user1, user2);
         when(userService.getAllUsers()).thenReturn(userList);
 
         // WHEN
@@ -82,20 +82,20 @@ class UserControllerTest {
 
         // THEN
         response
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
     @WithMockUser
     @DisplayName("Should return 200 when user tries to update profile with valid data")
-    void updateProfile_should_return_200_when_profile_data_is_valid_and_user_is_authenticated() throws Exception { 
+    void updateProfile_should_return_200_when_profile_data_is_valid_and_user_is_authenticated() throws Exception {
         // GIVEN
         UserUpdateProfileDto updateProfileDto = new UserUpdateProfileDto("abi", "faz");
-        doNothing().when(userService).updateUserProfile(any(User.class), eq(updateProfileDto) );
+        doNothing().when(userService).updateUserProfile(any(User.class), eq(updateProfileDto));
 
         // WHEN
-        ResultActions response =  mockMvc.perform(put("/users/me/profile")
+        ResultActions response = mockMvc.perform(put("/users/me/profile")
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(csrf())
                 .content(objectMapper.writeValueAsString(updateProfileDto)));
@@ -110,12 +110,12 @@ class UserControllerTest {
     void updateProfile_should_return_403_when_no_csrf_token() throws Exception {
         // GIVEN
         UserUpdateProfileDto updateProfileDto = new UserUpdateProfileDto("abi", "faz");
-        doNothing().when(userService).updateUserProfile(any(User.class), eq(updateProfileDto) );
+        doNothing().when(userService).updateUserProfile(any(User.class), eq(updateProfileDto));
 
         // WHEN
-        ResultActions response =  mockMvc.perform(put("/users/me/profile")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(updateProfileDto)));
+        ResultActions response = mockMvc.perform(put("/users/me/profile")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateProfileDto)));
 
         // THEN
         response.andExpect(status().isForbidden());
@@ -127,13 +127,13 @@ class UserControllerTest {
     void updateProfile_should_return_400_when_invalid_data_is_provided() throws Exception {
         // GIVEN
         UserUpdateProfileDto updateProfileDto = new UserUpdateProfileDto("", "");
-        doNothing().when(userService).updateUserProfile(any(User.class), eq(updateProfileDto) );
+        doNothing().when(userService).updateUserProfile(any(User.class), eq(updateProfileDto));
 
         // WHEN
-        ResultActions response =  mockMvc.perform(put("/users/me/profile")
-            .contentType(MediaType.APPLICATION_JSON)
-            .with(csrf())
-            .content(objectMapper.writeValueAsString(updateProfileDto)));
+        ResultActions response = mockMvc.perform(put("/users/me/profile")
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf())
+                .content(objectMapper.writeValueAsString(updateProfileDto)));
 
         // THEN
         response.andExpect(status().isBadRequest());
@@ -147,13 +147,12 @@ class UserControllerTest {
         // GIVEN
         UserUpdateProfileDto updateProfileDto = new UserUpdateProfileDto("abi", "faz");
         doNothing().when(userService).updateUserProfile((any(User.class)), eq(updateProfileDto));
-      
-        // WHEN
-        ResultActions response =  mockMvc.perform(put("/users/me/profile")
-        .contentType(MediaType.APPLICATION_JSON)
-        .with(csrf())
-        .content(objectMapper.writeValueAsString(updateProfileDto)));
 
+        // WHEN
+        ResultActions response = mockMvc.perform(put("/users/me/profile")
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf())
+                .content(objectMapper.writeValueAsString(updateProfileDto)));
 
         // THEN
         response.andExpect(status().isUnauthorized());
@@ -163,22 +162,20 @@ class UserControllerTest {
     @Test
     @WithMockUser
     @DisplayName("Should return 200 when user tries to update settings with valid data")
-    void updateSettings_should_return_200_when_settings_data_is_valid() throws Exception { 
+    void updateSettings_should_return_200_when_settings_data_is_valid() throws Exception {
         // GIVEN
         UserUpdateSettingsDto updateSettingsDto = new UserUpdateSettingsDto("test4@live.fr");
         doNothing().when(userService).updateUserSettings(any(User.class), eq(updateSettingsDto));
 
         // WHEN
         ResultActions response = mockMvc.perform(put("/users/me/settings")
-            .contentType(MediaType.APPLICATION_JSON)
-            .with(csrf())
-            .content(objectMapper.writeValueAsString(updateSettingsDto))
-        );
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf())
+                .content(objectMapper.writeValueAsString(updateSettingsDto)));
 
         // THEN
         response.andExpect(status().isOk());
     }
-
 
     @Test
     @WithMockUser
@@ -190,10 +187,9 @@ class UserControllerTest {
 
         // WHEN
         ResultActions response = mockMvc.perform(put("/users/me/settings")
-            .contentType(MediaType.APPLICATION_JSON)
-            .with(csrf())
-            .content(objectMapper.writeValueAsString(updateSettingsDto))
-        );
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf())
+                .content(objectMapper.writeValueAsString(updateSettingsDto)));
 
         // THEN
         response.andExpect(status().isBadRequest());

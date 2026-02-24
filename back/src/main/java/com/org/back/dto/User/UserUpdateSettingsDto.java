@@ -4,5 +4,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 
 public record UserUpdateSettingsDto(
+        // TODO : Add other settings
         @Size(min = 2, max = 128) @Email String email){
 }

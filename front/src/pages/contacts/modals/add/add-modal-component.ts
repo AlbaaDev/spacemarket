@@ -1,19 +1,19 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
-import { provideNativeDateAdapter } from "@angular/material/core";
+import { MatOption, provideNativeDateAdapter } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatDialogModule } from "@angular/material/dialog";
+import { MatIcon } from "@angular/material/icon";
 import { MatFormField, MatInputModule } from "@angular/material/input";
 import { ContactService } from "../../../../services/contact/contact.service";
-import { dateValidator } from "../../../../validators/DateValidator";
 
 @Component({
   selector: 'add-contact-modal',
   templateUrl: 'add-contact-modal.html',
   styleUrl: 'add-contact-modal.css',
   providers: [provideNativeDateAdapter()],
-  imports: [MatDialogModule, MatButtonModule, MatInputModule, MatFormField, ReactiveFormsModule, MatDatepickerModule, MatInputModule, MatDatepickerModule],
+  imports: [MatDialogModule, MatButtonModule, MatInputModule, MatFormField, ReactiveFormsModule, MatDatepickerModule, MatInputModule, MatDatepickerModule, MatIcon, MatOption],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddContactModal {
@@ -24,17 +24,18 @@ export class AddContactModal {
   protected readonly contactAddForm: FormGroup = this.formBuilder.group({
     firstName: ['', [Validators.required]],
     lastName: ['', [Validators.required]],
-    email: ['', [Validators.email, Validators.required]],
-    phone: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(12)]],
-    birthDate: ['', [Validators.required, dateValidator]],
-    city: ['', Validators.required],
-    address: ['', Validators.required],
-    country: ['', Validators.required]
+    city: [''],
+    address: [''],
+    country: [''],
+    emails: this.formBuilder.array([
+      this.createEmailFormGroup()
+    ]),
+    phones: this.formBuilder.array([
+      this.createPhoneFormGroup()
+    ])
   });
-
-  get email() {
-    return this.contactAddForm.get('email');
-  }
+  toastr: any;
+  router: any;
 
   get firstName() {
     return this.contactAddForm.get('firstName');
@@ -42,14 +43,6 @@ export class AddContactModal {
 
   get lastName() {
     return this.contactAddForm.get('lastName');
-  }
-
-  get phone() {
-    return this.contactAddForm.get('phone');
-  }
-
-  get birthDate() {
-    return this.contactAddForm.get('birthDate');
   }
 
   get city() {
@@ -64,11 +57,66 @@ export class AddContactModal {
     return this.contactAddForm.get('country');
   }
 
+  get emails(): FormArray {
+    return this.contactAddForm.get('emails') as FormArray;
+  }
+
+  get phones(): FormArray {
+    return this.contactAddForm.get('phones') as FormArray;
+  }
+
+  newEmail() {
+    this.emails.push(this.createEmailFormGroup());
+  }
+
+  removeEmail(index: number) {
+    if (this.emails.length > 1) {
+      this.emails.removeAt(index);
+    }
+  }
+
+  newPhone() {
+    this.phones.push(this.createPhoneFormGroup());
+  }
+
+  removePhone(index: number) {
+    if (this.phones.length > 1) {
+      this.phones.removeAt(index);
+    }
+  }
+
+  createEmailFormGroup(): FormGroup {
+    return this.formBuilder.group({
+      email: ['', [Validators.email]],
+      type: ['WORK'],
+      isPrimary: [false]
+    });
+  }
+
+  createPhoneFormGroup(): FormGroup {
+    return this.formBuilder.group({
+      phone: ['', [Validators.minLength(10), Validators.maxLength(12)]],
+      type: ['WORK'],
+      isPrimary: [false]
+    });
+  }
+
   onSubmitContactForm() {
-    this.contactService.addContact(this.contactAddForm.value).subscribe({
+    if (this.contactAddForm.invalid) {
+      return;
+    }
+    const formValue = { ...this.contactAddForm.value };
+    formValue.emails = formValue.emails.filter((element: any) =>
+      element.email && element.email.trim() !== ''
+    );
+    formValue.phones = formValue.phones.filter((element: any) =>
+      element.phone && element.phone.trim() !== ''
+    );
+    this.contactService.addContact(formValue).subscribe({
       next: (contact) => {
       },
-    
+      error: (error) => {
+      }
     });
   }
 }

@@ -1,15 +1,66 @@
-INSERT INTO Company (name, country, city, address) VALUES('Google', 'Suisse', 'Genève', '1 California Way');
-INSERT INTO Company (name, country, city, address) VALUES('Microsoft', 'USA', 'Seattle', '1 Microsoft Way');
-INSERT INTO Company (name, country, city, address) VALUES('Apple', 'USA', 'Cupertino', '1 Apple Park Way');
+-- =========================
+-- USERS (EN PREMIER)
+-- =========================
+-- Mot de passe : "password" encodé en BCrypt
+INSERT INTO USERS (email, password, first_name, last_name) 
+VALUES ('john@test.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'John', 'Smith');
 
-INSERT INTO Contact (birth_date, country, email, first_name, last_name, phone, city, address) 
-VALUES('2025-01-01', 'Suisse', 'test@live.fr', 'John1', 'Doe1', '0117684965', 'Genève', 'Rue de Genève');
+INSERT INTO USERS (email, password, first_name, last_name) 
+VALUES ('jane@test.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Jane', 'Doe');
 
-INSERT INTO Contact (birth_date, country, email, first_name, last_name, phone, city, address) 
-VALUES('2025-02-02', 'Suisse', 'test2@live.fr', 'John2', 'Doe2', '0217684965', 'Genève', 'Rue de Genève');
+-- =========================
+-- COMPANIES
+-- =========================
+INSERT INTO COMPANIES (name, country, city, address) 
+VALUES ('Google', 'Suisse', 'Genève', '1 California Way');
 
-INSERT INTO Contact (birth_date, country, email, first_name, last_name, phone, city, address) 
-VALUES('2025-03-03', 'France', 'test3@live.fr', 'John3', 'Doe3', '0317684965', 'Paris', 'Rue de France');
+INSERT INTO COMPANIES (name, country, city, address) 
+VALUES ('Microsoft', 'USA', 'Seattle', '1 Microsoft Way');
 
-INSERT INTO Contact (birth_date, country, email, first_name, last_name, phone, city, address) 
-VALUES('2025-04-04', 'USA', 'test4@live.fr', 'John4', 'Doe4', '0417684965', 'New York', 'Rue de New York'); 
+INSERT INTO COMPANIES (name, country, city, address) 
+VALUES ('Apple', 'USA', 'Cupertino', '1 Apple Park Way');
+
+-- =========================
+-- CONTACTS (avec user_id)
+-- =========================
+INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id) 
+VALUES ( 'Suisse', 'John1', 'Doe1', 'Genève', 'Rue de Genève', 1);
+
+INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id) 
+VALUES ( 'Suisse', 'John2', 'Doe2', 'Genève', 'Rue de Genève', 1); 
+
+INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id) 
+VALUES ( 'France', 'John3', 'Doe3', 'Paris', 'Rue de France', 1);
+
+INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id) 
+VALUES ( 'USA', 'John4', 'Doe4', 'New York', 'Rue de New York', 2);
+
+-- =========================
+-- CONTACT EMAILS
+-- =========================
+INSERT INTO CONTACT_EMAILS (email, type, is_primary, contact_id) 
+VALUES ('test@live.fr', 'WORK', TRUE, 1);
+
+INSERT INTO CONTACT_EMAILS (email, type, is_primary, contact_id) 
+VALUES ('test2@live.fr', 'WORK', TRUE, 2);
+
+INSERT INTO CONTACT_EMAILS (email, type, is_primary, contact_id) 
+VALUES ('test3@live.fr', 'WORK', TRUE, 3);
+
+INSERT INTO CONTACT_EMAILS (email, type, is_primary, contact_id) 
+VALUES ('test4@live.fr', 'WORK', TRUE, 4);
+
+-- =========================
+-- CONTACT PHONES
+-- =========================
+INSERT INTO CONTACT_PHONES (phone, type, is_primary, contact_id) 
+VALUES ('0117684965', 'WORK', TRUE, 1);
+
+INSERT INTO CONTACT_PHONES (phone, type, is_primary, contact_id) 
+VALUES ('0217684965', 'WORK', TRUE, 2);
+
+INSERT INTO CONTACT_PHONES (phone, type, is_primary, contact_id) 
+VALUES ('0317684965', 'WORK', TRUE, 3);
+
+INSERT INTO CONTACT_PHONES (phone, type, is_primary, contact_id) 
+VALUES ('0417684965', 'WORK', TRUE, 4);

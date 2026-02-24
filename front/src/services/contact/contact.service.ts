@@ -4,6 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { Observable, tap } from 'rxjs';
 import { Contact } from '../../interfaces/Contact';
 import { environment } from '../../environments/environment';
+import { ApiResponse } from '../../interfaces/ApiResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -20,27 +21,27 @@ export class ContactService {
   }
 
   addContact(contactToAdd: FormGroup) {
-    return this.http.post<Contact>(environment.baseUrl + '/contacts/', contactToAdd, { withCredentials: true }).pipe(
-      tap(newContact => {
-        this._contacts.update(contacts => [...contacts, newContact]);
+    return this.http.post<ApiResponse<Contact>>(environment.baseUrl + '/contacts/', contactToAdd, { withCredentials: true }).pipe(
+      tap(response => {
+        this._contacts.update(contacts => [...contacts, response.data]);
       })
     );
   }
 
-  editContact(contactToEdit: FormGroup) {
-    return this.http.put<Contact>(environment.baseUrl + '/contacts/', contactToEdit.value, { withCredentials: true }).pipe(
+  editContact(contactToEdit: Contact) {
+    return this.http.patch<ApiResponse<Contact>>(environment.baseUrl + '/contacts/', contactToEdit, { withCredentials: true }).pipe(
       tap(() => {
-        let contactIndex = this._contacts().findIndex(contact => contact.id == contactToEdit.value.id);
-        let updatedContacts = this._contacts()[contactIndex] = contactToEdit.value;
-        let filteredContacts = this._contacts().filter((contact) => contact.id !== contactToEdit.value.id);
+        let contactIndex = this._contacts().findIndex(contact => contact.id == contactToEdit.id);
+        let updatedContacts = this._contacts()[contactIndex] = contactToEdit;
+        let filteredContacts = this._contacts().filter((contact) => contact.id !== contactToEdit.id);
         this._contacts.update(contacts => [...filteredContacts, updatedContacts]);
         this.canClearSelection.set(true);
       })
     );
   }
 
-  getContacts(): Observable<Contact[]> {
-    return this.http.get<Contact[]>(environment.baseUrl + '/contacts/', { withCredentials: true });
+  getContacts(): Observable<ApiResponse<Contact[]>> {
+    return this.http.get<ApiResponse<Contact[]>>(environment.baseUrl + '/contacts/', { withCredentials: true });
   }
 
   deleteContactById(id: number) {
@@ -54,8 +55,8 @@ export class ContactService {
 
   private fetchContacts(): void {
     this.getContacts().subscribe({
-      next: (contacts) => {
-        this._contacts.set(contacts);
+      next: (response) => {
+        this._contacts.set(response.data);
       },
       error: (error) => {
         console.error('Error loading contacts:', error);

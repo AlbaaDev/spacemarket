@@ -1,6 +1,7 @@
 package com.org.back.exceptions;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,55 +12,60 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.org.back.models.ApiResponse;
+import com.org.back.models.ResponseUtil;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    public ErrorResponse handleUserAlreadyExist(UserAlreadyExistsException ex) {
-        return new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage(), LocalDateTime.now().toString());
+    public ApiResponse<Object> handleUserAlreadyExist(UserAlreadyExistsException ex, HttpServletRequest request) {
+        return ResponseUtil.error(HttpStatus.CONFLICT.value(), Arrays.asList(ex.getMessage()), LocalDateTime.now().toString());
     }
 
     @ExceptionHandler(ContactAlreadyExistException.class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    public ErrorResponse handleContactAlreadyExist(ContactAlreadyExistException ex) {
-        return new ErrorResponse(HttpStatus.CONFLICT.value(), ex.getMessage(), LocalDateTime.now().toString());
+    public ApiResponse<Object> handleContactAlreadyExist(ContactAlreadyExistException ex, HttpServletRequest request) {
+        return ResponseUtil.error(HttpStatus.CONFLICT.value(), Arrays.asList(ex.getMessage()), LocalDateTime.now().toString());
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public ErrorResponse handleBadCredentials(BadCredentialsException ex) {
-        return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), ex.getMessage(), LocalDateTime.now().toString());
+    public ApiResponse<Object> handleBadCredentials(BadCredentialsException ex, HttpServletRequest request) {
+        return ResponseUtil.error(HttpStatus.UNAUTHORIZED.value(), Arrays.asList(ex.getMessage()), LocalDateTime.now().toString());
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ErrorResponse handleEntityNotFound(EntityNotFoundException ex) {
-        return new ErrorResponse(HttpStatus.NOT_FOUND.value(), ex.getMessage(), LocalDateTime.now().toString());
+    public ApiResponse<Object> handleEntityNotFound(EntityNotFoundException ex, HttpServletRequest request) {
+        return ResponseUtil.error(HttpStatus.NOT_FOUND.value(), Arrays.asList(ex.getMessage()), LocalDateTime.now().toString());
     }
 
     @ExceptionHandler(PasswordDoesntMatchException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleEntityNotFound(PasswordDoesntMatchException ex) {
-        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now().toString());
+    public ApiResponse<Object> handleEntityNotFound(PasswordDoesntMatchException ex, HttpServletRequest request) {
+        return ResponseUtil.error(HttpStatus.BAD_REQUEST.value(), Arrays.asList(ex.getMessage()), LocalDateTime.now().toString());
     }
 
     @ExceptionHandler(PasswordAlreadyInUseException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleEntityNotFound(PasswordAlreadyInUseException ex) {
-        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now().toString());
+    public ApiResponse<Object> handleEntityNotFound(PasswordAlreadyInUseException ex, HttpServletRequest request) {
+        return ResponseUtil.error(HttpStatus.BAD_REQUEST.value(), Arrays.asList(ex.getMessage()), LocalDateTime.now().toString());
     }
 
     @ExceptionHandler(ConnectException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse handleConnectionFailed(ConnectException ex) {
-        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage(),
+    public ApiResponse<Object> handleConnectionFailed(ConnectException ex, HttpServletRequest request) {
+        return ResponseUtil.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), Arrays.asList(ex.getMessage()),
                 LocalDateTime.now().toString());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ApiResponse<Object> handleValidationExceptions(MethodArgumentNotValidException ex, HttpServletRequest request) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(
                 error -> {
@@ -67,6 +73,6 @@ public class GlobalExceptionHandler {
                     String errorMessage = error.getDefaultMessage();
                     errors.put(fieldName, errorMessage);
                 });
-        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), errors.toString(), LocalDateTime.now().toString());
+        return ResponseUtil.error(HttpStatus.BAD_REQUEST.value(), Arrays.asList(ex.getMessage()), LocalDateTime.now().toString());
     }
 }

@@ -5,78 +5,60 @@
       <mat-label>First Name</mat-label>
       <input id="firstName" type="text" formControlName="firstName" matInput fiedmatInput placeholder="Placeholder">
       <mat-icon matSuffix></mat-icon>
-      @if(firstName?.hasError('required') && firstName?.invalid && (firstName?.dirty || firstName?.touched)) {
-      <mat-error>
-        First Name is required
-      </mat-error>
-      }
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Last Name</mat-label>
       <input id="lastName" type="text" formControlName="lastName" matInput placeholder="Placeholder">
       <mat-icon matSuffix></mat-icon>
-      @if(lastName?.hasError('required') && lastName?.invalid && (lastName?.dirty || lastName?.touched)) {
-      <mat-error>
-        Last name is required
-      </mat-error>
-      }
     </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Email</mat-label>
-      <input id="email" type="email" formControlName="email" matInput placeholder="Placeholder">
-      <mat-icon matSuffix></mat-icon>
-      @if(email?.hasError('required') && email?.invalid && (email?.dirty || email?.touched)) {
-      <mat-error>
-        Email is required
-      </mat-error>
+    <div formArrayName="emails">
+      @for (emailControl of emails.controls; track $index) {
+      <div style="display: flex;">
+        <div [formGroupName]="$index">
+          <mat-form-field appearance="fill" style="width: 100%;">
+            <mat-label>Email</mat-label>
+            <input type="email" formControlName="email" matInput placeholder="Enter an email...">
+          </mat-form-field>
+        </div>
+        <div>
+          @if ($index === emails.length - 1) {
+          <button class="mx-2" type="button" mat-mini-fab color="primary" (click)="newEmail()">
+            <mat-icon>add</mat-icon>
+          </button>
+          }
+          @if (emails.length > 1) {
+          <button class="mx-2" type="button" mat-mini-fab color="warn" (click)="removeEmail($index)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          }
+        </div>
+      </div>
       }
-      @if(email?.hasError('email') && email?.invalid && (email?.dirty || email?.touched)) {
-      <mat-error>
-        Email is not valid
-      </mat-error>
+    </div>
+    <div formArrayName="phones">
+      @for (phoneControl of phones.controls; track $index) {
+      <div style="display: flex;">
+        <div [formGroupName]="$index">
+          <mat-form-field appearance="fill">
+            <mat-label>Phone</mat-label>
+            <input type="text" formControlName="phone" matInput placeholder="Enter a phone number...">
+          </mat-form-field>
+        </div>
+        <div>
+          @if ($index === phones.length - 1) {
+          <button class="mx-2" type="button" mat-mini-fab color="primary" (click)="newPhone()">
+            <mat-icon>add</mat-icon>
+          </button>
+          }
+          @if (phones.length > 1) {
+          <button class="mx-2" type="button" mat-mini-fab color="warn" (click)="removePhone($index)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          }
+        </div>
+      </div>
       }
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Phone</mat-label>
-      <input id="phone" type="text" formControlName="phone" matInput placeholder="Placeholder">
-      <mat-icon matSuffix></mat-icon>
-      @if(phone?.hasError('required') && phone?.invalid && (phone?.dirty || phone?.touched)) {
-      <mat-error>
-        Phone is required
-      </mat-error>
-      }
-      @if(phone?.hasError('minlength') && phone?.invalid && (phone?.dirty || phone?.touched)) {
-      <mat-error>
-        Phone number must be at least 10 characters
-      </mat-error>
-      }
-      @if(phone?.hasError('maxlength') && phone?.invalid && (phone?.dirty || phone?.touched)) {
-      <mat-error>
-        Phone number cannot exceed 12 characters
-      </mat-error>
-      }
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Choose a date</mat-label>
-      <input formControlName="birthDate" [max]="maxDate" id="birthDate" matInput #pickerInput [matDatepicker]="picker">
-      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-      @if(birthDate?.hasError('required') && birthDate?.invalid && (birthDate?.dirty || birthDate?.touched)) {
-      <mat-error>
-        Birth date is required
-      </mat-error>
-      }
-      @if(birthDate?.hasError('wrongFormat')) {
-      <mat-error>
-        Date should be in format MM/DD/YYYY
-      </mat-error>
-      }
-      @if(birthDate?.hasError('maxDate')) {
-      <mat-error>
-        Date cannot be greater than the current date.
-      </mat-error>
-      }
-    </mat-form-field>
+    </div>
     <mat-form-field appearance="fill">
       <mat-label>City</mat-label>
       <input id="city" type="text" formControlName="city" matInput placeholder="Placeholder">
@@ -91,25 +73,15 @@
       <mat-label>Address</mat-label>
       <input id="address" type="text" formControlName="address" matInput placeholder="Placeholder">
       <mat-icon matSuffix></mat-icon>
-      @if(address?.hasError('required') && address?.invalid && (address?.dirty || address?.touched)) {
-      <mat-error>
-        Address is required
-      </mat-error>
-      }
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Country</mat-label>
       <input id="country" type="text" formControlName="country" matInput placeholder="Placeholder">
       <mat-icon matSuffix></mat-icon>
-      @if(country?.hasError('required') && country?.invalid && (country?.dirty || country?.touched)) {
-      <mat-error>
-        Country is required
-      </mat-error>
-      }
     </mat-form-field>
   </mat-dialog-content>
   <mat-dialog-actions>
     <button matButton mat-dialog-close>Cancel</button>
-    <button matButton type="submit" [mat-dialog-close]="true" [disabled]="this.contactAddForm.invalid">Confirm</button>
+    <button matButton type="submit" [mat-dialog-close]="" [disabled]="this.contactAddForm.invalid">Confirm</button>
   </mat-dialog-actions>
 </form>

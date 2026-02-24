@@ -26,6 +26,7 @@ export const appConfig: ApplicationConfig = {
         authService.getCurrentUser().pipe(catchError(() => of(null)))
       );
     }),
+    //TODO : XSS
   ]
 };
 

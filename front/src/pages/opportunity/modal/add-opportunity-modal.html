@@ -1,61 +1,6 @@
 <h2 mat-dialog-title>Add opportunity</h2>
 <form [formGroup]="opportunityAddForm" (ngSubmit)="onSubmitOpportunityForm()">
   <mat-dialog-content class="mat-typography">
-    <mat-form-field class="example-full-width">
-      <mat-label>Contact</mat-label>
-      <input type="text" placeholder="Pick a contact" aria-label="Number" matInput formControlName="contact"
-        [matAutocomplete]="auto">
-      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-        @for (contact of filteredContactOptions | async; track contact) {
-          <mat-option [value]="contact.firstName"  (onSelectionChange)="_contactIsSelected($event)">{{contact.firstName}} {{contact.lastName}}</mat-option>
-        }
-      </mat-autocomplete>
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>First Name</mat-label>
-      <input id="firstName" type="text" formControlName="firstName" matInput fiedmatInput placeholder="Placeholder">
-      <mat-icon matSuffix></mat-icon>
-      @if(firstName?.hasError('required') && firstName?.invalid && (firstName?.dirty || firstName?.touched)) {
-      <mat-error>
-        First Name is required
-      </mat-error>
-      }
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Last Name</mat-label>
-      <input id="lastName" type="text" formControlName="lastName" matInput placeholder="Placeholder">
-      <mat-icon matSuffix></mat-icon>
-      @if(lastName?.hasError('required') && lastName?.invalid && (lastName?.dirty || lastName?.touched)) {
-      <mat-error>
-        Last name is required
-      </mat-error>
-      }
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Email</mat-label>
-      <input id="email" type="email" formControlName="email" matInput placeholder="Placeholder">
-      <mat-icon matSuffix></mat-icon>
-      @if(email?.hasError('required') && email?.invalid && (email?.dirty || email?.touched)) {
-      <mat-error>
-        Email is required
-      </mat-error>
-      }
-      @if(email?.hasError('email') && email?.invalid && (email?.dirty || email?.touched)) {
-      <mat-error>
-        Email is not valid
-      </mat-error>
-      }
-    </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Phone</mat-label>
-      <input id="phone" type="text" formControlName="phone" matInput placeholder="Placeholder">
-      <mat-icon matSuffix></mat-icon>
-      @if(phone?.hasError('required') && phone?.invalid && (phone?.dirty || phone?.touched)) {
-      <mat-error>
-        Phone is required
-      </mat-error>
-      }
-    </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Business name</mat-label>
       <input id="businessName" type="text" formControlName="businessName" matInput placeholder="Placeholder">

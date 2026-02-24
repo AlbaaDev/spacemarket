@@ -1,13 +1,15 @@
+import { ContactEmail } from "./ContactEmail";
+import { ContactPhone } from "./ContactPhone";
+
 export interface Contact { 
     id: number,
     firstName: string;
     lastName: string;
-    email: string;
-    phone: string;
-    birthDate: Date;
+    emails: ContactEmail[];
+    phones: ContactPhone[];
     city: string;
     address: string;
     country: string;
 }
 
-export type ContactKeys = 'firstName' | 'lastName' | 'email' | 'phone' | 'birthDate' | 'city' | 'address' | 'country';
+export type ContactKeys = 'firstName' | 'lastName' | 'email' | 'phone' | 'city' | 'address' | 'country';

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,11 +16,11 @@ import { MustMatch } from '../../validators/MustMatch';
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.css'
 })
-export class SettingsComponent {
+export class SettingsComponent implements OnInit {
   protected readonly userService = inject(UserService);
   protected readonly authService = inject(AuthService);
   protected readonly formBuilder = inject(FormBuilder);
-  protected readonly router      = inject(Router);
+  protected readonly router = inject(Router);
 
   protected readonly usernameFromHasChanged = signal<boolean>(false);
   protected readonly passwordFormHasChanged = signal<boolean>(false);
