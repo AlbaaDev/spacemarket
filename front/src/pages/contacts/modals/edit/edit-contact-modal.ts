@@ -131,7 +131,6 @@ export class EditContactModal implements OnInit {
         }
         this.contactService.editContact(this.editContactForm.value).subscribe({
             next: () => {
-                console.log('Contact updated successfully');
             },
             error: (error) => {
                 console.error('Error updating contact:', error);
