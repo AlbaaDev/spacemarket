@@ -68,11 +68,11 @@ export class AuthService {
   }
 
   setCurrentUser(newUser: User): void {
-    const user = { ...newUser, ...this._currentUser() };
+    const user = { ...this._currentUser(), ...newUser };
     this._currentUser.set(user);
     this._isAuthenticated.set(true);
     localStorage.setItem('user', JSON.stringify(user));
-    console.log(" this._currentUser : ", this._currentUser);
+    console.log(" this._currentUser : ", this._currentUser());
   }
 
   hasJwtCookie(): boolean {
