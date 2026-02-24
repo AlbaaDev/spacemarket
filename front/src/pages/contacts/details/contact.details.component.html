@@ -3,10 +3,17 @@
 
     <h2>First Name : {{contact.firstName}}</h2>
     <h2>Last Name : {{contact.lastName}}</h2>
-    <h2>Email : {{contact.emails[0].email}}</h2>
-    <h2>Phone : {{contact.phones[0].phone}} </h2>
+    <h2>Emails :
+        @for (item of contact.emails; track $index) {
+        <div>{{ item.email }}</div>
+        }
+    </h2>
+    <h2>Phones :
+        @for (item of contact.phones; track $index) {
+        <div>{{ item.phone }}</div>
+        }
+    </h2>
     <h2>City : {{contact.city}}</h2>
     <h2>Address : {{contact.address}}</h2>
     <h2>Country : {{contact.country}}</h2>
-    
 </div>

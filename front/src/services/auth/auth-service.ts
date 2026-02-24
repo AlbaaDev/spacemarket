@@ -53,8 +53,6 @@ export class AuthService {
     return this.http.get<ApiResponse<User>>(environment.baseUrl + '/users/me', { withCredentials: true }).pipe(
       tap({
         next: (response) => {
-          console.log("getCurrentUser response ", response);
-
           this.setCurrentUser(response.data);
         },
         error: () => this.clearSession()
@@ -69,12 +67,12 @@ export class AuthService {
       );
   }
 
-  setCurrentUser(user: User): void {
-    console.log("setCurrentUser ", user);
-
+  setCurrentUser(newUser: User): void {
+    const user = { ...newUser, ...this._currentUser() };
     this._currentUser.set(user);
     this._isAuthenticated.set(true);
     localStorage.setItem('user', JSON.stringify(user));
+    console.log(" this._currentUser : ", this._currentUser);
   }
 
   hasJwtCookie(): boolean {

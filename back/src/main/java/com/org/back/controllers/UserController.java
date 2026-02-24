@@ -54,7 +54,7 @@ public class UserController {
         }
 
         @PatchMapping("/me/profile")
-        public ResponseEntity<Object> updateProfile(
+        public ResponseEntity<Void> updateProfile(
                         @Valid @RequestBody UserUpdateProfileDto newUserProfile,
                         @AuthenticationPrincipal User authUser,
                         HttpServletRequest request) throws EntityNotFoundException {

@@ -16,26 +16,27 @@ export class UserService {
 
   constructor() {
 
-   }
+  }
 
-  updateProfile(profileData: User) : Observable<ApiResponse<User>> {
-      return this.http.patch<ApiResponse<User>>(environment.baseUrl + '/users/me/profile', profileData, {withCredentials: true}).pipe(
-        tap(() => {
-          this.authService.setCurrentUser(profileData);
-        })
-      )
-   }
+  updateProfile(profileData: User): Observable<void> {
+    return this.http.patch<void>(environment.baseUrl + '/users/me/profile', profileData, { withCredentials: true }).pipe(
+      tap(() => {
+        console.log("profileData ", profileData);
+        this.authService.setCurrentUser(profileData);
+      })
+    )
+  }
 
-   updateSettings(userNameData: User) : Observable<void> {
-    return this.http.patch<void>(environment.baseUrl + '/users/me/settings', userNameData, {withCredentials: true}).pipe(
+  updateSettings(userNameData: User): Observable<void> {
+    return this.http.patch<void>(environment.baseUrl + '/users/me/settings', userNameData, { withCredentials: true }).pipe(
       tap(() => {
         this.authService.setCurrentUser(userNameData);
       })
     )
   }
 
-  updatePassword(passwordData: User) : Observable<void> {
-    return this.http.put<void>(environment.baseUrl + '/users/me/password', passwordData, {withCredentials: true});
+  updatePassword(passwordData: User): Observable<void> {
+    return this.http.put<void>(environment.baseUrl + '/users/me/password', passwordData, { withCredentials: true });
   }
 }
 
