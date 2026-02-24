@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
-import { MatOption, provideNativeDateAdapter } from "@angular/material/core";
+import { provideNativeDateAdapter } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatIcon } from "@angular/material/icon";
@@ -13,7 +13,7 @@ import { ContactService } from "../../../../services/contact/contact.service";
   templateUrl: 'add-contact-modal.html',
   styleUrl: 'add-contact-modal.css',
   providers: [provideNativeDateAdapter()],
-  imports: [MatDialogModule, MatButtonModule, MatInputModule, MatFormField, ReactiveFormsModule, MatDatepickerModule, MatInputModule, MatDatepickerModule, MatIcon, MatOption],
+  imports: [MatDialogModule, MatButtonModule, MatInputModule, MatFormField, ReactiveFormsModule, MatDatepickerModule, MatInputModule, MatDatepickerModule, MatIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddContactModal {

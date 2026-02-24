@@ -1,15 +1,15 @@
+import { SelectionModel } from '@angular/cdk/collections';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { OpportunityService } from '../../services/opportunity/opportunity.service';
-import { MatIcon, MatIconModule } from "@angular/material/icon";
-import { ContactKeys } from '../../interfaces/Contact';
-import { MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
-import { Opportunity } from '../../interfaces/Opportunity';
 import { MatButtonModule } from '@angular/material/button';
-import { AddOpportunityModal } from './modal/add-opportunity-component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIcon, MatIconModule } from "@angular/material/icon";
+import { MatTableDataSource } from '@angular/material/table';
+import { ContactKeys } from '../../interfaces/Contact';
+import { Opportunity } from '../../interfaces/Opportunity';
 import { ContactService } from '../../services/contact/contact.service';
+import { OpportunityService } from '../../services/opportunity/opportunity.service';
+import { AddOpportunityModal } from './modal/add-opportunity-component';
 
 @Component({
   selector: 'app-opportunity',

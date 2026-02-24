@@ -12,4 +12,4 @@ export interface Contact {
     country: string;
 }
 
-export type ContactKeys = 'firstName' | 'lastName' | 'email' | 'phone' | 'city' | 'address' | 'country';
+export type ContactKeys = 'firstName' | 'lastName' | 'emails' | 'phones' | 'city' | 'address' | 'country';

@@ -63,12 +63,27 @@ export class ContactsComponent implements AfterViewInit {
   readonly columns = {
     firstName: 'First name',
     lastName: 'Last name',
-    email: 'Emails',
-    phone: 'Phones',
+    emails: 'Emails',
+    phones: 'Phones',
     city: 'City',
     address: 'Address',
     country: 'Country'
   };
+
+  isArray(value: any): boolean {
+    return Array.isArray(value);
+  }
+
+  getArrayItems(arr: any[]): string[] {
+    if (!arr || arr.length === 0) return [];
+
+    return arr.map(item => {
+      if (typeof item === 'object') {
+        return item.email || item.phone || item.name || '';
+      }
+      return String(item);
+    }).filter(Boolean);
+  }
 
   readonly dataColumns = Object.keys(this.columns) as ContactKeys[];
   readonly displayedColumns = ['select', ...this.dataColumns] as const;

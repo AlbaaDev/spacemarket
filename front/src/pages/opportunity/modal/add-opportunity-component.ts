@@ -1,9 +1,8 @@
-import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Inject, inject, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { MatAutocomplete, MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatButtonModule } from "@angular/material/button";
-import { MatOption, provideNativeDateAdapter } from "@angular/material/core";
+import { provideNativeDateAdapter } from "@angular/material/core";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MAT_DIALOG_DATA, MatDialogModule } from "@angular/material/dialog";
 import { MatFormField, MatInputModule } from "@angular/material/input";
@@ -17,7 +16,7 @@ import { OpportunityService } from "../../../services/opportunity/opportunity.se
   templateUrl: 'add-opportunity-modal.html',
   styleUrl: 'add-opportunity-modal.css',
   providers: [provideNativeDateAdapter()],
-  imports: [AsyncPipe, MatDialogModule, MatButtonModule, MatInputModule, MatFormField, ReactiveFormsModule, MatDatepickerModule, MatInputModule, MatDatepickerModule, MatAutocomplete, MatOption, MatAutocompleteModule],
+  imports: [MatDialogModule, MatButtonModule, MatInputModule, MatFormField, ReactiveFormsModule, MatDatepickerModule, MatInputModule, MatDatepickerModule, MatAutocompleteModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddOpportunityModal implements OnInit {
@@ -44,7 +43,7 @@ export class AddOpportunityModal implements OnInit {
     // this.filteredContactOptions?.subscribe(
     //   {
     //     next: (filteredContact) => {
-       
+
     //     }
     //   }
     // );

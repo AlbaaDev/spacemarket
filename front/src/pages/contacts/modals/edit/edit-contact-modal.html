@@ -35,6 +35,11 @@
                     </mat-form-field>
                 </div>
                 <div>
+                    <button class="mx-2" type="button" mat-mini-fab color="primary" (click)="newEmail()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+                <div>
                     @if (emails.length >= 1) {
                     <button class="mx-2" type="button" mat-mini-fab color="warn" (click)="removeEmail($index)">
                         <mat-icon>delete</mat-icon>
