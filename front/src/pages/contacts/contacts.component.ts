@@ -21,9 +21,9 @@ import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
 import { Contact, ContactKeys } from '../../interfaces/Contact';
 import { ContactService } from '../../services/contact/contact.service';
-import { AddContactModal } from './modals/add/add-modal-component';
-import { DeleteContacModal } from './modals/delete/delete-contact-modal';
-import { EditContactModal } from './modals/edit/edit-contact-modal';
+import { DeleteCompanyModal } from '../companies/modals/Delete/delete-company-modal';
+import { AddContactModal } from './modals/Add/add-contact-modal-component';
+import { EditContactModal } from './modals/Edit/edit-contact-modal';
 
 @Component({
   selector: 'app-contact',
@@ -52,7 +52,7 @@ export class ContactsComponent implements AfterViewInit {
   private readonly formBuilder = inject(FormBuilder)
   private readonly contactService = inject(ContactService);
   private readonly _snackBar = inject(MatSnackBar);
-  private router = inject(Router);
+  private readonly router = inject(Router);
 
   readonly dialog = inject(MatDialog);
 
@@ -63,27 +63,13 @@ export class ContactsComponent implements AfterViewInit {
   readonly columns = {
     firstName: 'First name',
     lastName: 'Last name',
+    company: 'Company',
     emails: 'Emails',
     phones: 'Phones',
     city: 'City',
     address: 'Address',
-    country: 'Country'
+    country: 'Country',
   };
-
-  isArray(value: any): boolean {
-    return Array.isArray(value);
-  }
-
-  getArrayItems(arr: any[]): string[] {
-    if (!arr || arr.length === 0) return [];
-
-    return arr.map(item => {
-      if (typeof item === 'object') {
-        return item.email || item.phone || item.name || '';
-      }
-      return String(item);
-    }).filter(Boolean);
-  }
 
   readonly dataColumns = Object.keys(this.columns) as ContactKeys[];
   readonly displayedColumns = ['select', ...this.dataColumns] as const;
@@ -95,10 +81,6 @@ export class ContactsComponent implements AfterViewInit {
   private readonly _currentDay = new Date().getDate();
   private readonly maxDate = new Date(this._currentYear, this._currentMonth, this._currentDay);
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
   constructor() {
     effect(() => {
       this.dataSource.data = this.contacts();
@@ -110,6 +92,12 @@ export class ContactsComponent implements AfterViewInit {
       }
     });
   }
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
@@ -127,7 +115,7 @@ export class ContactsComponent implements AfterViewInit {
   }
   openDeleteDialog() {
     if (this.selection.selected) {
-      this.dialog.open(DeleteContacModal);
+      this.dialog.open(DeleteCompanyModal);
     }
   }
   openEditDialog() {
@@ -168,6 +156,43 @@ export class ContactsComponent implements AfterViewInit {
     this.router.navigate(['/contact', selectedContact.id], {
       state: { contact: selectedContact }
     });
+  }
+
+  isArray(value: any): boolean {
+    return Array.isArray(value);
+  }
+
+  isObject(value: any): boolean {
+    return typeof value === 'object' && value !== null
+  }
+
+  getArrayItems(arr: any[]): string[] {
+    if (!arr || arr.length === 0) return [];
+
+    return arr.map(item => {
+      if (typeof item === 'object') {
+        return item.email || item.phone || item.name || '';
+      }
+      return String(item);
+    }).filter(Boolean);
+  }
+
+  displayColumn(element: any, column: string): string {
+    const value = element[column];
+    if (value === null || value === undefined) {
+      return '-';
+    }
+    if (Array.isArray(value)) {
+      return this.getArrayItems(value).join(', ');
+    }
+    if (typeof value === 'object') {
+      return value.name ?? (value.toString ? value.toString() : '-');
+    }
+    return String(value);
+  }
+
+  displayContact(contact: Contact): string {
+    return contact ? `${contact.firstName} ${contact.lastName}` : '';
   }
 
 }

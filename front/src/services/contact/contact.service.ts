@@ -56,7 +56,11 @@ export class ContactService {
   private fetchContacts(): void {
     this.getContacts().subscribe({
       next: (response) => {
-        this._contacts.set(response.data);
+        if (response?.data) {
+          this._contacts.set(response.data);
+        } else {
+          console.warn('empty contacts response', response);
+        }
       },
       error: (error) => {
         console.error('Error loading contacts:', error);

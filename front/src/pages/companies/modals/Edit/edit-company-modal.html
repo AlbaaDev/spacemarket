@@ -1,0 +1,72 @@
+<h2 mat-dialog-title>Edit company</h2>
+<mat-dialog-content>
+  <form [formGroup]="editCompanyForm" (ngSubmit)="confirmEditCompany()">
+    <mat-form-field appearance="fill">
+      <mat-label>Name</mat-label>
+      <input id="name" type="text" formControlName="name" matInput fiedmatInput placeholder="Enter y name...">
+      <mat-icon matSuffix></mat-icon>
+      @if(name?.hasError('required') && name?.invalid && (name?.dirty || name?.touched)) {
+      <mat-error>
+        Name is required
+      </mat-error>
+      }
+    </mat-form-field>
+    <div formArrayName="contacts">
+      @for (contactControl of contacts.controls; track $index) {
+      <div style="display: flex;">
+        <div [formGroupName]="$index" class="w-100">
+          <mat-form-field>
+            <mat-label>Contact</mat-label>
+            <input type="text" matInput formControlName="contact" [matAutocomplete]="auto"
+              placeholder="Search by name...">
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayContact">
+              @for (contact of filteredContacts[$index] | async; track contact.id) {
+              <mat-option [value]="contact">
+                {{ contact.firstName }} {{ contact.lastName }}
+              </mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+          <div>
+            @if ($index === contacts.length - 1) {
+            <button class="mx-2" type="button" mat-mini-fab color="primary" (click)="newContact()">
+              <mat-icon>add</mat-icon>
+            </button>
+            }
+            @if (contacts.length > 1) {
+            <button class="mx-2" type="button" mat-mini-fab color="warn" (click)="removeContact($index)">
+              <mat-icon>delete</mat-icon>
+            </button>
+            }
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+    <mat-form-field appearance="fill">
+      <mat-label>Industry</mat-label>
+      <input id="industry" type="text" formControlName="industry" matInput fiedmatInput
+        placeholder="Enter an industry...">
+      <mat-icon matSuffix></mat-icon>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>City</mat-label>
+      <input id="city" type="text" formControlName="city" matInput placeholder="Placeholder">
+      <mat-icon matSuffix></mat-icon>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Address</mat-label>
+      <input id="address" type="text" formControlName="address" matInput placeholder="Placeholder">
+      <mat-icon matSuffix></mat-icon>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Country</mat-label>
+      <input id="country" type="text" formControlName="country" matInput placeholder="Placeholder">
+      <mat-icon matSuffix></mat-icon>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button matButton mat-dialog-close>Cancel</button>
+  <button matButton mat-dialog-close (click)="confirmEditCompany()">Confirm</button>
+</mat-dialog-actions>

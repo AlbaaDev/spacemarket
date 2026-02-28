@@ -12,7 +12,7 @@ import { OpportunityService } from '../../services/opportunity/opportunity.servi
 import { AddOpportunityModal } from './modal/add-opportunity-component';
 
 @Component({
-  selector: 'app-opportunity',
+  selector: 'opportunity',
     imports: [
     MatIconModule,
     MatIcon,

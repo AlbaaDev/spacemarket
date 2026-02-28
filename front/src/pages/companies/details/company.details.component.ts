@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { Contact } from '../../../interfaces/Contact';
+import { Company } from '../../../interfaces/Company';
 
 
 @Component({
@@ -9,15 +9,15 @@ import { Contact } from '../../../interfaces/Contact';
   imports: [
     ReactiveFormsModule
   ],
-  templateUrl: './contact.details.component.html',
-  styleUrl: './contact.details.component.scss'
+  templateUrl: './company.details.component.html',
+  styleUrl: './company.details.component.scss'
 })
-export class ContactDetailsComponent implements OnInit {
-  contact!: Contact;
+export class CompanyDetailsComponent implements OnInit {
+  company!: Company;
   readonly dialog = inject(MatDialog);
 
   constructor() { }
   ngOnInit(): void {
-    this.contact = history.state?.contact ? history.state?.contact :  history.state?.selectedContact ;
+    this.company = history.state?.company ? history.state?.company : history.state?.selectedCompany;
   }
 }

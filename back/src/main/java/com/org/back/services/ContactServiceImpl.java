@@ -3,22 +3,24 @@ package com.org.back.services;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.org.back.dto.user.ContactDto;
 import com.org.back.exceptions.ContactAlreadyExistException;
 import com.org.back.exceptions.EntityNotFoundException;
 import com.org.back.interfaces.ContactService;
 import com.org.back.mapper.ContactMapper;
+import com.org.back.models.Company;
 import com.org.back.models.Contact;
 import com.org.back.models.ContactEmail;
 import com.org.back.models.ContactPhone;
 import com.org.back.models.User;
+import com.org.back.repositories.CompanyRepository;
 import com.org.back.repositories.ContactEmailRepository;
 import com.org.back.repositories.ContactPhoneRepository;
 import com.org.back.repositories.ContactRepository;
 import com.org.back.repositories.UserRepository;
 
-import jakarta.transaction.Transactional;
 
 @Service
 public class ContactServiceImpl implements ContactService {
@@ -26,26 +28,28 @@ public class ContactServiceImpl implements ContactService {
     private final ContactRepository contactRepository;
     private final ContactEmailRepository contactEmailRepository;
     private final ContactPhoneRepository contactPhoneRepository;
+    private final CompanyRepository companyRepository;
+
     private final UserRepository userRepository;
     private final ContactMapper contactMapper;
 
     public ContactServiceImpl(ContactRepository contactRepository, ContactMapper contactMapper,
             ContactEmailRepository contactEmailRepository, ContactPhoneRepository contactPhoneRepository,
+            CompanyRepository companyRepository,
             UserRepository userRepository) {
         this.contactRepository = contactRepository;
         this.contactMapper = contactMapper;
         this.contactEmailRepository = contactEmailRepository;
         this.contactPhoneRepository = contactPhoneRepository;
+        this.companyRepository = companyRepository;
         this.userRepository = userRepository;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<ContactDto> getUserContacts(Long userId) {
-        List<ContactDto> contacts = contactRepository.findAllByUser_Id(userId).stream()
+        return contactRepository.findAllByUser_Id(userId).stream()
                 .map(contactMapper::toContactDTO).toList();
-        return contacts;
-        // return
-        // contactRepository.findAllByUser_Id(userId).stream().map(contactMapper::toContactDTO).toList();
     }
 
     @Override
@@ -53,10 +57,15 @@ public class ContactServiceImpl implements ContactService {
     public ContactDto addContact(Long userId, Contact contact)
             throws ContactAlreadyExistException, EntityNotFoundException {
 
-        // TODO : Implement Sets to avoid all this ...
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        if (contact.getCompany() != null && contact.getCompany().getId() != null) {
+            Company foundCompany = companyRepository.findById(contact.getCompany().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Company not found"));
+            contact.setCompany(foundCompany);
+        } 
         contact.setUser(user);
+        // TODO : Implement Sets to avoid all this ...
         if (contactEmailRepository.existsByContactFirstNameAndContactLastName(contact.getFirstName(),
                 contact.getLastName())) {
             throw new ContactAlreadyExistException("Contact with firstName : " +
@@ -95,8 +104,10 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public ContactDto getContactById(Long id) throws EntityNotFoundException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getContactById'");
+        Contact contact = contactRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Contact not found with id: " + id));
+        return contactMapper.toContactDTO(contact);
     }
 
     @Override
@@ -147,5 +158,4 @@ public class ContactServiceImpl implements ContactService {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addCompanyToContact'");
     }
-
 }

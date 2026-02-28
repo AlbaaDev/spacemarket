@@ -3,19 +3,34 @@
   <mat-dialog-content class="mat-typography">
     <mat-form-field appearance="fill">
       <mat-label>First Name</mat-label>
-      <input id="firstName" type="text" formControlName="firstName" matInput fiedmatInput placeholder="Placeholder">
+      <input id="firstName" type="text" formControlName="firstName" matInput fiedmatInput
+        placeholder="Enter first name...">
       <mat-icon matSuffix></mat-icon>
     </mat-form-field>
     <mat-form-field appearance="fill">
       <mat-label>Last Name</mat-label>
-      <input id="lastName" type="text" formControlName="lastName" matInput placeholder="Placeholder">
+      <input id="lastName" type="text" formControlName="lastName" matInput placeholder="Enter last name...">
       <mat-icon matSuffix></mat-icon>
     </mat-form-field>
+    <mat-form-field>
+      <mat-label>Company</mat-label>
+      <input type="text" matInput formControlName="company" [matAutocomplete]="auto" placeholder="Search by name...">
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCompany">
+        @for (company of filteredCompanies | async; track company.id) {
+        <mat-option [value]="company">
+          {{ company.name }}
+        </mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+    @if (noCompanyFound()) {
+      <button matButton="elevated" class="mb-4" (click)="goToPageCompanies()">Create company</button>
+    }
     <div formArrayName="emails">
       @for (emailControl of emails.controls; track $index) {
       <div style="display: flex;">
-        <div [formGroupName]="$index">
-          <mat-form-field appearance="fill" style="width: 100%;">
+        <div [formGroupName]="$index" class="w-100">
+          <mat-form-field appearance="fill">
             <mat-label>Email</mat-label>
             <input type="email" formControlName="email" matInput placeholder="Enter an email...">
           </mat-form-field>
@@ -38,7 +53,7 @@
     <div formArrayName="phones">
       @for (phoneControl of phones.controls; track $index) {
       <div style="display: flex;">
-        <div [formGroupName]="$index">
+        <div [formGroupName]="$index" class="w-100">
           <mat-form-field appearance="fill">
             <mat-label>Phone</mat-label>
             <input type="text" formControlName="phone" matInput placeholder="Enter a phone number...">

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-calendrier',
+  selector: 'calendrier',
   imports: [],
   templateUrl: './calendrier.component.html',
   styleUrl: './calendrier.component.css'

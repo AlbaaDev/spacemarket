@@ -55,12 +55,15 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private transient List<Contact> contacts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private transient List<Company> companies = new ArrayList<>();
+
     @Override
     public String getUsername() {
         return email;
     }
 
-     @Override
+    @Override
     public String getPassword() {
         return password;
     }

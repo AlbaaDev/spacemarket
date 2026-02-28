@@ -4,22 +4,22 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatInputModule } from "@angular/material/input";
-import { ContactService } from "../../../../services/contact/contact.service";
+import { CompanyService } from "../../../../services/company/company.service";
 
 @Component({
-    selector: 'delete-contact-modal',
-    templateUrl: 'delete-contact-modal.html',
-    styleUrl: 'delete-contact-modal.css',
+    selector: 'delete-company-modal',
+    templateUrl: './delete-company-modal.html',
+    styleUrl: './delete-company-modal.css',
     imports: [MatDialogModule, MatButtonModule, MatInputModule, ReactiveFormsModule, MatDatepickerModule, MatInputModule, MatDatepickerModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DeleteContactModal {
-    private readonly contactService = inject(ContactService);
+export class DeleteCompanyModal {
+    private readonly companyService = inject(CompanyService);
     private readonly formBuilder = inject(FormBuilder);
-    
-    constructor() {}
 
-    confirmDeleteContact() {
-        this.contactService.canDeleteContacts.set(true);
+    constructor() { }
+
+    confirmDeleteCompany() {
+        this.companyService.canDeleteCompanies.set(true);
     }
 }

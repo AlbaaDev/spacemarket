@@ -1,6 +1,8 @@
 package com.org.back.models;
 
-import java.util.Set;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -9,9 +11,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -30,22 +33,26 @@ public class Company {
     @Column(name = "company_id")
     private Long id;
 
-    @NotBlank(message = "Name cannot be blank")
     @Column(nullable = false, length = 45)
     private String name;
 
-    @NotBlank(message = "Country cannot be blank")
-    @Column(nullable = false, length = 45)
+    @Column(nullable = true, length = 45)
     private String country;
 
-    @NotBlank(message = "City cannot be blank")
-    @Column(nullable = false, length = 45)
+    @Column(nullable = true, length = 45)
     private String city;
 
-    @NotBlank(message = "Address cannot be blank")
-    @Column(nullable = false, length = 45)
+    @Column(nullable = true, length = 45)
     private String address;
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Contact> contacts;
+    @Column(nullable = true, length = 45)
+    private String industry;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "company", cascade = { CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.LAZY)
+    private List<Contact> contacts;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

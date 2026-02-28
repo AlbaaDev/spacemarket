@@ -11,17 +11,17 @@ VALUES ('jane@test.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL
 -- =========================
 -- COMPANIES
 -- =========================
-INSERT INTO COMPANIES (name, country, city, address) 
-VALUES ('Google', 'Suisse', 'Genève', '1 California Way');
+INSERT INTO COMPANIES (name, country, city, address, user_id) 
+VALUES ('Google', 'Suisse', 'Genève', '1 California Way', 1);
 
-INSERT INTO COMPANIES (name, country, city, address) 
-VALUES ('Microsoft', 'USA', 'Seattle', '1 Microsoft Way');
+INSERT INTO COMPANIES (name, country, city, address, user_id) 
+VALUES ('Microsoft', 'USA', 'Seattle', '1 Microsoft Way', 1);
 
-INSERT INTO COMPANIES (name, country, city, address) 
-VALUES ('Apple', 'USA', 'Cupertino', '1 Apple Park Way');
+INSERT INTO COMPANIES (name, country, city, address, user_id) 
+VALUES ('Apple', 'USA', 'Cupertino', '1 Apple Park Way', 1);
 
 -- =========================
--- CONTACTS (avec user_id)
+-- CONTACTS
 -- =========================
 INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id) 
 VALUES ( 'Suisse', 'John1', 'Doe1', 'Genève', 'Rue de Genève', 1);
