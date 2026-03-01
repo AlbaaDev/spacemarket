@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -95,13 +96,13 @@ class UserControllerTest {
         doNothing().when(userService).updateUserProfile(any(User.class), eq(updateProfileDto));
 
         // WHEN
-        ResultActions response = mockMvc.perform(put("/users/me/profile")
+        ResultActions response = mockMvc.perform(patch("/users/me/profile")
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(csrf())
                 .content(objectMapper.writeValueAsString(updateProfileDto)));
 
         // THEN
-        response.andExpect(status().isOk());
+        response.andExpect(status().is(204));
     }
 
     @Test
@@ -130,7 +131,7 @@ class UserControllerTest {
         doNothing().when(userService).updateUserProfile(any(User.class), eq(updateProfileDto));
 
         // WHEN
-        ResultActions response = mockMvc.perform(put("/users/me/profile")
+        ResultActions response = mockMvc.perform(patch("/users/me/profile")
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(csrf())
                 .content(objectMapper.writeValueAsString(updateProfileDto)));
@@ -168,13 +169,13 @@ class UserControllerTest {
         doNothing().when(userService).updateUserSettings(any(User.class), eq(updateSettingsDto));
 
         // WHEN
-        ResultActions response = mockMvc.perform(put("/users/me/settings")
+        ResultActions response = mockMvc.perform(patch("/users/me/settings")
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(csrf())
                 .content(objectMapper.writeValueAsString(updateSettingsDto)));
 
         // THEN
-        response.andExpect(status().isOk());
+        response.andExpect(status().is(204));
     }
 
     @Test
@@ -186,7 +187,7 @@ class UserControllerTest {
         doNothing().when(userService).updateUserSettings(any(User.class), eq(updateSettingsDto));
 
         // WHEN
-        ResultActions response = mockMvc.perform(put("/users/me/settings")
+        ResultActions response = mockMvc.perform(patch("/users/me/settings")
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(csrf())
                 .content(objectMapper.writeValueAsString(updateSettingsDto)));

@@ -32,6 +32,8 @@ export class EditCompanyModal implements OnInit {
     filteredContacts: Observable<Contact[]>[] = [];
 
     ngOnInit() {
+        console.log(this.selectedCompany.contacts);
+        
         this.editCompanyForm = this.formBuilder.group({
             id: [this.selectedCompany.id],
             name: [this.selectedCompany.name, Validators.required],
@@ -66,7 +68,6 @@ export class EditCompanyModal implements OnInit {
 
     private _filter(value: string, currentIndex: number): Contact[] {
         const allContacts = this.contactService.contacts();
-        console.log(allContacts);
         const selectedIds = this.contacts.controls
             .map((control, i) => i !== currentIndex ? control.get('contact')?.value : null)
             .filter((contact): contact is Contact => contact?.id != null)
@@ -99,6 +100,8 @@ export class EditCompanyModal implements OnInit {
         });
     }
     createContactFormGroupWithData(contactData: Contact): FormGroup {
+        console.log(contactData);
+        
         return this.formBuilder.group({
             contact: [contactData]
         });

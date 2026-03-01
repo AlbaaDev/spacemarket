@@ -2,7 +2,6 @@ package com.org.back.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -51,28 +50,27 @@ class UserServiceTest {
         user.setFirstName("John");
         user.setLastName("Doe");
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        UserResponseDto dtoUser = new UserResponseDto(user.getFirstName(), user.getLastName(), user.getEmail());
+        when(userMapper.toUserResponseDto(user)).thenReturn(dtoUser);
 
         // when
         UserResponseDto result = userServiceImpl.findUserByEmail(email);
 
         // then
         assertNotNull(result);
-        assertEquals(user.getEmail(), result.email());
-        assertEquals(user.getFirstName(), result.firstName());
-        assertEquals(user.getLastName(), result.lastName());
+        assertEquals(dtoUser.email(), result.email());
+        assertEquals(dtoUser.firstName(), result.firstName());
+        assertEquals(dtoUser.lastName(), result.lastName());
     }
 
     @Test
-    void testFindUserByEmail_NotFound() throws EntityNotFoundException {
+    void testFindUserByEmail_NotFound() {
         // given
         String email = "nonexistent@example.com";
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
-        // when
-        UserResponseDto userDto = userServiceImpl.findUserByEmail(email);
-
-        // then
-        assertNull(userDto);
+        // when / then: method throws EntityNotFoundException when no user found
+        assertThrows(EntityNotFoundException.class, () -> userServiceImpl.findUserByEmail(email));
     }
 
     @Test
@@ -84,27 +82,26 @@ class UserServiceTest {
         user.setFirstName("John");
         user.setLastName("Doe");
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        UserResponseDto dtoUser = new UserResponseDto(user.getFirstName(), user.getLastName(), user.getEmail());
+        when(userMapper.toUserResponseDto(user)).thenReturn(dtoUser);
 
         // when
-        UserResponseDto userDto = userServiceImpl.getUserById(userId);
+        UserResponseDto result = userServiceImpl.getUserById(userId);
 
         // then
-        assertNotNull(userDto);
-        assertEquals(user.getFirstName(), userDto.firstName());
-        assertEquals(user.getLastName(), userDto.lastName());
+        assertNotNull(result);
+        assertEquals(dtoUser.firstName(), result.firstName());
+        assertEquals(dtoUser.lastName(), result.lastName());
     }
 
     @Test
-    void testGetUserById_NotFound() throws EntityNotFoundException {
+    void testGetUserById_NotFound() {
         // given
         Long userId = 99L;
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        // when
-         UserResponseDto userDto = userServiceImpl.getUserById(userId);
-
-        // then
-        assertNull(userDto);
+        // when / then
+        assertThrows(EntityNotFoundException.class, () -> userServiceImpl.getUserById(userId));
     }
 
     @Test
@@ -131,6 +128,11 @@ class UserServiceTest {
         }).when(userMapper).createEntityFromDto(eq(userDto), any(User.class));
         when(passwordEncoder.encode(userDto.password())).thenReturn("encodedPassword");
         when(userRepository.save(any(User.class))).thenReturn(expectedUser);
+
+        // stub mapper before call; result DTO must be known ahead of time
+        UserResponseDto dtoUser = new UserResponseDto(expectedUser.getFirstName(),
+            expectedUser.getLastName(), expectedUser.getEmail());
+        when(userMapper.toUserResponseDto(expectedUser)).thenReturn(dtoUser);
 
         // when
         UserResponseDto savedUser = userServiceImpl.addUser(userDto);

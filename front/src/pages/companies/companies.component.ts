@@ -120,8 +120,6 @@ export class CompaniesComponent implements AfterViewInit {
   }
   openEditDialog() {
     if (this.selection.selected) {
-              console.log('selected company:', this.selection.selected[0]); // ← vérifier
-
       this.dialog.open(EditCompanyModal, { data: this.selection.selected[0] });
     }
   }
@@ -139,16 +137,17 @@ export class CompaniesComponent implements AfterViewInit {
       }
     })
   }
-  getCompanies() {
-    this.companyService.getCompanies().subscribe({
-      next: (response) => {
-        this.dataSource.data = response.data;
-      },
-      error: (error) => {
-        console.error('Error fetching companies: ', error);
-      }
-    });
-  }
+  // getCompanies() {
+  //   this.companyService.getCompanies().subscribe({
+  //     next: (response) => {
+  //       this.dataSource.data = response.data;
+  //     },
+  //     error: (error) => {
+  //       console.error('Error fetching companies: ', error);
+  //     }
+  //   });
+  // }
+  
   goToDetailsPage(company?: Company) {
     const selectedCompany: Company | undefined = company ?? this.selection.selected[0];
     if (!selectedCompany) {

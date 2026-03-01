@@ -1,39 +1,38 @@
 -- =========================
 -- USERS (EN PREMIER)
 -- =========================
--- Mot de passe : "password" encodé en BCrypt
 INSERT INTO USERS (email, password, first_name, last_name) 
-VALUES ('john@test.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'John', 'Smith');
+VALUES ('test5@test.com', '$2a$12$7tWPGXjfWSRCj7fmKAcT0enQp7mDcLcTSg5rqf2NxxOjqVrL6yBhS', 'John', 'Smith');
 
 INSERT INTO USERS (email, password, first_name, last_name) 
-VALUES ('jane@test.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Jane', 'Doe');
+VALUES ('test6@test.com', '$2a$12$7tWPGXjfWSRCj7fmKAcT0enQp7mDcLcTSg5rqf2NxxOjqVrL6yBhS', 'Jane', 'Doe');
 
 -- =========================
 -- COMPANIES
 -- =========================
-INSERT INTO COMPANIES (name, country, city, address, user_id) 
-VALUES ('Google', 'Suisse', 'Genève', '1 California Way', 1);
+INSERT INTO COMPANIES (name, country, city, address, industry, user_id) 
+VALUES ('Google', 'Suisse', 'Genève', '1 California Way', 'Tech', 1);
 
-INSERT INTO COMPANIES (name, country, city, address, user_id) 
-VALUES ('Microsoft', 'USA', 'Seattle', '1 Microsoft Way', 1);
+INSERT INTO COMPANIES (name, country, city, address, industry, user_id) 
+VALUES ('Microsoft', 'USA', 'Seattle', '1 Microsoft Way', 'Tech', 1);
 
-INSERT INTO COMPANIES (name, country, city, address, user_id) 
-VALUES ('Apple', 'USA', 'Cupertino', '1 Apple Park Way', 1);
+INSERT INTO COMPANIES (name, country, city, address, industry, user_id) 
+VALUES ('Apple', 'USA', 'Cupertino', '1 Apple Park Way', 'Tech', 1);
 
 -- =========================
 -- CONTACTS
 -- =========================
-INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id) 
-VALUES ( 'Suisse', 'John1', 'Doe1', 'Genève', 'Rue de Genève', 1);
+INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id, company_id) 
+VALUES ( 'Suisse', 'John1', 'Doe1', 'Genève', 'Rue de Genève', 1, 1);
 
-INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id) 
-VALUES ( 'Suisse', 'John2', 'Doe2', 'Genève', 'Rue de Genève', 1); 
+INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id, company_id) 
+VALUES ( 'Suisse', 'John2', 'Doe2', 'Genève', 'Rue de Genève', 1, 1); 
 
-INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id) 
-VALUES ( 'France', 'John3', 'Doe3', 'Paris', 'Rue de France', 1);
+INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id, company_id) 
+VALUES ( 'France', 'John3', 'Doe3', 'Paris', 'Rue de France', 1, 1);
 
-INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id) 
-VALUES ( 'USA', 'John4', 'Doe4', 'New York', 'Rue de New York', 2);
+INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id, company_id) 
+VALUES ( 'USA', 'John4', 'Doe4', 'New York', 'Rue de New York', 2, 2);
 
 -- =========================
 -- CONTACT EMAILS

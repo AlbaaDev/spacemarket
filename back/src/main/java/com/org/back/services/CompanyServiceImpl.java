@@ -117,8 +117,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public List<CompanyDto> getCompaniesByUserId(Long userId) {
-        List<CompanyDto> list = companyRepository.findAllByUser_IdWithContacts(userId).stream()
+        return companyRepository.findAllByUser_IdWithContacts(userId).stream()
                 .map(companyMapper::toCompanyDTO).toList();
-        return list;
     }
 }

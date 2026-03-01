@@ -81,14 +81,13 @@ class ContactControllerTest {
         mockUser = new User();
         mockUser.setId(1L);
 
-        companyDto1 = new CompanyDto(1L, "companyTest1", "Suisse", "Genève", "13 Rue de Genève");
         contact1EmailsDto = new ArrayList<>();
         contact1EmailsDto.add(new ContactEmailDto(1L, "john.doe@work.com", EmailType.WORK, true));
         contact1EmailsDto.add(new ContactEmailDto(2L, "john.doe@home.com", EmailType.HOME, false));
         contact1PhonesDto = new ArrayList<>();
         contact1PhonesDto.add(new ContactPhoneDto(1L, "0412345678", PhoneType.WORK, true));
         contact1PhonesDto.add(new ContactPhoneDto(2L, "0637166248", PhoneType.HOME, false));
-        companyDto2 = new CompanyDto(1L, "companyTest2", "France", "Paris", "13 rue de Paris");
+
         contactDto1 = new ContactDto(
                 1L,
                 "John",
@@ -120,6 +119,10 @@ class ContactControllerTest {
                 "Suisse");
 
         contactsDto = List.of(contactDto1, contactDto2);
+
+        companyDto1 = new CompanyDto(1L, "companyTest1", "Suisse", "Genève", "13 Rue de Genève", "Tech", contactsDto);
+        companyDto2 = new CompanyDto(1L, "companyTest2", "France", "Paris", "13 rue de Paris", "Tech", contactsDto);
+
     }
 
     @Test
@@ -140,10 +143,10 @@ class ContactControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.data.firstName").value("John"))
                 .andExpect(jsonPath("$.data.lastName").value("Doe"))
-                .andExpect(jsonPath("$.emails[0].email").value("john.doe@work.com"))
-                .andExpect(jsonPath("$.emails[1].email").value("john.doe@home.com"))
-                .andExpect(jsonPath("$.phones[0].phone").value("0412345678"))
-                .andExpect(jsonPath("$.phones[1].phone").value("0637166248"))
+                .andExpect(jsonPath("$.data.emails[0].email").value("john.doe@work.com"))
+                .andExpect(jsonPath("$.data.emails[1].email").value("john.doe@home.com"))
+                .andExpect(jsonPath("$.data.phones[0].phone").value("0412345678"))
+                .andExpect(jsonPath("$.data.phones[1].phone").value("0637166248"))
                 .andExpect(jsonPath("$.data.address").value("13 Rue de Genève"))
                 .andExpect(jsonPath("$.data.city").value("Genève"))
                 .andExpect(jsonPath("$.data.country").value("Suisse"));
