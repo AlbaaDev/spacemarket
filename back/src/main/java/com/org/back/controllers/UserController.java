@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,11 +19,13 @@ import com.org.back.dto.user.UserResponseDto;
 import com.org.back.dto.user.UserUpdatePasswordDto;
 import com.org.back.dto.user.UserUpdateProfileDto;
 import com.org.back.dto.user.UserUpdateSettingsDto;
+import com.org.back.exceptions.ContactAlreadyExistException;
 import com.org.back.exceptions.EntityNotFoundException;
 import com.org.back.exceptions.PasswordAlreadyInUseException;
 import com.org.back.exceptions.PasswordDoesntMatchException;
 import com.org.back.exceptions.UserAlreadyExistsException;
 import com.org.back.models.ApiResponse;
+import com.org.back.models.Contact;
 import com.org.back.models.ResponseUtil;
 import com.org.back.models.User;
 import com.org.back.services.UserServiceImpl;
@@ -108,5 +111,10 @@ public class UserController {
                                                 "Conact users successfuly retrived.",
                                                 userService.getContactsByUserId(userId),
                                                 request.getRequestURI()));
+        }
+
+        @GetMapping("/ping")
+        public String addContact() {
+                return "ok";
         }
 }
