@@ -20,7 +20,7 @@ import { ContactDetailsComponent } from '../pages/contacts/details/contact.detai
 import { CompanyDetailsComponent } from '../pages/companies/details/company.details.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: LoginComponent },
   { path: 'app-home', component: HomeComponent },
   { path: 'app-login', component: LoginComponent, canActivate: [NoAuthGaurd] },
   { path: 'app-sign-up', component: SignUpComponent, canActivate: [NoAuthGaurd] },

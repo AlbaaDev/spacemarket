@@ -5,12 +5,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth-service';
+import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 
 @Component({
   selector: 'app-sign-up',
-  imports: [ReactiveFormsModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [MatCardContent, MatCard, MatCardTitle, ReactiveFormsModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.css'
+  styleUrl: './sign-up.component.scss'
 })
 export class SignUpComponent {
     private readonly formBuilder = inject(FormBuilder);

@@ -28,7 +28,7 @@ public class AuthenticationService {
                     inputForm.password()
                 )
             );
-        } catch(AuthenticationException _) {
+        } catch(AuthenticationException e) {
             throw new BadCredentialsException("Login attempt failed : Invalid email or password.");
         }
         return userRepository.findByEmail(inputForm.email()).orElseThrow();

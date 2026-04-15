@@ -6,12 +6,13 @@ import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth/auth-service';
 import { environment } from '../../environments/environment';
+import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
 
 @Component({
     selector: 'app-login',
-    imports: [RouterLink, ReactiveFormsModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+    imports: [MatCardTitle, MatCard, RouterLink, ReactiveFormsModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatCardContent],
     templateUrl: './login.component.html',
-    styleUrl: './login.component.css'
+    styleUrl: './login.component.scss'
 })
 export class LoginComponent {
     private readonly formBuilder = inject(FormBuilder);

@@ -1,14 +1,12 @@
 import { ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
-import { routes } from './app.routes';
-import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { xsrfInterceptor } from '../interceptors/xrfInterceptor';
+import { provideHttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
-import { tap } from 'rxjs/internal/operators/tap';
-import { AuthService } from '../services/auth/auth-service';
-import { catchError } from 'rxjs/internal/operators/catchError';
 import { of } from 'rxjs/internal/observable/of';
+import { catchError } from 'rxjs/internal/operators/catchError';
+import { AuthService } from '../services/auth/auth-service';
+import { routes } from './app.routes';
 
 
 

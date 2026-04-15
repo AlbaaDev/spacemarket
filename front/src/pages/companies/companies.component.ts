@@ -36,7 +36,7 @@ import { EditCompanyModal } from './modals/Edit/edit-company-modal';
     MatCheckbox,
     ReactiveFormsModule],
   templateUrl: './companies.component.html',
-  styleUrl: './companies.component.css'
+  styleUrl: './companies.component.scss'
 })
 export class CompaniesComponent implements AfterViewInit {
   private readonly formBuilder = inject(FormBuilder)

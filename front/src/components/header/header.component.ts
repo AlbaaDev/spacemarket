@@ -12,7 +12,7 @@ import { AuthService } from '../../services/auth/auth-service';
     MatButtonModule,
   ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
   protected readonly authService = inject(AuthService);
