@@ -159,7 +159,7 @@ userSelected = output<string>();
   // ✅ Good
   import { inject } from '@angular/core';
 
-  const http = inject(HttpClient);
+  private readonly http = inject(HttpClient);
   ```
 
 - Services should have `providedIn: 'root'` for tree-shakability.
