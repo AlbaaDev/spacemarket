@@ -1,19 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ContactDetailsComponent } from '../../contacts/details/contact.details.component';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
+import { CompanyDetailsComponent } from './company.details.component';
 
 
-describe('ContactComponent', () => {
-  let component: ContactDetailsComponent;
-  let fixture: ComponentFixture<ContactDetailsComponent>;
+describe('CompanyDetailsComponent', () => {
+  let component: CompanyDetailsComponent;
+  let fixture: ComponentFixture<CompanyDetailsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ContactDetailsComponent]
+      imports: [CompanyDetailsComponent],
+      providers: [provideHttpClient(), provideRouter([])]
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(ContactDetailsComponent);
+    fixture = TestBed.createComponent(CompanyDetailsComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('id', '1');
     fixture.detectChanges();
   });
 
