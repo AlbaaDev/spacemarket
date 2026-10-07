@@ -1,1 +1,138 @@
-<p>dashboard works!</p>
+<main class="dashboard" [attr.aria-busy]="status() === 'loading'">
+  <h1>Dashboard</h1>
+
+  @switch (status()) {
+    @case ('loading') {
+      <div class="skeleton-layout" role="status">
+        <span class="visually-hidden">Loading your pipeline</span>
+        <div class="skeleton skeleton-line wide"></div>
+        <div class="skeleton skeleton-block"></div>
+        <div class="skeleton skeleton-block short"></div>
+      </div>
+    }
+
+    @case ('error') {
+      <section class="notice" role="alert">
+        <h2>Can't reach your data</h2>
+        <p>The server did not answer. Check that the backend is running, then try again.</p>
+        <button mat-flat-button type="button" (click)="load()">Try again</button>
+      </section>
+    }
+
+    @case ('ready') {
+      @if (isFirstRun()) {
+        <section class="first-run">
+          <h2>Start with the first person you do business with</h2>
+          <p>An opportunity is attached to a contact, so add things in this order.</p>
+          <ol class="steps">
+            <li>
+              <a routerLink="/contacts">Add a contact</a>
+              <span>The person you are talking to.</span>
+            </li>
+            <li>
+              <a routerLink="/companies">Add their company</a>
+              <span>Optional, but it keeps contacts grouped.</span>
+            </li>
+            <li>
+              <a routerLink="/opportunities">Log an opportunity</a>
+              <span>The deal, with its value. It shows up here.</span>
+            </li>
+          </ol>
+        </section>
+      } @else {
+        <p class="summary">
+          @if (opportunities(); as list) {
+            <strong class="tabular">{{ list.length }}</strong> {{ list.length === 1 ? 'opportunity' : 'opportunities' }}
+            worth <strong class="tabular">{{ format(totalValue()) }}</strong>
+          } @else {
+            Opportunities unavailable
+          }
+          <span class="sep" aria-hidden="true">/</span>
+          <strong class="tabular">{{ contacts()?.length ?? '–' }}</strong> contacts
+          <span class="sep" aria-hidden="true">/</span>
+          <strong class="tabular">{{ companies()?.length ?? '–' }}</strong> companies
+        </p>
+
+        <div class="columns">
+          <section class="panel" aria-labelledby="top-title">
+            <header class="panel-head">
+              <h2 id="top-title">Largest opportunities</h2>
+              <a routerLink="/opportunities">All opportunities</a>
+            </header>
+
+            @if (opportunities() === null) {
+              <p class="muted">Opportunities could not be loaded. <button type="button" class="link-button" (click)="load()">Try again</button></p>
+            } @else if (opportunities()!.length === 0) {
+              <div class="empty">
+                <p>No opportunities yet.</p>
+                <p class="muted">Log a deal with its value and the biggest ones will rank here.</p>
+                <a mat-flat-button routerLink="/opportunities">Add an opportunity</a>
+              </div>
+            } @else {
+              <ul class="rows">
+                @for (o of topOpportunities(); track $index) {
+                  <li class="row">
+                    <div class="row-main">
+                      <span class="row-title">{{ o.name }}</span>
+                      <span class="muted">
+                        {{ o.businessName }}@if (principalContactName(o)) { · {{ principalContactName(o) }} }
+                      </span>
+                    </div>
+                    <span class="value tabular">{{ format(o.value) }}</span>
+                  </li>
+                }
+              </ul>
+            }
+          </section>
+
+          <div class="side">
+            <section class="panel" aria-labelledby="contacts-title">
+              <header class="panel-head">
+                <h2 id="contacts-title">Recent contacts</h2>
+                <a routerLink="/contacts">All</a>
+              </header>
+              @if (contacts() === null) {
+                <p class="muted">Contacts could not be loaded.</p>
+              } @else if (contacts()!.length === 0) {
+                <div class="empty">
+                  <p class="muted">No contacts yet.</p>
+                  <a mat-stroked-button routerLink="/contacts">Add a contact</a>
+                </div>
+              } @else {
+                <ul class="rows compact">
+                  @for (c of recentContacts(); track c.id) {
+                    <li><a class="row-link" [routerLink]="['/contact', c.id]">{{ contactName(c) }}</a></li>
+                  }
+                </ul>
+              }
+            </section>
+
+            <section class="panel" aria-labelledby="companies-title">
+              <header class="panel-head">
+                <h2 id="companies-title">Recent companies</h2>
+                <a routerLink="/companies">All</a>
+              </header>
+              @if (companies() === null) {
+                <p class="muted">Companies could not be loaded.</p>
+              } @else if (companies()!.length === 0) {
+                <div class="empty">
+                  <p class="muted">No companies yet.</p>
+                  <a mat-stroked-button routerLink="/companies">Add a company</a>
+                </div>
+              } @else {
+                <ul class="rows compact">
+                  @for (c of recentCompanies(); track c.id) {
+                    <li>
+                      <a class="row-link" [routerLink]="['/company', c.id]">{{ c.name }}</a>
+                      @if (c.industry) { <span class="muted"> · {{ c.industry }}</span> }
+                    </li>
+                  }
+                </ul>
+              }
+            </section>
+          </div>
+        </div>
+      }
+    }
+  }
+</main>

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Opportunity } from '../../interfaces/Opportunity';
 import { FormGroup } from '@angular/forms';
-import { tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -14,6 +14,12 @@ export class OpportunityService {
   readonly opportunities = this._opportunities.asReadonly();
 
   constructor() {
+  }
+
+  getOpportunities(): Observable<Opportunity[]> {
+    return this.http.get<Opportunity[]>(environment.baseUrl + '/opportunities/', { withCredentials: true }).pipe(
+      tap(opportunities => this._opportunities.set(opportunities))
+    );
   }
 
   addOportuntiy(opportunityToAdd: FormGroup) {

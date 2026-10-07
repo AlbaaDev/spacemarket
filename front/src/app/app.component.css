@@ -1,3 +1,17 @@
-mat-sidenav-container {
+:host {
+  display: flex;
+  flex-direction: column;
   height: 100vh;
+}
+
+mat-sidenav-container {
+  flex: 1;
+  min-height: 0;
+  background: var(--mat-sys-surface);
+}
+
+mat-sidenav {
+  --mat-sidenav-container-width: 15rem;
+  background: var(--mat-sys-surface-container-low);
+  border-right: 1px solid var(--mat-sys-outline-variant);
 }

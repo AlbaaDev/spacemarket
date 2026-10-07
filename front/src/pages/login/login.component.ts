@@ -41,7 +41,7 @@ export class LoginComponent {
         this.errorMessage = null;
         this.authService.login(this.loginForm).subscribe({
             next: () => {
-                this.router.navigate(['/contacts']);
+                this.router.navigate(['/app-dashboard']);
             },
             error: (responseError) => {
                 if (responseError.status === 0) {

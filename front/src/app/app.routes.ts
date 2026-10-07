@@ -33,12 +33,15 @@ export const routes: Routes = [
   { path: 'app-profile', component: ProfileComponent, canActivate: [AuthGuard] },
   { path: 'contacts', component: ContactsComponent, canActivate: [AuthGuard] },
   { path: 'contact/:id', component: ContactDetailsComponent, canActivate: [AuthGuard] },
-  { path: 'opportunity', component: OpportunityComponent, canActivate: [AuthGuard] },
-  { path: 'calendrier', component: CalendrierComponent, canActivate: [AuthGuard] },
+  { path: 'opportunities', component: OpportunityComponent, canActivate: [AuthGuard] },
+  { path: 'calendar', component: CalendrierComponent, canActivate: [AuthGuard] },
   { path: 'workflow', component: WorkflowComponent, canActivate: [AuthGuard] },
   { path: 'reporting', component: ReportingComponent, canActivate: [AuthGuard] },
-  { path: 'app-document', component: DocumentsComponent, canActivate: [AuthGuard] },
+  { path: 'documents', component: DocumentsComponent, canActivate: [AuthGuard] },
 
+  { path: 'opportunity', redirectTo: 'opportunities' },
+  { path: 'calendrier', redirectTo: 'calendar' },
+  { path: 'app-document', redirectTo: 'documents' },
   { path: '**', component: PageNotFoundComponent },
 
 ];

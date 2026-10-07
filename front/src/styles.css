@@ -1,14 +1,121 @@
-/* You can add global styles to this file, and also import other style files */
+/*
+  SpaceMarket design tokens.
+  Loaded after the Material prebuilt theme and after Bootstrap (see angular.json),
+  so these values override both. Material reads --mat-sys-*, Bootstrap reads --bs-*.
+*/
+
+html {
+  /* Surfaces: warm paper, one step cooler for panels */
+  --mat-sys-background: #f7f6f2;
+  --mat-sys-surface: #f7f6f2;
+  --mat-sys-surface-bright: #f7f6f2;
+  --mat-sys-surface-dim: #dedcd4;
+  --mat-sys-surface-container-lowest: #ffffff;
+  --mat-sys-surface-container-low: #f1f0eb;
+  --mat-sys-surface-container: #ebeae4;
+  --mat-sys-surface-container-high: #e4e3dc;
+  --mat-sys-surface-container-highest: #dedcd4;
+  --mat-sys-surface-variant: #e4e8e3;
+  --mat-sys-on-background: #1c2321;
+  --mat-sys-on-surface: #1c2321;
+  --mat-sys-on-surface-variant: #4a5552;
+  --mat-sys-outline: #7a8480;
+  --mat-sys-outline-variant: #cfd3cc;
+
+  /* Accent: deep teal, reserved for primary actions, selection and state */
+  --mat-sys-primary: #1f6f66;
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-primary-container: #cfe8e2;
+  --mat-sys-on-primary-container: #0b3b35;
+  --mat-sys-surface-tint: #1f6f66;
+  --mat-sys-secondary: #4f5f5b;
+  --mat-sys-on-secondary: #ffffff;
+  --mat-sys-secondary-container: #dce8e4;
+  --mat-sys-on-secondary-container: #1c2f2b;
+  --mat-sys-tertiary: #8a5a12;
+  --mat-sys-on-tertiary: #ffffff;
+  --mat-sys-tertiary-container: #f6e3c3;
+  --mat-sys-on-tertiary-container: #3f2a05;
+
+  /* One family for the whole product UI */
+  --app-font: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mat-sys-display-large-font: var(--app-font);
+  --mat-sys-display-medium-font: var(--app-font);
+  --mat-sys-display-small-font: var(--app-font);
+  --mat-sys-headline-large-font: var(--app-font);
+  --mat-sys-headline-medium-font: var(--app-font);
+  --mat-sys-headline-small-font: var(--app-font);
+  --mat-sys-title-large-font: var(--app-font);
+  --mat-sys-title-medium-font: var(--app-font);
+  --mat-sys-title-small-font: var(--app-font);
+  --mat-sys-body-large-font: var(--app-font);
+  --mat-sys-body-medium-font: var(--app-font);
+  --mat-sys-body-small-font: var(--app-font);
+  --mat-sys-label-large-font: var(--app-font);
+  --mat-sys-label-medium-font: var(--app-font);
+  --mat-sys-label-small-font: var(--app-font);
+
+  /* Type scale (fixed rem, ratio about 1.2) */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  /* Bootstrap bridge: utilities keep working but speak the same palette */
+  --bs-body-font-family: var(--app-font);
+  --bs-body-color: #1c2321;
+  --bs-body-bg: #f7f6f2;
+  --bs-primary: #1f6f66;
+  --bs-primary-rgb: 31, 111, 102;
+  --bs-link-color: #1f6f66;
+  --bs-link-color-rgb: 31, 111, 102;
+  --bs-link-hover-color: #0b3b35;
+  --bs-link-hover-color-rgb: 11, 59, 53;
+
+  accent-color: var(--mat-sys-primary);
+  scrollbar-color: var(--mat-sys-outline-variant) transparent;
+}
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+body {
+  margin: 0;
+  font-family: var(--app-font);
+  color: var(--mat-sys-on-surface);
+  background: var(--mat-sys-surface);
+}
+
+::selection {
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+}
+
+:focus-visible {
+  outline: 2px solid var(--mat-sys-primary);
+  outline-offset: 2px;
+}
+
+a { text-underline-offset: 0.18em; }
+
+.tabular { font-variant-numeric: tabular-nums; }
 
 .snackbar-success {
-    --mat-snackbar-container-color: #43a047;
-    --mat-snackbar-supporting-text-color: white;
-    --mat-snackbar-action-color: black;
-    --mat-snackbar-action-text-color: black;
-    --mat-mdc-snack-bar-button-color: black;
+  --mat-snackbar-container-color: #1f6f66;
+  --mat-snackbar-supporting-text-color: #ffffff;
+  --mat-snackbar-action-color: #cfe8e2;
+  --mat-snackbar-action-text-color: #cfe8e2;
+  --mat-mdc-snack-bar-button-color: #cfe8e2;
 
-    color: #fff;
+  color: #ffffff;
 }
