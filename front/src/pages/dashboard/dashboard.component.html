@@ -40,18 +40,86 @@
           </ol>
         </section>
       } @else {
-        <p class="summary">
-          @if (opportunities(); as list) {
-            <strong class="tabular">{{ list.length }}</strong> {{ list.length === 1 ? 'opportunity' : 'opportunities' }}
-            worth <strong class="tabular">{{ format(totalValue()) }}</strong>
-          } @else {
-            Opportunities unavailable
+        <div class="filters" role="group" aria-label="Period">
+          <mat-button-toggle-group [value]="preset()" (change)="selectPreset($event.value)" aria-label="Period preset"
+            hideSingleSelectionIndicator>
+            @for (option of presets; track option.value) {
+              <mat-button-toggle [value]="option.value">This {{ option.label.toLowerCase() }}</mat-button-toggle>
+            }
+          </mat-button-toggle-group>
+
+          <div class="range">
+            <button mat-icon-button type="button" (click)="shift(-1)" aria-label="Previous period">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <mat-form-field class="range-field" subscriptSizing="dynamic">
+              <mat-label>Period</mat-label>
+              <mat-date-range-input [rangePicker]="rangePicker">
+                <input matStartDate placeholder="Start" aria-label="Period start" [value]="period().from"
+                  (dateChange)="setStart($event.value)">
+                <input matEndDate placeholder="End" aria-label="Period end" [value]="period().to"
+                  (dateChange)="setEnd($event.value)">
+              </mat-date-range-input>
+              <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
+              <mat-date-range-picker #rangePicker></mat-date-range-picker>
+            </mat-form-field>
+            <button mat-icon-button type="button" (click)="shift(1)" aria-label="Next period">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <section class="kpis" aria-label="Figures for the period" [attr.aria-busy]="summary().state === 'loading'">
+          @switch (summary().state) {
+            @case ('error') {
+              <p class="muted" role="alert">Figures for this period could not be loaded. <button type="button" class="link-button" (click)="period.set({ from: period().from, to: period().to })">Try again</button></p>
+            }
+            @default {
+              @let figures = summary().state === 'ready' ? $any(summary()).value : null;
+              @let tiles = [
+                { label: 'Revenue', key: 'revenue', money: true },
+                { label: 'Interactions', key: 'interactions', money: false },
+                { label: 'Contacts reached', key: 'contactsReached', money: false },
+              ];
+              @for (tile of tiles; track tile.key) {
+                <div class="kpi" [class.lead]="$first">
+                  <span class="kpi-label">{{ tile.label }}</span>
+                  @if (figures) {
+                    @let current = figures.current[tile.key];
+                    @let previous = figures.previous[tile.key];
+                    <strong class="kpi-value tabular">{{ tile.money ? formatMoney(current) : format(current) }}</strong>
+                    @if (change(current, previous); as delta) {
+                      <span class="kpi-delta" [attr.data-direction]="delta.direction">
+                        @if (delta.direction !== 'flat') {
+                          <mat-icon aria-hidden="true">{{ delta.direction === 'up' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+                        }
+                        {{ delta.label }}
+                        <span class="muted">vs {{ formatPeriod(figures.previous) }}</span>
+                      </span>
+                    } @else {
+                      <span class="kpi-delta muted">Nothing in {{ formatPeriod(figures.previous) }}</span>
+                    }
+                  } @else {
+                    <span class="skeleton kpi-skeleton" aria-hidden="true"></span>
+                  }
+                </div>
+              }
+            }
           }
-          <span class="sep" aria-hidden="true">/</span>
-          <strong class="tabular">{{ contacts()?.length ?? '–' }}</strong> contacts
-          <span class="sep" aria-hidden="true">/</span>
-          <strong class="tabular">{{ companies()?.length ?? '–' }}</strong> companies
-        </p>
+        </section>
+
+        <section class="panel timeline" aria-labelledby="timeline-title">
+          <header class="panel-head">
+            <h2 id="timeline-title">Activity</h2>
+            <span class="muted">Drag across the chart to pick a period, or drag the highlighted band and its edges.</span>
+          </header>
+          @if (timeline(); as points) {
+            <app-activity-timeline [points]="points" [extent]="timelineExtent()" [period]="period()"
+              (periodChange)="period.set($event)" />
+          } @else {
+            <p class="muted" role="alert">The activity timeline could not be loaded.</p>
+          }
+        </section>
 
         <div class="columns">
           <section class="panel" aria-labelledby="top-title">
@@ -78,7 +146,10 @@
                         {{ o.businessName }}@if (principalContactName(o)) { · {{ principalContactName(o) }} }
                       </span>
                     </div>
-                    <span class="value tabular">{{ format(o.value) }}</span>
+                    <div class="row-side">
+                      <span class="value tabular">{{ formatMoney(o.value) }}</span>
+                      <span class="status" [attr.data-status]="o.status">{{ statusLabels[o.status] }}</span>
+                    </div>
                   </li>
                 }
               </ul>

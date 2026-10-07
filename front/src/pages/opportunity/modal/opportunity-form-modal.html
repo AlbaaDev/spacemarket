@@ -1,0 +1,65 @@
+<h2 mat-dialog-title>{{ existing ? 'Edit opportunity' : 'Add opportunity' }}</h2>
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <mat-dialog-content class="fields">
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" required>
+      <mat-error>Name is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Business name</mat-label>
+      <input matInput formControlName="businessName" required>
+      <mat-error>Business name is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Value</mat-label>
+      <input matInput type="number" min="0" step="1" formControlName="value" required>
+      <span matTextSuffix>€</span>
+      <mat-error>Enter a value of 0 or more</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Principal contact</mat-label>
+      <mat-select formControlName="principalContactId" required>
+        @for (contact of contacts(); track contact.id) {
+          <mat-option [value]="contact.id">{{ contact.firstName }} {{ contact.lastName }}</mat-option>
+        }
+      </mat-select>
+      @if (contacts().length === 0) {
+        <mat-hint>Add a contact first: every opportunity is attached to one.</mat-hint>
+      }
+      <mat-error>Choose a contact</mat-error>
+    </mat-form-field>
+
+    <div class="pair">
+      <mat-form-field>
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          @for (status of statuses; track status[0]) {
+            <mat-option [value]="status[0]">{{ status[1] }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      @if (status() !== 'OPEN') {
+        <mat-form-field>
+          <mat-label>Close date</mat-label>
+          <input matInput [matDatepicker]="picker" [max]="today" formControlName="closeDate">
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-hint>Empty means today</mat-hint>
+        </mat-form-field>
+      }
+    </div>
+
+    @if (error()) {
+      <p class="form-error" role="alert">{{ error() }}</p>
+    }
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" mat-dialog-close>Cancel</button>
+    <button mat-flat-button type="submit" [disabled]="saving()">{{ existing ? 'Save' : 'Add opportunity' }}</button>
+  </mat-dialog-actions>
+</form>

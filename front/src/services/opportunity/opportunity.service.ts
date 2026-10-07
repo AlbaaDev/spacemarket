@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { Opportunity } from '../../interfaces/Opportunity';
-import { FormGroup } from '@angular/forms';
-import { Observable, tap } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
+import { ApiResponse } from '../../interfaces/ApiResponse';
+import { Opportunity, OpportunityRequest } from '../../interfaces/Opportunity';
 import { environment } from '../../environments/environment';
 
 @Injectable({
@@ -10,23 +10,35 @@ import { environment } from '../../environments/environment';
 })
 export class OpportunityService {
   private readonly http = inject(HttpClient);
+  private readonly url = environment.baseUrl + '/opportunities/';
   private readonly _opportunities = signal<Opportunity[]>([]);
   readonly opportunities = this._opportunities.asReadonly();
 
-  constructor() {
-  }
-
   getOpportunities(): Observable<Opportunity[]> {
-    return this.http.get<Opportunity[]>(environment.baseUrl + '/opportunities/', { withCredentials: true }).pipe(
+    return this.http.get<ApiResponse<Opportunity[]>>(this.url, { withCredentials: true }).pipe(
+      map(response => response.data ?? []),
       tap(opportunities => this._opportunities.set(opportunities))
     );
   }
 
-  addOportuntiy(opportunityToAdd: FormGroup) {
-    return this.http.post<Opportunity>(environment.baseUrl + '/opportunities/', opportunityToAdd, { withCredentials: true }).pipe(
-      tap((newOpportunity: Opportunity) => {
-        this._opportunities.update(opportunities => [...opportunities, newOpportunity]);
-      })
+  addOpportunity(request: OpportunityRequest): Observable<Opportunity> {
+    return this.http.post<ApiResponse<Opportunity>>(this.url, request, { withCredentials: true }).pipe(
+      map(response => response.data),
+      tap(created => this._opportunities.update(opportunities => [...opportunities, created]))
+    );
+  }
+
+  updateOpportunity(id: number, request: OpportunityRequest): Observable<Opportunity> {
+    return this.http.put<ApiResponse<Opportunity>>(this.url + id, request, { withCredentials: true }).pipe(
+      map(response => response.data),
+      tap(updated => this._opportunities.update(opportunities =>
+        opportunities.map(opportunity => opportunity.id === id ? updated : opportunity)))
+    );
+  }
+
+  deleteOpportunity(id: number): Observable<void> {
+    return this.http.delete<void>(this.url + id, { withCredentials: true }).pipe(
+      tap(() => this._opportunities.update(opportunities => opportunities.filter(opportunity => opportunity.id !== id)))
     );
   }
 }

@@ -19,6 +19,7 @@ import com.org.back.repositories.CompanyRepository;
 import com.org.back.repositories.ContactEmailRepository;
 import com.org.back.repositories.ContactPhoneRepository;
 import com.org.back.repositories.ContactRepository;
+import com.org.back.repositories.InteractionRepository;
 import com.org.back.repositories.UserRepository;
 
 
@@ -31,18 +32,20 @@ public class ContactServiceImpl implements ContactService {
     private final CompanyRepository companyRepository;
 
     private final UserRepository userRepository;
+    private final InteractionRepository interactionRepository;
     private final ContactMapper contactMapper;
 
     public ContactServiceImpl(ContactRepository contactRepository, ContactMapper contactMapper,
             ContactEmailRepository contactEmailRepository, ContactPhoneRepository contactPhoneRepository,
             CompanyRepository companyRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository, InteractionRepository interactionRepository) {
         this.contactRepository = contactRepository;
         this.contactMapper = contactMapper;
         this.contactEmailRepository = contactEmailRepository;
         this.contactPhoneRepository = contactPhoneRepository;
         this.companyRepository = companyRepository;
         this.userRepository = userRepository;
+        this.interactionRepository = interactionRepository;
     }
 
     @Transactional(readOnly = true)
@@ -147,9 +150,11 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    @Transactional
     public void deleteContactById(Long id) throws EntityNotFoundException {
         Contact contact = contactRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Contact not found with id: " + id));
+        interactionRepository.deleteAllByContactId(id);
         contactRepository.delete(contact);
     }
 

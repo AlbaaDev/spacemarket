@@ -1,36 +1,114 @@
-<div>
-    <h1 style="text-align: center;">Contact details</h1>
+@if (contact(); as contact) {
+  <h1 class="title">{{ contact.firstName }} {{ contact.lastName }}</h1>
 
-
-
-</div>
-
-<div class="row mt-5">
-    <div class="col-6">
-        <mat-card>
-            <mat-card-content>
-                <h2>First Name : {{contact.firstName}}</h2>
-                <h2>Last Name : {{contact.lastName}}</h2>
-                <h2>Emails :
-                    @for (item of contact.emails; track $index) {
-                    <div>{{ item.email }}</div>
-                    }
-                </h2>
-                <h2>Phones :
-                    @for (item of contact.phones; track $index) {
-                    <div>{{ item.phone }}</div>
-                    }
-                </h2>
-            </mat-card-content>
-        </mat-card>
+  <div class="row mt-4">
+    <div class="col-md-6 mb-3">
+      <mat-card>
+        <mat-card-content>
+          <dl class="facts">
+            <dt>Emails</dt>
+            <dd>
+              @for (item of contact.emails; track $index) { <div>{{ item.email }}</div> } @empty { – }
+            </dd>
+            <dt>Phones</dt>
+            <dd>
+              @for (item of contact.phones; track $index) { <div>{{ item.phone }}</div> } @empty { – }
+            </dd>
+          </dl>
+        </mat-card-content>
+      </mat-card>
     </div>
-    <div class="col-6">
-        <mat-card>
-            <mat-card-content>
-                <h2>City : {{contact.city}}</h2>
-                <h2>Address : {{contact.address}}</h2>
-                <h2>Country : {{contact.country}}</h2>
-            </mat-card-content>
-        </mat-card>
+    <div class="col-md-6 mb-3">
+      <mat-card>
+        <mat-card-content>
+          <dl class="facts">
+            <dt>City</dt><dd>{{ contact.city || '–' }}</dd>
+            <dt>Address</dt><dd>{{ contact.address || '–' }}</dd>
+            <dt>Country</dt><dd>{{ contact.country || '–' }}</dd>
+          </dl>
+        </mat-card-content>
+      </mat-card>
     </div>
-</div>
+  </div>
+} @else {
+  <h1 class="title">Contact</h1>
+}
+
+<section class="interactions" aria-labelledby="interactions-title">
+  <h2 id="interactions-title">Interactions</h2>
+
+  <form class="log" [formGroup]="form" (ngSubmit)="logInteraction()">
+    <mat-button-toggle-group formControlName="type" aria-label="Interaction type" hideSingleSelectionIndicator>
+      @for (type of types; track type.value) {
+        <mat-button-toggle [value]="type.value">
+          <mat-icon aria-hidden="true">{{ type.icon }}</mat-icon> {{ type.label }}
+        </mat-button-toggle>
+      }
+    </mat-button-toggle-group>
+
+    <div class="log-fields">
+      <mat-form-field class="date">
+        <mat-label>Date</mat-label>
+        <input matInput [matDatepicker]="picker" [max]="today" formControlName="occurredOn" required>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error>Pick a date</mat-error>
+      </mat-form-field>
+
+      @if (contactOpportunities().length > 0) {
+        <mat-form-field class="opportunity">
+          <mat-label>Opportunity (optional)</mat-label>
+          <mat-select formControlName="opportunityId">
+            <mat-option [value]="null">None</mat-option>
+            @for (opportunity of contactOpportunities(); track opportunity.id) {
+              <mat-option [value]="opportunity.id">{{ opportunity.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+
+      <mat-form-field class="note">
+        <mat-label>Note (optional)</mat-label>
+        <textarea matInput formControlName="note" rows="1" maxlength="2000"></textarea>
+      </mat-form-field>
+
+      <button mat-flat-button type="submit" class="submit" [disabled]="saving()">Log interaction</button>
+    </div>
+    @if (saveFailed()) {
+      <p class="error" role="alert">The interaction could not be saved. Try again.</p>
+    }
+  </form>
+
+  @if (loadFailed()) {
+    <p class="error" role="alert">Interactions could not be loaded.</p>
+  } @else if (interactions() !== null) {
+    @let list = interactions()!;
+    @if (list.length === 0) {
+      <p class="muted">No interactions yet. Log your calls, emails and meetings here; they feed the dashboard.</p>
+    } @else {
+      <ol class="history">
+        @for (interaction of list; track interaction.id) {
+          <li class="entry">
+            <mat-icon class="entry-icon" aria-hidden="true">{{ typeIcon(interaction.type) }}</mat-icon>
+            <div class="entry-main">
+              <div class="entry-head">
+                <strong>{{ typeLabel(interaction.type) }}</strong>
+                <span class="muted">{{ formatDay(interaction.occurredOn) }}</span>
+                @if (opportunityName(interaction.opportunityId); as name) {
+                  <span class="chip">{{ name }}</span>
+                }
+              </div>
+              @if (interaction.note) {
+                <p class="entry-note">{{ interaction.note }}</p>
+              }
+            </div>
+            <button mat-icon-button type="button" (click)="deleteInteraction(interaction)"
+              [attr.aria-label]="'Delete ' + typeLabel(interaction.type) + ' of ' + formatDay(interaction.occurredOn)">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </li>
+        }
+      </ol>
+    }
+  }
+</section>

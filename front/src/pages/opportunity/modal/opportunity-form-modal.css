@@ -1,0 +1,17 @@
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: min(28rem, 80vw);
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.form-error {
+  color: var(--mat-sys-error);
+  margin: 0;
+}
