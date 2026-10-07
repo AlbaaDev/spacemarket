@@ -87,6 +87,61 @@ html {
   scrollbar-color: var(--mat-sys-outline-variant) transparent;
 }
 
+/*
+  Dark theme, toggled from the header (ThemeService sets data-theme on <html>).
+  Cool graphite page, panels one step lighter, teal lifted for contrast.
+*/
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --mat-sys-background: #34363b;
+  --mat-sys-surface: #34363b;
+  --mat-sys-surface-bright: #3b3d42;
+  --mat-sys-surface-dim: #2b2d31;
+  --mat-sys-surface-container-lowest: #404248;
+  --mat-sys-surface-container-low: #3b3d42;
+  --mat-sys-surface-container: #45474d;
+  --mat-sys-surface-container-high: #4c4e54;
+  --mat-sys-surface-container-highest: #53555b;
+  --mat-sys-surface-variant: #45474d;
+  --mat-sys-on-background: #e8e9ec;
+  --mat-sys-on-surface: #e8e9ec;
+  --mat-sys-on-surface-variant: #b4b8bf;
+  --mat-sys-inverse-surface: #e8e9ec;
+  --mat-sys-inverse-on-surface: #2b2d31;
+  --mat-sys-outline: #8b9098;
+  --mat-sys-outline-variant: #55585f;
+
+  --mat-sys-primary: #6cc2b4;
+  --mat-sys-on-primary: #0b2b27;
+  --mat-sys-primary-container: #1f4d47;
+  --mat-sys-on-primary-container: #cfe8e2;
+  --mat-sys-surface-tint: #6cc2b4;
+  --mat-sys-secondary: #a9bab5;
+  --mat-sys-on-secondary: #1c2f2b;
+  --mat-sys-secondary-container: #3e4a47;
+  --mat-sys-on-secondary-container: #dce8e4;
+  --mat-sys-tertiary: #e0b26a;
+  --mat-sys-on-tertiary: #3f2a05;
+  --mat-sys-tertiary-container: #5a4120;
+  --mat-sys-on-tertiary-container: #f6e3c3;
+  --mat-sys-error: #ffb4ab;
+  --mat-sys-on-error: #690005;
+  --mat-sys-error-container: #93000a;
+  --mat-sys-on-error-container: #ffdad6;
+
+  --bs-body-color: #e8e9ec;
+  --bs-body-bg: #34363b;
+  --bs-primary: #6cc2b4;
+  --bs-primary-rgb: 108, 194, 180;
+  --bs-link-color: #6cc2b4;
+  --bs-link-color-rgb: 108, 194, 180;
+  --bs-link-hover-color: #cfe8e2;
+  --bs-link-hover-color-rgb: 207, 232, 226;
+  --bs-border-color: #55585f;
+  --bs-secondary-color: #b4b8bf;
+}
+
 html, body { height: 100%; }
 
 body {

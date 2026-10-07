@@ -2,6 +2,12 @@
   <a routerLink="/app-home" class="brand">SpaceMarket</a>
   <span class="example-fill-remaining-space"></span>
 
+  <button mat-icon-button type="button" (click)="themeService.toggle()"
+          [attr.aria-label]="themeService.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+          [attr.aria-pressed]="themeService.theme() === 'dark'">
+    <mat-icon aria-hidden="true">{{ themeService.theme() === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
+  </button>
+
   @if(!(authService.isAuthenticated())) {
     <button mat-raised-button routerLink="/app-login" class="mx-2">Sign in</button>
     <button mat-raised-button routerLink="/app-sign-up" class="mx-2">Sign Up</button>
