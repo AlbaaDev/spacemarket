@@ -1,0 +1,40 @@
+:host {
+  display: block;
+  padding: var(--space-5);
+  max-width: 48rem;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.title {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+
+  dt {
+    color: var(--mat-sys-on-surface-variant);
+    font-weight: 500;
+    font-size: var(--text-sm);
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+.muted {
+  color: var(--mat-sys-on-surface-variant);
+}

@@ -1,6 +1,7 @@
 package com.org.back.dto.user;
 
 import java.util.List;
+import java.util.Map;
 
 public record ContactDto(
         Long id,
@@ -11,4 +12,5 @@ public record ContactDto(
         CompanyDto company,
         String city,
         String address,
-        String country) {}
+        String country,
+        Map<String, Object> customValues) {}

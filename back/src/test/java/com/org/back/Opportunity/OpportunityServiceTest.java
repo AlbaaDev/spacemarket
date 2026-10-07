@@ -28,6 +28,7 @@ import com.org.back.models.User;
 import com.org.back.repositories.ContactRepository;
 import com.org.back.repositories.InteractionRepository;
 import com.org.back.repositories.OpportunityRepository;
+import com.org.back.services.CustomFieldService;
 import com.org.back.services.OpportunityServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,6 +44,8 @@ class OpportunityServiceTest {
     ContactRepository contactRepository;
     @Mock
     InteractionRepository interactionRepository;
+    @Mock
+    CustomFieldService customFieldService;
 
     private OpportunityServiceImpl service;
     private Contact contact;
@@ -50,7 +53,7 @@ class OpportunityServiceTest {
     @BeforeEach
     void setUp() {
         Clock clock = Clock.fixed(TODAY.atStartOfDay().toInstant(ZoneOffset.UTC), ZoneOffset.UTC);
-        service = new OpportunityServiceImpl(opportunityRepository, contactRepository, interactionRepository, clock);
+        service = new OpportunityServiceImpl(opportunityRepository, contactRepository, interactionRepository, customFieldService, clock);
 
         User user = new User();
         user.setId(USER_ID);
@@ -124,7 +127,7 @@ class OpportunityServiceTest {
     }
 
     private OpportunityRequest request(OpportunityStatus status, LocalDate closeDate) {
-        return new OpportunityRequest("Website", "Acme", 12_500L, status, closeDate, CONTACT_ID);
+        return new OpportunityRequest("Website", "Acme", 12_500L, status, closeDate, CONTACT_ID, null);
     }
 
     private void givenOwnedContact() {

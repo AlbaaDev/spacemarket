@@ -10,6 +10,7 @@ import com.org.back.dto.user.CompanyDto;
 import com.org.back.exceptions.CompanyAlreadyExistException;
 import com.org.back.exceptions.EntityNotFoundException;
 import com.org.back.interfaces.CompanyService;
+import com.org.back.enums.CustomFieldTarget;
 import com.org.back.mapper.CompanyMapper;
 import com.org.back.models.Company;
 import com.org.back.models.Contact;
@@ -24,14 +25,16 @@ public class CompanyServiceImpl implements CompanyService {
     private final ContactRepository contactRepository;
     private final CompanyMapper companyMapper;
     private final UserRepository userRepository;
+    private final CustomFieldService customFieldService;
 
     public CompanyServiceImpl(CompanyRepository companyRepository, ContactRepository contactRepository,
             UserRepository userRepository,
-            CompanyMapper companyMapper) {
+            CompanyMapper companyMapper, CustomFieldService customFieldService) {
         this.companyRepository = companyRepository;
         this.contactRepository = contactRepository;
         this.userRepository = userRepository;
         this.companyMapper = companyMapper;
+        this.customFieldService = customFieldService;
     }
 
     @Transactional(readOnly = true)
@@ -61,6 +64,7 @@ public class CompanyServiceImpl implements CompanyService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         company.setUser(user);
+        company.setCustomValues(customFieldService.validateValues(userId, CustomFieldTarget.COMPANY, company.getCustomValues()));
         if (company.getContacts() != null) {
             List<Contact> attachedContacts = company.getContacts().stream()
                     .map((Contact contact) -> {
@@ -95,6 +99,8 @@ public class CompanyServiceImpl implements CompanyService {
         existingCompany.setCountry(company.getCountry());
         existingCompany.setAddress(company.getAddress());
         existingCompany.setIndustry(company.getIndustry());
+        existingCompany.setCustomValues(customFieldService.validateValues(
+                existingCompany.getUser().getId(), CustomFieldTarget.COMPANY, company.getCustomValues()));
         if (company.getContacts() != null) {
             List<Contact> attachedContacts = company.getContacts().stream()
                     .map(c -> {

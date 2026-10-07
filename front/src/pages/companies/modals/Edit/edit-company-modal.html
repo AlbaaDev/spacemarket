@@ -64,6 +64,7 @@
       <input id="country" type="text" formControlName="country" matInput placeholder="Placeholder">
       <mat-icon matSuffix></mat-icon>
     </mat-form-field>
+    <app-custom-value-fields target="COMPANY" [group]="customValues" [values]="selectedCompany.customValues" />
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>

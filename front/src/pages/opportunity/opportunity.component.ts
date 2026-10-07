@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, effect, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,7 +8,12 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { forkJoin } from 'rxjs';
+import { ColumnHeaderMenuComponent } from '../../components/columns/column-header-menu.component';
+import { ColumnPickerComponent } from '../../components/columns/column-picker.component';
+import { CustomFieldDialogComponent } from '../../components/columns/custom-field-dialog.component';
+import { customSortValue, customValue, formatCustomValue, TableColumn, TableColumns } from '../../components/columns/table-columns';
 import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
+import { CustomFieldService } from '../../services/custom-field/custom-field.service';
 import { Opportunity, OPPORTUNITY_STATUS_LABELS } from '../../interfaces/Opportunity';
 import { OpportunityService } from '../../services/opportunity/opportunity.service';
 import { fromIsoDate } from '../../utils/dates';
@@ -19,7 +24,7 @@ type OpportunityColumn = 'name' | 'businessName' | 'principalContact' | 'value' 
 
 @Component({
   selector: 'opportunity',
-  imports: [MatTableModule, MatSortModule, MatPaginatorModule, MatCheckbox, MatIconModule, MatButtonModule],
+  imports: [MatTableModule, MatSortModule, MatPaginatorModule, MatCheckbox, MatIconModule, MatButtonModule, ColumnPickerComponent, ColumnHeaderMenuComponent],
   templateUrl: './opportunity.component.html',
   styleUrl: './opportunity.component.css'
 })
@@ -29,17 +34,15 @@ export class OpportunityComponent implements OnInit, AfterViewInit {
   readonly opportunities = this.opportunityService.opportunities;
   readonly loadFailed = signal(false);
 
-  readonly columns: Record<OpportunityColumn, string> = {
-    name: 'Name',
-    businessName: 'Business name',
-    principalContact: 'Principal contact',
-    value: 'Value',
-    status: 'Status',
-    closeDate: 'Close date',
-  };
-
-  readonly dataColumns = Object.keys(this.columns) as OpportunityColumn[];
-  readonly displayedColumns = ['select', ...this.dataColumns];
+  readonly columns = new TableColumns('spacemarket.columns.opportunities', [
+    { id: 'name', label: 'Name' },
+    { id: 'businessName', label: 'Business name' },
+    { id: 'principalContact', label: 'Principal contact' },
+    { id: 'value', label: 'Value' },
+    { id: 'status', label: 'Status' },
+    { id: 'closeDate', label: 'Close date' },
+  ], inject(CustomFieldService).fields('OPPORTUNITY'));
+  readonly displayedColumns = computed(() => ['select', ...this.columns.visibleIds(), 'add']);
   readonly dataSource = new MatTableDataSource<Opportunity>([]);
   readonly selection = new SelectionModel<Opportunity>(true, [], true, (a, b) => a.id === b.id);
 
@@ -53,12 +56,15 @@ export class OpportunityComponent implements OnInit, AfterViewInit {
     effect(() => {
       this.dataSource.data = this.opportunities();
     });
-    this.dataSource.sortingDataAccessor = (opportunity, column) => {
-      switch (column as OpportunityColumn) {
+    this.dataSource.sortingDataAccessor = (opportunity, columnId) => {
+      const field = this.columns.all().find(c => c.id === columnId)?.field;
+      if (field) return customSortValue(field, customValue(opportunity, field));
+      const column = columnId as OpportunityColumn;
+      switch (column) {
         case 'principalContact': return this.contactName(opportunity).toLowerCase();
         case 'closeDate': return opportunity.closeDate ?? '';
         case 'value': return opportunity.value;
-        default: return String(opportunity[column as keyof Opportunity] ?? '').toLowerCase();
+        default: return String(opportunity[column] ?? '').toLowerCase();
       }
     };
   }
@@ -110,7 +116,13 @@ export class OpportunityComponent implements OnInit, AfterViewInit {
     });
   }
 
-  display(opportunity: Opportunity, column: OpportunityColumn): string {
+  addColumn() {
+    this.dialog.open(CustomFieldDialogComponent, { data: { target: 'OPPORTUNITY' } });
+  }
+
+  display(opportunity: Opportunity, tableColumn: TableColumn): string {
+    if (tableColumn.field) return formatCustomValue(tableColumn.field, customValue(opportunity, tableColumn.field));
+    const column = tableColumn.id as OpportunityColumn;
     switch (column) {
       case 'principalContact': return this.contactName(opportunity);
       case 'value': return this.money.format(opportunity.value);

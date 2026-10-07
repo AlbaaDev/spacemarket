@@ -1,5 +1,10 @@
 package com.org.back.models;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,6 +42,18 @@ public class Opportunity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /** Custom field values keyed by field id (see docs/adr/0001-custom-field-values-in-jsonb.md). */
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "custom_values")
+    private Map<String, Object> customValues = new HashMap<>();
+
+    public Map<String, Object> getCustomValues() {
+        if (customValues == null) {
+            customValues = new HashMap<>();
+        }
+        return customValues;
+    }
 
     @NotBlank
     @Column(nullable = false, length = 124)

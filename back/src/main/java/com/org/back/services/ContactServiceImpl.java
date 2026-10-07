@@ -9,6 +9,7 @@ import com.org.back.dto.user.ContactDto;
 import com.org.back.exceptions.ContactAlreadyExistException;
 import com.org.back.exceptions.EntityNotFoundException;
 import com.org.back.interfaces.ContactService;
+import com.org.back.enums.CustomFieldTarget;
 import com.org.back.mapper.ContactMapper;
 import com.org.back.models.Company;
 import com.org.back.models.Contact;
@@ -33,12 +34,14 @@ public class ContactServiceImpl implements ContactService {
 
     private final UserRepository userRepository;
     private final InteractionRepository interactionRepository;
+    private final CustomFieldService customFieldService;
     private final ContactMapper contactMapper;
 
     public ContactServiceImpl(ContactRepository contactRepository, ContactMapper contactMapper,
             ContactEmailRepository contactEmailRepository, ContactPhoneRepository contactPhoneRepository,
             CompanyRepository companyRepository,
-            UserRepository userRepository, InteractionRepository interactionRepository) {
+            UserRepository userRepository, InteractionRepository interactionRepository,
+            CustomFieldService customFieldService) {
         this.contactRepository = contactRepository;
         this.contactMapper = contactMapper;
         this.contactEmailRepository = contactEmailRepository;
@@ -46,6 +49,7 @@ public class ContactServiceImpl implements ContactService {
         this.companyRepository = companyRepository;
         this.userRepository = userRepository;
         this.interactionRepository = interactionRepository;
+        this.customFieldService = customFieldService;
     }
 
     @Transactional(readOnly = true)
@@ -68,6 +72,7 @@ public class ContactServiceImpl implements ContactService {
             contact.setCompany(foundCompany);
         } 
         contact.setUser(user);
+        contact.setCustomValues(customFieldService.validateValues(userId, CustomFieldTarget.CONTACT, contact.getCustomValues()));
         // TODO : Implement Sets to avoid all this ...
         if (contactEmailRepository.existsByContactFirstNameAndContactLastName(contact.getFirstName(),
                 contact.getLastName())) {
@@ -145,6 +150,7 @@ public class ContactServiceImpl implements ContactService {
             }
         }
         contactForm.setUser(existingContact.getUser());
+        contactForm.setCustomValues(customFieldService.validateValues(userId, CustomFieldTarget.CONTACT, contactForm.getCustomValues()));
         Contact savedContact = contactRepository.save(contactForm);
         return contactMapper.toContactDTO(savedContact);
     }

@@ -1,4 +1,4 @@
-<div class="mx-2 my-2">
+<div class="toolbar mx-2 my-2">
   <button matMiniFab aria-label="button with a add icon" (click)="openAddDialog()"
     [disabled]="this.selection.selected.length >= 1">
     <mat-icon>add</mat-icon>
@@ -15,9 +15,10 @@
     [disabled]="this.selection.selected.length !== 1">
     <mat-icon>visibility</mat-icon>
   </button>
+  <app-column-picker class="ms-auto" [columns]="columns" target="COMPANY" />
 </div>
-<div class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource">
+<div class="mat-elevation-z8 table-scroll">
+  <table mat-table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
         <mat-checkbox (change)="$event ? toggleAllRows() : null" [checked]="selection.hasValue() && isAllSelected()"
@@ -30,27 +31,35 @@
         </mat-checkbox>
       </td>
     </ng-container>
-    @for (column of dataColumns; track column) {
-    <ng-container [matColumnDef]="column">
-      <th mat-header-cell *matHeaderCellDef> {{ columns[column] }} </th>
-      <td mat-cell *matCellDef="let element" (click)="goToDetailsPage(element)">
-        @if (isArray(element[column])) {
-        <div style="display: flex; flex-direction: column; gap: 4px;">
-          @for (item of getArrayItems(element[column]); track item) {
-            <div>{{ item }}</div>
+    @for (column of columns.all(); track column.id) {
+      <ng-container [matColumnDef]="column.id">
+        <th mat-header-cell *matHeaderCellDef [class.numeric]="column.field?.type === 'NUMBER'">
+          <div class="header-cell">
+            <span mat-sort-header [arrowPosition]="column.field?.type === 'NUMBER' ? 'before' : 'after'">{{ column.label }}</span>
+            @if (column.field) { <app-column-header-menu [field]="column.field" [columns]="columns" /> }
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let element" (click)="goToDetailsPage(element)" [class.numeric]="column.field?.type === 'NUMBER'">
+          @if (!column.field && isArray(element[column.id])) {
+            <div class="stack">
+              @for (item of getArrayItems(element[column.id]); track item) { <div>{{ item }}</div> } @empty { <div>-</div> }
+            </div>
+          } @else {
+            {{ display(element, column) }}
           }
-          @empty {
-            <div>-</div>
-          }
-        </div>
-      } @else {
-        {{ element[column] || '-' }}
-      }
-      </td>
-    </ng-container>
+        </td>
+      </ng-container>
     }
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <ng-container matColumnDef="add">
+      <th mat-header-cell *matHeaderCellDef class="add-column">
+        <button mat-icon-button type="button" (click)="addColumn()" aria-label="Add a column">
+          <mat-icon>add</mat-icon>
+        </button>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="goToDetailsPage(element)"></td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns();"></tr>
   </table>
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
   </mat-paginator>

@@ -1,5 +1,10 @@
 package com.org.back.models;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -32,6 +37,18 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "company_id")
     private Long id;
+
+    /** Custom field values keyed by field id (see docs/adr/0001-custom-field-values-in-jsonb.md). */
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "custom_values")
+    private Map<String, Object> customValues = new HashMap<>();
+
+    public Map<String, Object> getCustomValues() {
+        if (customValues == null) {
+            customValues = new HashMap<>();
+        }
+        return customValues;
+    }
 
     @Column(nullable = false, length = 45)
     private String name;

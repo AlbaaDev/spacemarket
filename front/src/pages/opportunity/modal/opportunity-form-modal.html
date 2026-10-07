@@ -54,6 +54,8 @@
       }
     </div>
 
+    <app-custom-value-fields target="OPPORTUNITY" [group]="customValues" [values]="existing?.customValues" />
+
     @if (error()) {
       <p class="form-error" role="alert">{{ error() }}</p>
     }

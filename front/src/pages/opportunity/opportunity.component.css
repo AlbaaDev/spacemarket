@@ -41,3 +41,31 @@ tr.mat-mdc-row:hover {
   margin: 0 var(--space-2) var(--space-3);
   color: var(--mat-sys-error);
 }
+
+.toolbar {
+  display: flex;
+  align-items: center;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+.header-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+th.numeric .header-cell {
+  justify-content: flex-end;
+}
+
+th.mat-mdc-header-cell {
+  white-space: nowrap;
+}
+
+.add-column {
+  width: 48px;
+  text-align: center;
+}

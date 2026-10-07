@@ -1,4 +1,5 @@
 import { IsoDate } from "../utils/dates";
+import { CustomValues } from "./CustomField";
 
 export type OpportunityStatus = 'OPEN' | 'WON' | 'LOST';
 
@@ -16,6 +17,7 @@ export interface Opportunity {
     status: OpportunityStatus,
     closeDate: IsoDate | null,
     principalContact: { id: number, firstName: string, lastName: string },
+    customValues: CustomValues,
 }
 
 export interface OpportunityRequest {
@@ -25,4 +27,5 @@ export interface OpportunityRequest {
     status: OpportunityStatus,
     closeDate: IsoDate | null,
     principalContactId: number,
+    customValues: CustomValues,
 }

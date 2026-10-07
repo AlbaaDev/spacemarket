@@ -1,6 +1,7 @@
 package com.org.back.dto.opportunity;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 import com.org.back.enums.OpportunityStatus;
 
@@ -14,4 +15,5 @@ public record OpportunityRequest(
         @NotNull @PositiveOrZero Long value,
         OpportunityStatus status,
         LocalDate closeDate,
-        @NotNull Long principalContactId) {}
+        @NotNull Long principalContactId,
+        Map<String, Object> customValues) {}

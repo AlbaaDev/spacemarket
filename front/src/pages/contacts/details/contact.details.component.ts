@@ -9,7 +9,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { customValue, formatCustomValue } from '../../../components/columns/table-columns';
 import { ConfirmDialogComponent } from '../../../components/confirm-dialog/confirm-dialog.component';
+import { CustomFieldService } from '../../../services/custom-field/custom-field.service';
+import { EditContactModal } from '../modals/Edit/edit-contact-modal';
 import { Contact } from '../../../interfaces/Contact';
 import { Interaction, INTERACTION_TYPES, InteractionType } from '../../../interfaces/Interaction';
 import { ContactService } from '../../../services/contact/contact.service';
@@ -45,9 +48,15 @@ export class ContactDetailsComponent implements OnInit {
   readonly dialog = inject(MatDialog);
 
   private readonly stateContact = signal<Contact | undefined>(history.state?.contact ?? history.state?.selectedContact);
-  // Navigation state is lost on reload; fall back to the loaded contact list.
+  // The loaded list has the latest edits; navigation state covers the moment before it arrives.
   readonly contact = computed(() =>
-    this.stateContact() ?? this.contactService.contacts().find(contact => contact.id === Number(this.id())));
+    this.contactService.contacts().find(contact => contact.id === Number(this.id())) ?? this.stateContact());
+
+  readonly customFields = inject(CustomFieldService).fields('CONTACT');
+  readonly customFacts = computed(() => {
+    const contact = this.contact();
+    return contact ? this.customFields().map(field => ({ name: field.name, value: formatCustomValue(field, customValue(contact, field)) })) : [];
+  });
 
   readonly types = INTERACTION_TYPES;
   readonly interactions = signal<Interaction[] | null>(null);
@@ -119,6 +128,11 @@ export class ContactDetailsComponent implements OnInit {
       this.interactionService.deleteInteraction(interaction.id).subscribe(() =>
         this.interactions.update(list => (list ?? []).filter(i => i.id !== interaction.id)));
     });
+  }
+
+  editContact() {
+    const contact = this.contact();
+    if (contact) this.dialog.open(EditContactModal, { data: contact });
   }
 
   typeLabel(type: InteractionType): string {

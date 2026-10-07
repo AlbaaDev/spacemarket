@@ -1,16 +1,22 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, effect, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, inject, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckbox } from "@angular/material/checkbox";
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon, MatIconModule } from "@angular/material/icon";
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatTable, MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { Company, CompanyKeys } from '../../interfaces/Company';
+import { ColumnHeaderMenuComponent } from '../../components/columns/column-header-menu.component';
+import { ColumnPickerComponent } from '../../components/columns/column-picker.component';
+import { CustomFieldDialogComponent } from '../../components/columns/custom-field-dialog.component';
+import { customSortValue, customValue, formatCustomValue, TableColumn, TableColumns } from '../../components/columns/table-columns';
+import { Company } from '../../interfaces/Company';
+import { CustomFieldService } from '../../services/custom-field/custom-field.service';
 import { CompanyService } from '../../services/company/company.service';
 import { AddCompanyModal } from './modals/Add/add-company-modal';
 import { DeleteCompanyModal } from './modals/Delete/delete-company-modal';
@@ -30,6 +36,9 @@ import { EditCompanyModal } from './modals/Edit/edit-company-modal';
     MatRowDef,
     MatCellDef,
     MatPaginatorModule,
+    MatSortModule,
+    ColumnPickerComponent,
+    ColumnHeaderMenuComponent,
     MatIcon,
     MatIconModule,
     MatButtonModule,
@@ -50,13 +59,13 @@ export class CompaniesComponent implements AfterViewInit {
   canDeleteCompanies = this.companyService.canDeleteCompanies;
   canClearSelection = this.companyService.canClearSelection;
 
-  readonly columns = {
-    name: 'Name',
-    city: 'City',
-    address: 'Address',
-    country: 'Country',
-    industry: 'Industry',
-  };
+  readonly columns = new TableColumns('spacemarket.columns.companies', [
+    { id: 'name', label: 'Name' },
+    { id: 'city', label: 'City' },
+    { id: 'address', label: 'Address' },
+    { id: 'country', label: 'Country' },
+    { id: 'industry', label: 'Industry' },
+  ], inject(CustomFieldService).fields('COMPANY'));
 
   isArray(value: any): boolean {
     return Array.isArray(value);
@@ -73,8 +82,7 @@ export class CompaniesComponent implements AfterViewInit {
     }).filter(Boolean);
   }
 
-  readonly dataColumns = Object.keys(this.columns) as CompanyKeys[];
-  readonly displayedColumns = ['select', ...this.dataColumns] as const;
+  readonly displayedColumns = computed(() => ['select', ...this.columns.visibleIds(), 'add']);
   readonly dataSource = new MatTableDataSource<Company>(this.companies());
   readonly selection = new SelectionModel<Company>(true, []);
 
@@ -84,8 +92,25 @@ export class CompaniesComponent implements AfterViewInit {
   private readonly maxDate = new Date(this._currentYear, this._currentMonth, this._currentDay);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sortingDataAccessor = (company, columnId) => {
+      const field = this.columns.all().find(c => c.id === columnId)?.field;
+      if (field) return customSortValue(field, customValue(company, field));
+      return String(company[columnId as keyof Company] ?? '').toLowerCase();
+    };
+    this.dataSource.sort = this.sort;
+  }
+
+  addColumn() {
+    this.dialog.open(CustomFieldDialogComponent, { data: { target: 'COMPANY' } });
+  }
+
+  display(company: Company, column: TableColumn): string {
+    if (column.field) return formatCustomValue(column.field, customValue(company, column.field));
+    const value = company[column.id as keyof Company];
+    return value === null || value === undefined || value === '' ? '-' : String(value);
   }
   constructor() {
     effect(() => {

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.org.back.dto.opportunity.OpportunityDto;
 import com.org.back.dto.opportunity.OpportunityRequest;
+import com.org.back.enums.CustomFieldTarget;
 import com.org.back.enums.OpportunityStatus;
 import com.org.back.exceptions.EntityNotFoundException;
 import com.org.back.interfaces.OpportunityService;
@@ -24,13 +25,15 @@ public class OpportunityServiceImpl implements OpportunityService {
     private final OpportunityRepository opportunityRepository;
     private final ContactRepository contactRepository;
     private final InteractionRepository interactionRepository;
+    private final CustomFieldService customFieldService;
     private final Clock clock;
 
     public OpportunityServiceImpl(OpportunityRepository opportunityRepository, ContactRepository contactRepository,
-            InteractionRepository interactionRepository, Clock clock) {
+            InteractionRepository interactionRepository, CustomFieldService customFieldService, Clock clock) {
         this.opportunityRepository = opportunityRepository;
         this.contactRepository = contactRepository;
         this.interactionRepository = interactionRepository;
+        this.customFieldService = customFieldService;
         this.clock = clock;
     }
 
@@ -74,6 +77,7 @@ public class OpportunityServiceImpl implements OpportunityService {
         opportunity.setBusinessName(request.businessName());
         opportunity.setValue(request.value());
         opportunity.setPrincipalContact(principalContact);
+        opportunity.setCustomValues(customFieldService.validateValues(userId, CustomFieldTarget.OPPORTUNITY, request.customValues()));
 
         OpportunityStatus status = request.status() == null ? OpportunityStatus.OPEN : request.status();
         opportunity.setStatus(status);
@@ -101,6 +105,7 @@ public class OpportunityServiceImpl implements OpportunityService {
                 opportunity.getValue(),
                 opportunity.getStatus(),
                 opportunity.getCloseDate(),
-                new OpportunityDto.PrincipalContact(contact.getId(), contact.getFirstName(), contact.getLastName()));
+                new OpportunityDto.PrincipalContact(contact.getId(), contact.getFirstName(), contact.getLastName()),
+                opportunity.getCustomValues());
     }
 }

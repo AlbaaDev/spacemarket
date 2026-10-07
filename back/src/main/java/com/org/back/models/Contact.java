@@ -1,5 +1,10 @@
 package com.org.back.models;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +39,18 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "contact_id")
     private Long id;
+
+    /** Custom field values keyed by field id (see docs/adr/0001-custom-field-values-in-jsonb.md). */
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "custom_values")
+    private Map<String, Object> customValues = new HashMap<>();
+
+    public Map<String, Object> getCustomValues() {
+        if (customValues == null) {
+            customValues = new HashMap<>();
+        }
+        return customValues;
+    }
 
     @NotBlank(message = "Last name cannot be blank")
     @Column(nullable = false, length = 45)

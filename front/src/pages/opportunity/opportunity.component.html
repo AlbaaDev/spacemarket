@@ -1,4 +1,4 @@
-<div class="mx-2 my-2">
+<div class="toolbar mx-2 my-2">
   <button matMiniFab aria-label="Add an opportunity" (click)="openAddDialog()">
     <mat-icon>add</mat-icon>
   </button>
@@ -10,13 +10,14 @@
     [disabled]="selection.selected.length < 1">
     <mat-icon>delete</mat-icon>
   </button>
+  <app-column-picker class="ms-auto" [columns]="columns" target="OPPORTUNITY" />
 </div>
 
 @if (loadFailed()) {
   <p class="notice" role="alert">Opportunities could not be loaded. Check that the backend is running, then reload.</p>
 }
 
-<div class="mat-elevation-z8">
+<div class="mat-elevation-z8 table-scroll">
   <table mat-table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef>
@@ -30,11 +31,17 @@
         </mat-checkbox>
       </td>
     </ng-container>
-    @for (column of dataColumns; track column) {
-      <ng-container [matColumnDef]="column">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header [class.numeric]="column === 'value'">{{ columns[column] }}</th>
-        <td mat-cell *matCellDef="let element" (click)="openEditDialog(element)" [class.numeric]="column === 'value'">
-          @if (column === 'status') {
+    @for (column of columns.all(); track column.id) {
+      <ng-container [matColumnDef]="column.id">
+        <th mat-header-cell *matHeaderCellDef [class.numeric]="column.id === 'value' || column.field?.type === 'NUMBER'">
+          <div class="header-cell">
+            <span mat-sort-header [arrowPosition]="column.id === 'value' || column.field?.type === 'NUMBER' ? 'before' : 'after'">{{ column.label }}</span>
+            @if (column.field) { <app-column-header-menu [field]="column.field" [columns]="columns" /> }
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let element" (click)="openEditDialog(element)"
+          [class.numeric]="column.id === 'value' || column.field?.type === 'NUMBER'">
+          @if (column.id === 'status') {
             <span class="status" [attr.data-status]="element.status">{{ display(element, column) }}</span>
           } @else {
             {{ display(element, column) }}
@@ -42,10 +49,18 @@
         </td>
       </ng-container>
     }
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <ng-container matColumnDef="add">
+      <th mat-header-cell *matHeaderCellDef class="add-column">
+        <button mat-icon-button type="button" (click)="addColumn()" aria-label="Add a column">
+          <mat-icon>add</mat-icon>
+        </button>
+      </th>
+      <td mat-cell *matCellDef="let element" (click)="openEditDialog(element)"></td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns();"></tr>
     <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell empty" [attr.colspan]="displayedColumns.length">
+      <td class="mat-cell empty" [attr.colspan]="displayedColumns().length">
         No opportunities yet. Add one with its value; mark it Won when the deal closes and it counts as revenue.
       </td>
     </tr>

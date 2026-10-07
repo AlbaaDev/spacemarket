@@ -1,5 +1,8 @@
 @if (contact(); as contact) {
-  <h1 class="title">{{ contact.firstName }} {{ contact.lastName }}</h1>
+  <header class="head">
+    <h1 class="title">{{ contact.firstName }} {{ contact.lastName }}</h1>
+    <button mat-stroked-button type="button" (click)="editContact()"><mat-icon>edit</mat-icon> Edit</button>
+  </header>
 
   <div class="row mt-4">
     <div class="col-md-6 mb-3">
@@ -25,6 +28,9 @@
             <dt>City</dt><dd>{{ contact.city || '–' }}</dd>
             <dt>Address</dt><dd>{{ contact.address || '–' }}</dd>
             <dt>Country</dt><dd>{{ contact.country || '–' }}</dd>
+            @for (fact of customFacts(); track fact.name) {
+              <dt>{{ fact.name }}</dt><dd>{{ fact.value }}</dd>
+            }
           </dl>
         </mat-card-content>
       </mat-card>

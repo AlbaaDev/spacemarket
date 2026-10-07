@@ -1,5 +1,29 @@
-<div>
-    <h1 style="text-align: center;">Company details</h1>
+@if (company(); as company) {
+  <header class="head">
+    <h1 class="title">{{ company.name }}</h1>
+    <button mat-stroked-button type="button" (click)="editCompany()"><mat-icon>edit</mat-icon> Edit</button>
+  </header>
 
-    <h2>Name : {{company.name}}</h2>
-</div>
+  <mat-card class="mt-4">
+    <mat-card-content>
+      <dl class="facts">
+        <dt>Industry</dt><dd>{{ company.industry || '–' }}</dd>
+        <dt>City</dt><dd>{{ company.city || '–' }}</dd>
+        <dt>Address</dt><dd>{{ company.address || '–' }}</dd>
+        <dt>Country</dt><dd>{{ company.country || '–' }}</dd>
+        <dt>Contacts</dt>
+        <dd>
+          @for (contact of company.contacts; track contact.id) {
+            <div><a [routerLink]="['/contact', contact.id]">{{ contact.firstName }} {{ contact.lastName }}</a></div>
+          } @empty { – }
+        </dd>
+        @for (fact of customFacts(); track fact.name) {
+          <dt>{{ fact.name }}</dt><dd>{{ fact.value }}</dd>
+        }
+      </dl>
+    </mat-card-content>
+  </mat-card>
+} @else {
+  <h1 class="title">Company</h1>
+  <p class="muted">This company could not be found.</p>
+}

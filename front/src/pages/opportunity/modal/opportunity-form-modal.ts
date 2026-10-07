@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
-import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MatDatepickerModule } from "@angular/material/datepicker";
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
+import { CustomValueFieldsComponent, customValuesFrom } from "../../../components/columns/custom-value-fields.component";
 import { Opportunity, OPPORTUNITY_STATUS_LABELS, OpportunityStatus } from "../../../interfaces/Opportunity";
 import { ContactService } from "../../../services/contact/contact.service";
 import { OpportunityService } from "../../../services/opportunity/opportunity.service";
@@ -16,7 +17,7 @@ import { fromIsoDate, toIsoDate } from "../../../utils/dates";
   selector: 'opportunity-form-modal',
   templateUrl: 'opportunity-form-modal.html',
   styleUrl: 'opportunity-form-modal.css',
-  imports: [MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatDatepickerModule, ReactiveFormsModule],
+  imports: [MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatDatepickerModule, ReactiveFormsModule, CustomValueFieldsComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OpportunityFormModal {
@@ -38,6 +39,8 @@ export class OpportunityFormModal {
     closeDate: [this.existing?.closeDate ? fromIsoDate(this.existing.closeDate) : null as Date | null],
   });
 
+  protected readonly customValues = new FormGroup({});
+
   protected readonly status = toSignal(this.form.controls.status.valueChanges, { initialValue: this.form.controls.status.value });
 
   submit() {
@@ -55,6 +58,7 @@ export class OpportunityFormModal {
       status,
       // Left empty on a closed Opportunity, the backend uses today.
       closeDate: status !== 'OPEN' && value.closeDate ? toIsoDate(value.closeDate) : null,
+      customValues: customValuesFrom(this.customValues),
     };
     this.saving.set(true);
     this.error.set(null);

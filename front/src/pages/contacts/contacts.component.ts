@@ -1,11 +1,12 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, effect, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, inject, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   MatCell, MatCellDef,
@@ -19,7 +20,12 @@ import {
 } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs/internal/observable/forkJoin';
-import { Contact, ContactKeys } from '../../interfaces/Contact';
+import { ColumnHeaderMenuComponent } from '../../components/columns/column-header-menu.component';
+import { ColumnPickerComponent } from '../../components/columns/column-picker.component';
+import { CustomFieldDialogComponent } from '../../components/columns/custom-field-dialog.component';
+import { customSortValue, customValue, formatCustomValue, TableColumn, TableColumns } from '../../components/columns/table-columns';
+import { Contact } from '../../interfaces/Contact';
+import { CustomFieldService } from '../../services/custom-field/custom-field.service';
 import { ContactService } from '../../services/contact/contact.service';
 import { DeleteCompanyModal } from '../companies/modals/Delete/delete-company-modal';
 import { AddContactModal } from './modals/Add/add-contact-modal-component';
@@ -39,6 +45,9 @@ import { EditContactModal } from './modals/Edit/edit-contact-modal';
     MatRowDef,
     MatCellDef,
     MatPaginatorModule,
+    MatSortModule,
+    ColumnPickerComponent,
+    ColumnHeaderMenuComponent,
     MatIcon,
     MatIconModule,
     MatButtonModule,
@@ -60,19 +69,17 @@ export class ContactsComponent implements AfterViewInit {
   canDeleteContacts = this.contactService.canDeleteContacts;
   canClearSelection = this.contactService.canClearSelection;
 
-  readonly columns = {
-    firstName: 'First name',
-    lastName: 'Last name',
-    company: 'Company',
-    emails: 'Emails',
-    phones: 'Phones',
-    city: 'City',
-    address: 'Address',
-    country: 'Country',
-  };
-
-  readonly dataColumns = Object.keys(this.columns) as ContactKeys[];
-  readonly displayedColumns = ['select', ...this.dataColumns] as const;
+  readonly columns = new TableColumns('spacemarket.columns.contacts', [
+    { id: 'firstName', label: 'First name' },
+    { id: 'lastName', label: 'Last name' },
+    { id: 'company', label: 'Company' },
+    { id: 'emails', label: 'Emails' },
+    { id: 'phones', label: 'Phones' },
+    { id: 'city', label: 'City' },
+    { id: 'address', label: 'Address' },
+    { id: 'country', label: 'Country' },
+  ], inject(CustomFieldService).fields('CONTACT'));
+  readonly displayedColumns = computed(() => ['select', ...this.columns.visibleIds(), 'add']);
   readonly dataSource = new MatTableDataSource<Contact>(this.contacts());
   readonly selection = new SelectionModel<Contact>(true, []);
 
@@ -94,8 +101,23 @@ export class ContactsComponent implements AfterViewInit {
   }
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.dataSource.sortingDataAccessor = (contact, columnId) => {
+      const field = this.columns.all().find(c => c.id === columnId)?.field;
+      if (field) return customSortValue(field, customValue(contact, field));
+      return this.displayColumn(contact, columnId).toLowerCase();
+    };
+    this.dataSource.sort = this.sort;
+  }
+
+  addColumn() {
+    this.dialog.open(CustomFieldDialogComponent, { data: { target: 'CONTACT' } });
+  }
+
+  display(contact: Contact, column: TableColumn): string {
+    return column.field ? formatCustomValue(column.field, customValue(contact, column.field)) : this.displayColumn(contact, column.id);
   }
 
   isAllSelected() {

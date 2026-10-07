@@ -5,3 +5,41 @@ tr {
 tr:hover {
   background: var(--mat-sys-surface-container-low);
 }
+.toolbar {
+  display: flex;
+  align-items: center;
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+th.mat-mdc-header-cell {
+  white-space: nowrap;
+}
+
+.header-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+th.numeric .header-cell {
+  justify-content: flex-end;
+}
+
+.add-column {
+  width: 48px;
+  text-align: center;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}

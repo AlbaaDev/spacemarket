@@ -1,3 +1,4 @@
+import { CustomValueFieldsComponent, customValuesFrom } from "../../../../components/columns/custom-value-fields.component";
 import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
@@ -18,15 +19,16 @@ import { ContactService } from "../../../../services/contact/contact.service";
     templateUrl: 'edit-company-modal.html',
     styleUrl: 'edit-company-modal.css',
     providers: [provideNativeDateAdapter()],
-    imports: [MatAutocomplete, MatDialogModule, MatButtonModule, MatInputModule, ReactiveFormsModule,
+    imports: [ CustomValueFieldsComponent,MatAutocomplete, MatDialogModule, MatButtonModule, MatInputModule, ReactiveFormsModule,
         MatAutocompleteModule, MatDatepickerModule, MatInputModule, MatDatepickerModule, MatIcon, AsyncPipe, MatOption],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditCompanyModal implements OnInit {
+    protected readonly customValues = new FormGroup({});
     private readonly companyService = inject(CompanyService);
     private readonly contactService = inject(ContactService);
     private readonly formBuilder = inject(FormBuilder);
-    private readonly selectedCompany = inject(MAT_DIALOG_DATA);
+    protected readonly selectedCompany = inject(MAT_DIALOG_DATA);
 
     editCompanyForm!: FormGroup;
     filteredContacts: Observable<Contact[]>[] = [];
@@ -127,6 +129,7 @@ export class EditCompanyModal implements OnInit {
             .map((c: any) => c.contact)
             .filter((c: Contact) => c && c.id);
 
+        formValue.customValues = customValuesFrom(this.customValues);
         this.companyService.editCompany(formValue).subscribe({
             next: () => { },
             error: (error) => console.error('Error updating company:', error)

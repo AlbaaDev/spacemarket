@@ -1,3 +1,4 @@
+import { CustomValueFieldsComponent, customValuesFrom } from "../../../../components/columns/custom-value-fields.component";
 import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
@@ -18,15 +19,16 @@ import { CompanyService } from "../../../../services/company/company.service";
     templateUrl: 'edit-contact-modal.html',
     styleUrl: 'edit-contact-modal.css',
     providers: [provideNativeDateAdapter()],
-    imports: [AsyncPipe, MatAutocompleteModule, MatDialogModule,
+    imports: [ CustomValueFieldsComponent,AsyncPipe, MatAutocompleteModule, MatDialogModule,
         MatButtonModule, MatInputModule, ReactiveFormsModule, MatDatepickerModule, MatInputModule, MatDatepickerModule, MatIcon, MatAutocomplete, MatOption],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditContactModal implements OnInit {
+    protected readonly customValues = new FormGroup({});
     private readonly contactService = inject(ContactService);
     private readonly companyService = inject(CompanyService);
     private readonly formBuilder = inject(FormBuilder);
-    private readonly selectedContact = inject(MAT_DIALOG_DATA);
+    protected readonly selectedContact = inject(MAT_DIALOG_DATA);
     readonly maxDate = new Date();
 
     editContactForm!: FormGroup;
@@ -188,7 +190,8 @@ export class EditContactModal implements OnInit {
         if (this.editContactForm.invalid) {
             return;
         }
-        this.contactService.editContact(this.editContactForm.value).subscribe({
+        const formValue = { ...this.editContactForm.value, customValues: customValuesFrom(this.customValues) };
+        this.contactService.editContact(formValue).subscribe({
             next: () => {
             },
             error: (error) => {

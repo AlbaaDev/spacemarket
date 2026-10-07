@@ -1,3 +1,4 @@
+import { CustomValueFieldsComponent, customValuesFrom } from "../../../../components/columns/custom-value-fields.component";
 import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
@@ -20,7 +21,7 @@ import { ContactService } from "../../../../services/contact/contact.service";
   templateUrl: 'add-company-modal.html',
   styleUrl: 'add-company-modal.css',
   providers: [provideNativeDateAdapter()],
-  imports: [AsyncPipe, FormsModule,
+  imports: [ CustomValueFieldsComponent,AsyncPipe, FormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
@@ -29,6 +30,7 @@ import { ContactService } from "../../../../services/contact/contact.service";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddCompanyModal {
+    protected readonly customValues = new FormGroup({});
   private readonly companyService = inject(CompanyService);
   private readonly contactService = inject(ContactService);
   private readonly formBuilder = inject(FormBuilder);
@@ -166,6 +168,7 @@ export class AddCompanyModal {
     formValue.contacts = formValue.contacts
       .map((c: any) => c.contact)
       .filter((c: Contact) => c && c.id);
+    formValue.customValues = customValuesFrom(this.customValues);
     this.companyService.addCompany(formValue).subscribe({
       next: (company) => { },
       error: (error) => { }

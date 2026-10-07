@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -97,7 +98,8 @@ class ContactControllerTest {
                 companyDto1,
                 "Genève",
                 "13 Rue de Genève",
-                "Suisse");
+                "Suisse",
+                Map.of());
 
         contact2EmailsDto = new ArrayList<>();
         contact2EmailsDto.add(new ContactEmailDto(1L, "jean.dupont@work.com", EmailType.WORK, true));
@@ -116,12 +118,13 @@ class ContactControllerTest {
                 companyDto2,
                 "Lausanne",
                 "13 Rue de Lausanne",
-                "Suisse");
+                "Suisse",
+                Map.of());
 
         contactsDto = List.of(contactDto1, contactDto2);
 
-        companyDto1 = new CompanyDto(1L, "companyTest1", "Suisse", "Genève", "13 Rue de Genève", "Tech", contactsDto);
-        companyDto2 = new CompanyDto(1L, "companyTest2", "France", "Paris", "13 rue de Paris", "Tech", contactsDto);
+        companyDto1 = new CompanyDto(1L, "companyTest1", "Suisse", "Genève", "13 Rue de Genève", "Tech", contactsDto, Map.of());
+        companyDto2 = new CompanyDto(1L, "companyTest2", "France", "Paris", "13 rue de Paris", "Tech", contactsDto, Map.of());
 
     }
 
