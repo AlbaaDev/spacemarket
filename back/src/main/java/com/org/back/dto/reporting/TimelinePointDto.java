@@ -1,4 +1,4 @@
-package com.org.back.dto.dashboard;
+package com.org.back.dto.reporting;
 
 import java.time.LocalDate;
 

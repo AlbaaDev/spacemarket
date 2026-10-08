@@ -1,4 +1,4 @@
-package com.org.back.Dashboard;
+package com.org.back.Reporting;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -13,25 +13,25 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 
-import com.org.back.dto.dashboard.DashboardSummaryDto;
-import com.org.back.dto.dashboard.TimelinePointDto;
+import com.org.back.dto.reporting.ReportingSummaryDto;
+import com.org.back.dto.reporting.TimelinePointDto;
 import com.org.back.enums.InteractionType;
 import com.org.back.enums.OpportunityStatus;
 import com.org.back.models.Contact;
 import com.org.back.models.Interaction;
 import com.org.back.models.Opportunity;
 import com.org.back.models.User;
-import com.org.back.services.DashboardService;
+import com.org.back.services.ReportingService;
 
 @DataJpaTest
-@Import(DashboardService.class)
-class DashboardServiceTest {
+@Import(ReportingService.class)
+class ReportingServiceTest {
 
     private static final LocalDate FROM = LocalDate.of(2026, 3, 1);
     private static final LocalDate TO = LocalDate.of(2026, 3, 31);
 
     @Autowired
-    DashboardService dashboardService;
+    ReportingService reportingService;
 
     @Autowired
     TestEntityManager entityManager;
@@ -42,7 +42,7 @@ class DashboardServiceTest {
 
     @BeforeEach
     void setUp() {
-        user = user("dashboard-owner@test.com");
+        user = user("reporting-owner@test.com");
         alice = contact(user, "Alice");
         bob = contact(user, "Bob");
     }
@@ -56,7 +56,7 @@ class DashboardServiceTest {
         opportunity(bob, 8_000, OpportunityStatus.LOST, LocalDate.of(2026, 3, 10));
         opportunity(bob, 16_000, OpportunityStatus.OPEN, null);
 
-        DashboardSummaryDto summary = dashboardService.summary(user.getId(), FROM, TO, null, null);
+        ReportingSummaryDto summary = reportingService.summary(user.getId(), FROM, TO, null, null);
 
         assertEquals(3_000, summary.current().revenue());
     }
@@ -69,7 +69,7 @@ class DashboardServiceTest {
         interaction(bob, LocalDate.of(2026, 3, 9));
         interaction(bob, LocalDate.of(2026, 2, 28));
 
-        DashboardSummaryDto.Figures current = dashboardService.summary(user.getId(), FROM, TO, null, null).current();
+        ReportingSummaryDto.Figures current = reportingService.summary(user.getId(), FROM, TO, null, null).current();
 
         assertEquals(3, current.interactions());
         assertEquals(2, current.contactsReached());
@@ -81,7 +81,7 @@ class DashboardServiceTest {
         interaction(bob, LocalDate.of(2026, 2, 28));
         interaction(bob, LocalDate.of(2026, 1, 29));
 
-        DashboardSummaryDto.Figures previous = dashboardService.summary(user.getId(), FROM, TO, null, null).previous();
+        ReportingSummaryDto.Figures previous = reportingService.summary(user.getId(), FROM, TO, null, null).previous();
 
         assertEquals(LocalDate.of(2026, 1, 29), previous.from());
         assertEquals(LocalDate.of(2026, 2, 28), previous.to());
@@ -94,7 +94,7 @@ class DashboardServiceTest {
         interaction(bob, LocalDate.of(2026, 2, 1));
         interaction(bob, LocalDate.of(2026, 1, 31));
 
-        DashboardSummaryDto.Figures previous = dashboardService
+        ReportingSummaryDto.Figures previous = reportingService
                 .summary(user.getId(), FROM, TO, LocalDate.of(2026, 2, 1), LocalDate.of(2026, 2, 28)).previous();
 
         assertEquals(LocalDate.of(2026, 2, 1), previous.from());
@@ -109,7 +109,7 @@ class DashboardServiceTest {
         opportunity(strangersContact, 5_000, OpportunityStatus.WON, LocalDate.of(2026, 3, 5));
         interaction(strangersContact, LocalDate.of(2026, 3, 5));
 
-        DashboardSummaryDto.Figures current = dashboardService.summary(user.getId(), FROM, TO, null, null).current();
+        ReportingSummaryDto.Figures current = reportingService.summary(user.getId(), FROM, TO, null, null).current();
 
         assertEquals(0, current.revenue());
         assertEquals(0, current.interactions());
@@ -122,7 +122,7 @@ class DashboardServiceTest {
         interaction(alice, LocalDate.of(2026, 3, 9));
         interaction(bob, LocalDate.of(2026, 3, 12));
 
-        List<TimelinePointDto> timeline = dashboardService.timeline(user.getId(), FROM, TO);
+        List<TimelinePointDto> timeline = reportingService.timeline(user.getId(), FROM, TO);
 
         assertEquals(List.of(
                 new TimelinePointDto(LocalDate.of(2026, 3, 9), 1_000, 1),

@@ -18,13 +18,13 @@ export class DashboardService {
     if (compare) {
       params = params.set('compareFrom', compare.from).set('compareTo', compare.to);
     }
-    return this.http.get<ApiResponse<DashboardSummary>>(environment.baseUrl + '/dashboard/summary', {
+    return this.http.get<ApiResponse<DashboardSummary>>(environment.baseUrl + '/reporting/summary', {
       params, withCredentials: true
     }).pipe(map(response => response.data));
   }
 
   getTimeline(from: IsoDate, to: IsoDate): Observable<TimelinePoint[]> {
-    return this.http.get<ApiResponse<TimelinePoint[]>>(environment.baseUrl + '/dashboard/timeline', {
+    return this.http.get<ApiResponse<TimelinePoint[]>>(environment.baseUrl + '/reporting/timeline', {
       params: new HttpParams().set('from', from).set('to', to), withCredentials: true
     }).pipe(map(response => response.data ?? []));
   }

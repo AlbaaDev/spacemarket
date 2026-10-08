@@ -9,18 +9,18 @@ import java.util.TreeMap;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.org.back.dto.dashboard.DashboardSummaryDto;
-import com.org.back.dto.dashboard.TimelinePointDto;
+import com.org.back.dto.reporting.ReportingSummaryDto;
+import com.org.back.dto.reporting.TimelinePointDto;
 import com.org.back.repositories.InteractionRepository;
 import com.org.back.repositories.OpportunityRepository;
 
 @Service
-public class DashboardService {
+public class ReportingService {
 
     private final OpportunityRepository opportunityRepository;
     private final InteractionRepository interactionRepository;
 
-    public DashboardService(OpportunityRepository opportunityRepository, InteractionRepository interactionRepository) {
+    public ReportingService(OpportunityRepository opportunityRepository, InteractionRepository interactionRepository) {
         this.opportunityRepository = opportunityRepository;
         this.interactionRepository = interactionRepository;
     }
@@ -30,14 +30,14 @@ public class DashboardService {
      * the previous Period has the same number of days and ends the day before.
      */
     @Transactional(readOnly = true)
-    public DashboardSummaryDto summary(Long userId, LocalDate from, LocalDate to, LocalDate compareFrom,
+    public ReportingSummaryDto summary(Long userId, LocalDate from, LocalDate to, LocalDate compareFrom,
             LocalDate compareTo) {
         if (compareFrom == null || compareTo == null) {
             long days = ChronoUnit.DAYS.between(from, to) + 1;
             compareTo = from.minusDays(1);
             compareFrom = compareTo.minusDays(days - 1);
         }
-        return new DashboardSummaryDto(figures(userId, from, to), figures(userId, compareFrom, compareTo));
+        return new ReportingSummaryDto(figures(userId, from, to), figures(userId, compareFrom, compareTo));
     }
 
     @Transactional(readOnly = true)
@@ -54,8 +54,8 @@ public class DashboardService {
                 .toList();
     }
 
-    private DashboardSummaryDto.Figures figures(Long userId, LocalDate from, LocalDate to) {
-        return new DashboardSummaryDto.Figures(
+    private ReportingSummaryDto.Figures figures(Long userId, LocalDate from, LocalDate to) {
+        return new ReportingSummaryDto.Figures(
                 from,
                 to,
                 opportunityRepository.sumRevenue(userId, from, to),
