@@ -43,3 +43,8 @@ th.numeric .header-cell {
   flex-direction: column;
   gap: 4px;
 }
+
+.empty {
+  padding: var(--space-5) var(--space-4);
+  color: var(--mat-sys-on-surface-variant);
+}

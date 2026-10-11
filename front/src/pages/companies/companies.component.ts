@@ -8,13 +8,15 @@ import { MatIcon, MatIconModule } from "@angular/material/icon";
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatTable, MatTableDataSource } from '@angular/material/table';
+import { MatCell, MatCellDef, MatColumnDef, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatHeaderRowDef, MatNoDataRow, MatRow, MatRowDef, MatTable, MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { ColumnHeaderMenuComponent } from '../../components/columns/column-header-menu.component';
 import { ColumnPickerComponent } from '../../components/columns/column-picker.component';
 import { CustomFieldDialogComponent } from '../../components/columns/custom-field-dialog.component';
 import { customSortValue, customValue, formatCustomValue, TableColumn, TableColumns } from '../../components/columns/table-columns';
+import { TableSearch } from '../../components/table-search/table-search';
+import { TableSearchFieldComponent } from '../../components/table-search/table-search-field.component';
 import { Company } from '../../interfaces/Company';
 import { CustomFieldService } from '../../services/custom-field/custom-field.service';
 import { CompanyService } from '../../services/company/company.service';
@@ -39,6 +41,8 @@ import { EditCompanyModal } from './modals/Edit/edit-company-modal';
     MatSortModule,
     ColumnPickerComponent,
     ColumnHeaderMenuComponent,
+    TableSearchFieldComponent,
+    MatNoDataRow,
     MatIcon,
     MatIconModule,
     MatButtonModule,
@@ -85,6 +89,7 @@ export class CompaniesComponent implements AfterViewInit {
   readonly displayedColumns = computed(() => ['select', ...this.columns.visibleIds(), 'add']);
   readonly dataSource = new MatTableDataSource<Company>(this.companies());
   readonly selection = new SelectionModel<Company>(true, []);
+  readonly search = new TableSearch(this.dataSource, this.columns, (company, column) => this.display(company, column), this.selection, () => this.paginator);
 
   private readonly _currentYear = new Date().getFullYear();
   private readonly _currentMonth = new Date().getMonth();
@@ -125,7 +130,7 @@ export class CompaniesComponent implements AfterViewInit {
   }
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
+    const numRows = this.search.rows.length;
     return numSelected === numRows;
   }
   toggleAllRows() {
@@ -133,7 +138,7 @@ export class CompaniesComponent implements AfterViewInit {
       this.selection.clear();
       return;
     }
-    this.selection.select(...this.dataSource.data);
+    this.selection.select(...this.search.rows);
   }
   openAddDialog() {
     this.dialog.open(AddCompanyModal);

@@ -15,6 +15,7 @@
     [disabled]="this.selection.selected.length !== 1">
     <mat-icon>visibility</mat-icon>
   </button>
+  <app-table-search-field class="mx-3" [search]="search" placeholder="Search companies" />
   <app-column-picker class="ms-auto" [columns]="columns" target="COMPANY" />
 </div>
 <div class="mat-elevation-z8 table-scroll">
@@ -60,6 +61,14 @@
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns();"></tr>
+    <tr class="mat-row" *matNoDataRow>
+      @if (search.text()) {
+        <td class="mat-cell empty" [attr.colspan]="displayedColumns().length">
+          No companies match “{{ search.text() }}”.
+          <button mat-button type="button" (click)="search.set('')">Clear the search</button>
+        </td>
+      }
+    </tr>
   </table>
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic elements">
   </mat-paginator>

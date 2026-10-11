@@ -10,6 +10,7 @@
     [disabled]="selection.selected.length < 1">
     <mat-icon>delete</mat-icon>
   </button>
+  <app-table-search-field class="mx-3" [search]="search" placeholder="Search opportunities" />
   <app-column-picker class="ms-auto" [columns]="columns" target="OPPORTUNITY" />
 </div>
 
@@ -61,7 +62,12 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns();"></tr>
     <tr class="mat-row" *matNoDataRow>
       <td class="mat-cell empty" [attr.colspan]="displayedColumns().length">
-        No opportunities yet. Add one with its value; mark it Won when the deal closes and it counts as revenue.
+        @if (search.text()) {
+          No opportunities match “{{ search.text() }}”.
+          <button mat-button type="button" (click)="search.set('')">Clear the search</button>
+        } @else {
+          No opportunities yet. Add one with its value; mark it Won when the deal closes and it counts as revenue.
+        }
       </td>
     </tr>
   </table>

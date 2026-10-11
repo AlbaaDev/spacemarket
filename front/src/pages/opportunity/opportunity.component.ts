@@ -13,6 +13,8 @@ import { ColumnPickerComponent } from '../../components/columns/column-picker.co
 import { CustomFieldDialogComponent } from '../../components/columns/custom-field-dialog.component';
 import { customSortValue, customValue, formatCustomValue, TableColumn, TableColumns } from '../../components/columns/table-columns';
 import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-dialog.component';
+import { TableSearch } from '../../components/table-search/table-search';
+import { TableSearchFieldComponent } from '../../components/table-search/table-search-field.component';
 import { CustomFieldService } from '../../services/custom-field/custom-field.service';
 import { Opportunity, OPPORTUNITY_STATUS_LABELS } from '../../interfaces/Opportunity';
 import { OpportunityService } from '../../services/opportunity/opportunity.service';
@@ -24,7 +26,7 @@ type OpportunityColumn = 'name' | 'businessName' | 'principalContact' | 'value' 
 
 @Component({
   selector: 'opportunity',
-  imports: [MatTableModule, MatSortModule, MatPaginatorModule, MatCheckbox, MatIconModule, MatButtonModule, ColumnPickerComponent, ColumnHeaderMenuComponent],
+  imports: [MatTableModule, MatSortModule, MatPaginatorModule, MatCheckbox, MatIconModule, MatButtonModule, ColumnPickerComponent, ColumnHeaderMenuComponent, TableSearchFieldComponent],
   templateUrl: './opportunity.component.html',
   styleUrl: './opportunity.component.css'
 })
@@ -45,6 +47,7 @@ export class OpportunityComponent implements OnInit, AfterViewInit {
   readonly displayedColumns = computed(() => ['select', ...this.columns.visibleIds(), 'add']);
   readonly dataSource = new MatTableDataSource<Opportunity>([]);
   readonly selection = new SelectionModel<Opportunity>(true, [], true, (a, b) => a.id === b.id);
+  readonly search = new TableSearch(this.dataSource, this.columns, (opportunity, column) => this.display(opportunity, column), this.selection, () => this.paginator);
 
   private readonly money = new Intl.NumberFormat(APP_LOCALE, { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
   private readonly day = new Intl.DateTimeFormat(APP_LOCALE, { dateStyle: 'medium' });
@@ -79,7 +82,7 @@ export class OpportunityComponent implements OnInit, AfterViewInit {
   }
 
   isAllSelected() {
-    return this.selection.selected.length === this.dataSource.data.length;
+    return this.selection.selected.length === this.search.rows.length;
   }
 
   toggleAllRows() {
@@ -87,7 +90,7 @@ export class OpportunityComponent implements OnInit, AfterViewInit {
       this.selection.clear();
       return;
     }
-    this.selection.select(...this.dataSource.data);
+    this.selection.select(...this.search.rows);
   }
 
   openAddDialog() {

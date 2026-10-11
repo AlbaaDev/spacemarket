@@ -15,6 +15,7 @@ import {
   MatHeaderCellDef,
   MatHeaderRow, MatHeaderRowDef,
   MatRow, MatRowDef,
+  MatNoDataRow,
   MatTable,
   MatTableDataSource
 } from '@angular/material/table';
@@ -24,6 +25,8 @@ import { ColumnHeaderMenuComponent } from '../../components/columns/column-heade
 import { ColumnPickerComponent } from '../../components/columns/column-picker.component';
 import { CustomFieldDialogComponent } from '../../components/columns/custom-field-dialog.component';
 import { customSortValue, customValue, formatCustomValue, TableColumn, TableColumns } from '../../components/columns/table-columns';
+import { TableSearch } from '../../components/table-search/table-search';
+import { TableSearchFieldComponent } from '../../components/table-search/table-search-field.component';
 import { Contact } from '../../interfaces/Contact';
 import { CustomFieldService } from '../../services/custom-field/custom-field.service';
 import { ContactService } from '../../services/contact/contact.service';
@@ -48,6 +51,8 @@ import { EditContactModal } from './modals/Edit/edit-contact-modal';
     MatSortModule,
     ColumnPickerComponent,
     ColumnHeaderMenuComponent,
+    TableSearchFieldComponent,
+    MatNoDataRow,
     MatIcon,
     MatIconModule,
     MatButtonModule,
@@ -82,6 +87,7 @@ export class ContactsComponent implements AfterViewInit {
   readonly displayedColumns = computed(() => ['select', ...this.columns.visibleIds(), 'add']);
   readonly dataSource = new MatTableDataSource<Contact>(this.contacts());
   readonly selection = new SelectionModel<Contact>(true, []);
+  readonly search = new TableSearch(this.dataSource, this.columns, (contact, column) => this.display(contact, column), this.selection, () => this.paginator);
 
   private readonly _currentYear = new Date().getFullYear();
   private readonly _currentMonth = new Date().getMonth();
@@ -122,7 +128,7 @@ export class ContactsComponent implements AfterViewInit {
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    const numRows = this.dataSource.data.length;
+    const numRows = this.search.rows.length;
     return numSelected === numRows;
   }
   toggleAllRows() {
@@ -130,7 +136,7 @@ export class ContactsComponent implements AfterViewInit {
       this.selection.clear();
       return;
     }
-    this.selection.select(...this.dataSource.data);
+    this.selection.select(...this.search.rows);
   }
   openAddDialog() {
     this.dialog.open(AddContactModal);

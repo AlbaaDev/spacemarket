@@ -54,6 +54,10 @@ _Avoid_: Custom column, extra field, property, attribute
 A Custom field or built-in attribute shown in a table; showing, hiding or reordering one does not change the data.
 _Avoid_: Field (when only display is meant)
 
+**Search**:
+Free text typed above a table that narrows it to the rows whose visible Columns contain every word typed.
+_Avoid_: Filter, query, lookup
+
 ### Reporting
 
 **Period**:
