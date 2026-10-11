@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import com.org.back.support.PostgresJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import com.org.back.enums.EmailType;
@@ -19,7 +19,7 @@ import com.org.back.models.ContactEmail;
 import com.org.back.models.ContactPhone;
 import com.org.back.repositories.ContactRepository;
 
-@DataJpaTest
+@PostgresJpaTest
 class ContactRepositoryTest {
 
     @Autowired

@@ -3,11 +3,11 @@ const path = require("path");
 
 const isWindows = process.platform === "win32";
 const backendPath = path.join(__dirname, "back");
-console.log("==== Lancement du backend Spring Boot en profil TEST... ====");
+console.log("==== Lancement du backend Spring Boot avec un PostgreSQL de démo (Docker)... ====");
 
 const backend = spawn(
   isWindows ? "mvn.cmd" : "mvn",
-  ["spring-boot:run", "-Dspring-boot.run.profiles=test"],
+  ["spring-boot:test-run"],
   { cwd: backendPath, stdio: "inherit" }
 );
 

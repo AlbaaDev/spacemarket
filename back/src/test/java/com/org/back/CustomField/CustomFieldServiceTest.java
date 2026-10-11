@@ -13,7 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import com.org.back.support.PostgresJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 
@@ -27,7 +27,7 @@ import com.org.back.models.Contact;
 import com.org.back.models.User;
 import com.org.back.services.CustomFieldService;
 
-@DataJpaTest
+@PostgresJpaTest
 @Import(CustomFieldService.class)
 class CustomFieldServiceTest {
 

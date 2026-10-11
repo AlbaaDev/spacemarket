@@ -68,16 +68,16 @@ VALUES ('0417684965', 'WORK', TRUE, 4);
 -- OPPORTUNITIES (dates relative to today so the dashboard has data)
 -- =========================
 INSERT INTO OPPORTUNITIES (name, business_name, opportunity_value, status, close_date, contact_id)
-VALUES ('Website redesign', 'Google', 12000, 'WON', DATEADD('DAY', -3, CURRENT_DATE), 1);
+VALUES ('Website redesign', 'Google', 12000, 'WON', CURRENT_DATE - 3, 1);
 
 INSERT INTO OPPORTUNITIES (name, business_name, opportunity_value, status, close_date, contact_id)
-VALUES ('SEO audit', 'Microsoft', 4500, 'WON', DATEADD('DAY', -20, CURRENT_DATE), 2);
+VALUES ('SEO audit', 'Microsoft', 4500, 'WON', CURRENT_DATE - 20, 2);
 
 INSERT INTO OPPORTUNITIES (name, business_name, opportunity_value, status, close_date, contact_id)
-VALUES ('Mobile app', 'Apple', 30000, 'WON', DATEADD('DAY', -75, CURRENT_DATE), 3);
+VALUES ('Mobile app', 'Apple', 30000, 'WON', CURRENT_DATE - 75, 3);
 
 INSERT INTO OPPORTUNITIES (name, business_name, opportunity_value, status, close_date, contact_id)
-VALUES ('Brand workshop', 'Google', 2500, 'LOST', DATEADD('DAY', -40, CURRENT_DATE), 1);
+VALUES ('Brand workshop', 'Google', 2500, 'LOST', CURRENT_DATE - 40, 1);
 
 INSERT INTO OPPORTUNITIES (name, business_name, opportunity_value, status, close_date, contact_id)
 VALUES ('Maintenance contract', 'Microsoft', 8000, 'OPEN', NULL, 2);
@@ -86,16 +86,16 @@ VALUES ('Maintenance contract', 'Microsoft', 8000, 'OPEN', NULL, 2);
 -- INTERACTIONS
 -- =========================
 INSERT INTO INTERACTIONS (type, occurred_on, note, contact_id, opportunity_id, user_id)
-VALUES ('CALL', DATEADD('DAY', -1, CURRENT_DATE), 'Kick-off call for the redesign', 1, 1, 1);
+VALUES ('CALL', CURRENT_DATE - 1, 'Kick-off call for the redesign', 1, 1, 1);
 
 INSERT INTO INTERACTIONS (type, occurred_on, note, contact_id, opportunity_id, user_id)
-VALUES ('EMAIL', DATEADD('DAY', -4, CURRENT_DATE), 'Sent the signed quote', 1, 1, 1);
+VALUES ('EMAIL', CURRENT_DATE - 4, 'Sent the signed quote', 1, 1, 1);
 
 INSERT INTO INTERACTIONS (type, occurred_on, note, contact_id, opportunity_id, user_id)
-VALUES ('MEETING', DATEADD('DAY', -9, CURRENT_DATE), NULL, 2, 5, 1);
+VALUES ('MEETING', CURRENT_DATE - 9, NULL, 2, 5, 1);
 
 INSERT INTO INTERACTIONS (type, occurred_on, note, contact_id, opportunity_id, user_id)
-VALUES ('MESSAGE', DATEADD('DAY', -22, CURRENT_DATE), NULL, 3, NULL, 1);
+VALUES ('MESSAGE', CURRENT_DATE - 22, NULL, 3, NULL, 1);
 
 INSERT INTO INTERACTIONS (type, occurred_on, note, contact_id, opportunity_id, user_id)
-VALUES ('CALL', DATEADD('DAY', -50, CURRENT_DATE), NULL, 2, NULL, 1);
+VALUES ('CALL', CURRENT_DATE - 50, NULL, 2, NULL, 1);

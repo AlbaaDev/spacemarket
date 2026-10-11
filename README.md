@@ -1,7 +1,12 @@
 # SpaceMarket
 
-SpaceMarket is a CRM project using **Angular 20**, **Java 25 Spring 3.5.3**, and **PostgreSQL**.
+SpaceMarket is a CRM project using **Angular 20**, **Java 25 Spring Boot 3.5**, and **PostgreSQL**.
 
+
+## Prerequisites
+
+- **Docker**, running. The backend's tests and demo mode start a throwaway PostgreSQL in it; nothing else to install for the database.
+- **JDK 25** and **Node.js**.
 
 ## Installation
 
@@ -13,6 +18,8 @@ SpaceMarket is a CRM project using **Angular 20**, **Java 25 Spring 3.5.3**, and
     
     b. Run this command: **node start.js**
 
+    The backend starts against a fresh PostgreSQL filled with demo data (`back/src/main/resources/data.sql`). It is thrown away when you stop it. To run only the backend this way, launch `TestBackApplication` from your IDE or run `mvn spring-boot:test-run` in `back/`.
+
 3. Login with ;
 
     email : test5@test.com 
@@ -21,5 +28,11 @@ SpaceMarket is a CRM project using **Angular 20**, **Java 25 Spring 3.5.3**, and
 
 ![alt text](preview.png)
 
+## Running against your own database
 
+Without `TestBackApplication`, the backend uses the `dev` profile: a local PostgreSQL database named `spacemarket` (see `back/src/main/resources/application-dev.properties`). Its data is kept between runs, and the demo data is not loaded.
 
+## Tests
+
+- Backend: `mvn test` in `back/` (needs Docker).
+- Frontend: `npm test` in `front/` (needs Chrome, or `CHROME_BIN` pointing to another Chromium browser).
