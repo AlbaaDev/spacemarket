@@ -29,6 +29,7 @@
     <properties>
         <java.version>25</java.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
+        <sentry.version>8.60.0</sentry.version>
     </properties>
     <dependencies>
 
@@ -57,6 +58,12 @@
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
+        </dependency>
+        <!-- Error reporting. Only switched on in dev, where errors go to Spotlight on this machine. -->
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-spring-boot-starter-jakarta</artifactId>
+            <version>${sentry.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

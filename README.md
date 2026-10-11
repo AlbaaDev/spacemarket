@@ -32,6 +32,10 @@ SpaceMarket is a CRM project using **Angular 20**, **Java 25 Spring Boot 3.5**, 
 
 Without `TestBackApplication`, the backend uses the `dev` profile: a local PostgreSQL database named `spacemarket` (see `back/src/main/resources/application-dev.properties`). Its data is kept between runs, and the demo data is not loaded.
 
+## Seeing errors while developing (Spotlight)
+
+Run `npm run spotlight` in `front/`, then open http://localhost:8969. Errors from the backend (`dev` profile) and from the frontend (`npm start`) show up there. Everything stays on your machine: nothing is sent to Sentry's servers, and production reports nothing.
+
 ## Tests
 
 - Backend: `mvn test` in `back/` (needs Docker).
