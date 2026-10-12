@@ -28,6 +28,9 @@ import com.org.back.security.jwt.JwtService;
 import com.org.back.services.AuthenticationService;
 import com.org.back.services.UserServiceImpl;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.http.Cookie;
+
 @WebMvcTest(AuthenticationController.class)
 @Import(SecurityConfiguration.class)
 class AuthenticationControllerTest {
@@ -68,6 +71,15 @@ class AuthenticationControllerTest {
     @DisplayName("A request without a valid session is answered 401, so the front can send the user to the login page")
     void request_without_session_is_unauthorized() throws Exception {
         mockMvc.perform(get("/auth/me"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("An expired or tampered token is answered 401, like no token at all")
+    void request_with_unreadable_token_is_unauthorized() throws Exception {
+        when(jwtService.extractUsername("expired-token")).thenThrow(new ExpiredJwtException(null, null, "JWT expired"));
+
+        mockMvc.perform(get("/auth/me").cookie(new Cookie("jwt", "expired-token")))
                 .andExpect(status().isUnauthorized());
     }
 }

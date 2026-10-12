@@ -2,9 +2,6 @@ import { ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDete
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
-import { of } from 'rxjs/internal/observable/of';
-import { catchError } from 'rxjs/internal/operators/catchError';
 import { sessionExpiredInterceptor } from '../interceptors/session-expired.interceptor';
 import { AuthService } from '../services/auth/auth-service';
 import { routes } from './app.routes';
@@ -18,15 +15,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(withInterceptors([sessionExpiredInterceptor])),
     provideAppDateAdapter(),
-    provideAppInitializer(() => {
-      const authService = inject(AuthService);
-      if (!authService.hasJwtCookie()) {
-        return Promise.resolve();
-      }
-      return firstValueFrom(
-        authService.getCurrentUser().pipe(catchError(() => of(null)))
-      );
-    }),
+    provideAppInitializer(() => inject(AuthService).restoreSession()),
     //TODO : XSS
   ]
 };
