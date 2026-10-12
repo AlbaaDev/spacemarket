@@ -42,6 +42,16 @@ public class InteractionController {
                 request.getRequestURI()));
     }
 
+    @GetMapping("/opportunities/{opportunityId}/interactions")
+    public ResponseEntity<ApiResponse<List<InteractionDto>>> getOpportunityInteractions(@PathVariable Long opportunityId,
+            @AuthenticationPrincipal User user, HttpServletRequest request) throws EntityNotFoundException {
+        return ResponseEntity.ok(ResponseUtil.success(
+                HttpStatus.OK.value(),
+                "Success",
+                interactionService.getOpportunityInteractions(user, opportunityId),
+                request.getRequestURI()));
+    }
+
     @PostMapping("/contacts/{contactId}/interactions")
     public ResponseEntity<ApiResponse<InteractionDto>> logInteraction(@PathVariable Long contactId,
             @Valid @RequestBody InteractionRequest body, @AuthenticationPrincipal User user,

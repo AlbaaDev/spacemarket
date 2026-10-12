@@ -34,6 +34,15 @@ VALUES ( 'France', 'John3', 'Doe3', 'Paris', 'Rue de France', 1, 1);
 INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id, company_id) 
 VALUES ( 'USA', 'John4', 'Doe4', 'New York', 'Rue de New York', 2, 2);
 
+INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id, company_id)
+VALUES ( 'USA', 'Sarah', 'Connor', 'Seattle', '1 Microsoft Way', 1, 2);
+
+INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id, company_id)
+VALUES ( 'France', 'Élodie', 'Martin', 'Paris', '39 Quai du Président Roosevelt', 1, 2);
+
+INSERT INTO CONTACTS ( country, first_name, last_name, city, address, user_id, company_id)
+VALUES ( 'USA', 'Marcus', 'Lee', 'Cupertino', '1 Apple Park Way', 1, 3);
+
 -- =========================
 -- CONTACT EMAILS
 -- =========================
@@ -49,6 +58,15 @@ VALUES ('test3@live.fr', 'WORK', TRUE, 3);
 INSERT INTO CONTACT_EMAILS (email, type, is_primary, contact_id) 
 VALUES ('test4@live.fr', 'WORK', TRUE, 4);
 
+INSERT INTO CONTACT_EMAILS (email, type, is_primary, contact_id)
+VALUES ('sarah.connor@microsoft.example', 'WORK', TRUE, 5);
+
+INSERT INTO CONTACT_EMAILS (email, type, is_primary, contact_id)
+VALUES ('elodie.martin@microsoft.example', 'WORK', TRUE, 6);
+
+INSERT INTO CONTACT_EMAILS (email, type, is_primary, contact_id)
+VALUES ('marcus.lee@apple.example', 'WORK', TRUE, 7);
+
 -- =========================
 -- CONTACT PHONES
 -- =========================
@@ -63,6 +81,15 @@ VALUES ('0317684965', 'WORK', TRUE, 3);
 
 INSERT INTO CONTACT_PHONES (phone, type, is_primary, contact_id) 
 VALUES ('0417684965', 'WORK', TRUE, 4);
+
+INSERT INTO CONTACT_PHONES (phone, type, is_primary, contact_id)
+VALUES ('0517684965', 'WORK', TRUE, 5);
+
+INSERT INTO CONTACT_PHONES (phone, type, is_primary, contact_id)
+VALUES ('0617684965', 'WORK', TRUE, 6);
+
+INSERT INTO CONTACT_PHONES (phone, type, is_primary, contact_id)
+VALUES ('0717684965', 'WORK', TRUE, 7);
 
 -- =========================
 -- OPPORTUNITIES (dates relative to today so the dashboard has data)
@@ -82,6 +109,24 @@ VALUES ('Brand workshop', 'Google', 2500, 'LOST', CURRENT_DATE - 40, 1);
 INSERT INTO OPPORTUNITIES (name, business_name, opportunity_value, status, close_date, contact_id)
 VALUES ('Maintenance contract', 'Microsoft', 8000, 'OPEN', NULL, 2);
 
+INSERT INTO OPPORTUNITIES (name, business_name, opportunity_value, status, close_date, contact_id)
+VALUES ('Cloud migration', 'Microsoft', 45000, 'OPEN', NULL, 5);
+
+INSERT INTO OPPORTUNITIES (name, business_name, opportunity_value, status, close_date, contact_id)
+VALUES ('Teams training', 'Microsoft', 3200, 'WON', CURRENT_DATE - 12, 6);
+
+INSERT INTO OPPORTUNITIES (name, business_name, opportunity_value, status, close_date, contact_id)
+VALUES ('Accessibility audit', 'Microsoft', 6800, 'LOST', CURRENT_DATE - 30, 5);
+
+INSERT INTO OPPORTUNITIES (name, business_name, opportunity_value, status, close_date, contact_id)
+VALUES ('Retail kiosk prototype', 'Apple', 22000, 'OPEN', NULL, 7);
+
+INSERT INTO OPPORTUNITIES (name, business_name, opportunity_value, status, close_date, contact_id)
+VALUES ('Design system', 'Apple', 15000, 'WON', CURRENT_DATE - 6, 7);
+
+INSERT INTO OPPORTUNITIES (name, business_name, opportunity_value, status, close_date, contact_id)
+VALUES ('Analytics dashboard', 'Google', 9500, 'OPEN', NULL, 3);
+
 -- =========================
 -- INTERACTIONS
 -- =========================
@@ -99,3 +144,12 @@ VALUES ('MESSAGE', CURRENT_DATE - 22, NULL, 3, NULL, 1);
 
 INSERT INTO INTERACTIONS (type, occurred_on, note, contact_id, opportunity_id, user_id)
 VALUES ('CALL', CURRENT_DATE - 50, NULL, 2, NULL, 1);
+
+INSERT INTO INTERACTIONS (type, occurred_on, note, contact_id, opportunity_id, user_id)
+VALUES ('MEETING', CURRENT_DATE - 2, 'Workshop on the migration roadmap', 5, 6, 1);
+
+INSERT INTO INTERACTIONS (type, occurred_on, note, contact_id, opportunity_id, user_id)
+VALUES ('EMAIL', CURRENT_DATE - 8, 'Sent the first estimate', 5, 6, 1);
+
+INSERT INTO INTERACTIONS (type, occurred_on, note, contact_id, opportunity_id, user_id)
+VALUES ('CALL', CURRENT_DATE - 5, 'Walked through the kiosk mock-ups', 7, 9, 1);

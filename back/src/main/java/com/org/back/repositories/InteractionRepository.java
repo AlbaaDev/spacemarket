@@ -17,6 +17,8 @@ public interface InteractionRepository extends JpaRepository<Interaction, Long> 
 
     List<Interaction> findAllByContact_IdAndUser_IdOrderByOccurredOnDescIdDesc(Long contactId, Long userId);
 
+    List<Interaction> findAllByOpportunity_IdAndUser_IdOrderByOccurredOnDescIdDesc(Long opportunityId, Long userId);
+
     Optional<Interaction> findByIdAndUser_Id(Long id, Long userId);
 
     @Query("select count(i) from Interaction i where i.user.id = :userId and i.occurredOn between :from and :to")

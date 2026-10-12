@@ -37,6 +37,13 @@ public class InteractionService {
                 .stream().map(InteractionService::toDto).toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<InteractionDto> getOpportunityInteractions(User user, Long opportunityId) throws EntityNotFoundException {
+        findOwnedOpportunity(user, opportunityId);
+        return interactionRepository.findAllByOpportunity_IdAndUser_IdOrderByOccurredOnDescIdDesc(opportunityId, user.getId())
+                .stream().map(InteractionService::toDto).toList();
+    }
+
     @Transactional
     public InteractionDto logInteraction(User user, Long contactId, InteractionRequest request)
             throws EntityNotFoundException {
@@ -47,10 +54,7 @@ public class InteractionService {
         interaction.setOccurredOn(request.occurredOn());
         interaction.setNote(request.note() == null || request.note().isBlank() ? null : request.note().trim());
         if (request.opportunityId() != null) {
-            Opportunity opportunity = opportunityRepository.findOwnedBy(request.opportunityId(), user.getId())
-                    .orElseThrow(() -> new EntityNotFoundException(
-                            "Opportunity not found with id: " + request.opportunityId()));
-            interaction.setOpportunity(opportunity);
+            interaction.setOpportunity(findOwnedOpportunity(user, request.opportunityId()));
         }
         return toDto(interactionRepository.save(interaction));
     }
@@ -66,6 +70,11 @@ public class InteractionService {
         return contactRepository.findById(contactId)
                 .filter(contact -> contact.getUser().getId().equals(user.getId()))
                 .orElseThrow(() -> new EntityNotFoundException("Contact not found with id: " + contactId));
+    }
+
+    private Opportunity findOwnedOpportunity(User user, Long opportunityId) throws EntityNotFoundException {
+        return opportunityRepository.findOwnedBy(opportunityId, user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Opportunity not found with id: " + opportunityId));
     }
 
     private static InteractionDto toDto(Interaction interaction) {

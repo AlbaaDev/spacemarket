@@ -7,6 +7,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { ColumnHeaderMenuComponent } from '../../components/columns/column-header-menu.component';
 import { ColumnPickerComponent } from '../../components/columns/column-picker.component';
@@ -32,6 +33,7 @@ type OpportunityColumn = 'name' | 'businessName' | 'principalContact' | 'value' 
 })
 export class OpportunityComponent implements OnInit, AfterViewInit {
   private readonly opportunityService = inject(OpportunityService);
+  private readonly router = inject(Router);
   readonly dialog = inject(MatDialog);
   readonly opportunities = this.opportunityService.opportunities;
   readonly loadFailed = signal(false);
@@ -102,6 +104,10 @@ export class OpportunityComponent implements OnInit, AfterViewInit {
     this.dialog.open(OpportunityFormModal, { data: { opportunity } }).afterClosed().subscribe(saved => {
       if (saved) this.selection.clear();
     });
+  }
+
+  goToDetailsPage(opportunity: Opportunity) {
+    this.router.navigate(['/opportunity', opportunity.id], { state: { opportunity } });
   }
 
   openDeleteDialog() {

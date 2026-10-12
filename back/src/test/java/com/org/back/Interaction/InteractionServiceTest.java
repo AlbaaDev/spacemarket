@@ -1,0 +1,95 @@
+package com.org.back.Interaction;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.org.back.dto.interaction.InteractionDto;
+import com.org.back.enums.InteractionType;
+import com.org.back.exceptions.EntityNotFoundException;
+import com.org.back.models.Contact;
+import com.org.back.models.Interaction;
+import com.org.back.models.Opportunity;
+import com.org.back.models.User;
+import com.org.back.repositories.ContactRepository;
+import com.org.back.repositories.InteractionRepository;
+import com.org.back.repositories.OpportunityRepository;
+import com.org.back.services.InteractionService;
+
+@ExtendWith(MockitoExtension.class)
+class InteractionServiceTest {
+
+    private static final Long USER_ID = 1L;
+    private static final Long OPPORTUNITY_ID = 5L;
+
+    @Mock
+    InteractionRepository interactionRepository;
+    @Mock
+    ContactRepository contactRepository;
+    @Mock
+    OpportunityRepository opportunityRepository;
+
+    private InteractionService service;
+    private User user;
+    private Contact contact;
+    private Opportunity opportunity;
+
+    @BeforeEach
+    void setUp() {
+        service = new InteractionService(interactionRepository, contactRepository, opportunityRepository);
+
+        user = new User();
+        user.setId(USER_ID);
+        contact = new Contact();
+        contact.setId(10L);
+        contact.setUser(user);
+        opportunity = new Opportunity();
+        opportunity.setId(OPPORTUNITY_ID);
+        opportunity.setPrincipalContact(contact);
+    }
+
+    @Test
+    @DisplayName("An Opportunity's Interactions come newest first")
+    void opportunityInteractionsNewestFirst() throws EntityNotFoundException {
+        when(opportunityRepository.findOwnedBy(OPPORTUNITY_ID, USER_ID)).thenReturn(Optional.of(opportunity));
+        Interaction recent = interaction(2L, LocalDate.of(2026, 10, 5));
+        Interaction older = interaction(1L, LocalDate.of(2026, 9, 1));
+        when(interactionRepository.findAllByOpportunity_IdAndUser_IdOrderByOccurredOnDescIdDesc(OPPORTUNITY_ID, USER_ID))
+                .thenReturn(List.of(recent, older));
+
+        List<InteractionDto> interactions = service.getOpportunityInteractions(user, OPPORTUNITY_ID);
+
+        assertEquals(List.of(2L, 1L), interactions.stream().map(InteractionDto::id).toList());
+        assertEquals(OPPORTUNITY_ID, interactions.get(0).opportunityId());
+    }
+
+    @Test
+    @DisplayName("Another user's Opportunity is not found")
+    void foreignOpportunityIsRejected() {
+        when(opportunityRepository.findOwnedBy(OPPORTUNITY_ID, USER_ID)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> service.getOpportunityInteractions(user, OPPORTUNITY_ID));
+    }
+
+    private Interaction interaction(Long id, LocalDate occurredOn) {
+        Interaction interaction = new Interaction();
+        interaction.setId(id);
+        interaction.setType(InteractionType.CALL);
+        interaction.setOccurredOn(occurredOn);
+        interaction.setContact(contact);
+        interaction.setOpportunity(opportunity);
+        interaction.setUser(user);
+        return interaction;
+    }
+}

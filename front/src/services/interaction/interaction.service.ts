@@ -16,6 +16,11 @@ export class InteractionService {
       .pipe(map(response => response.data ?? []));
   }
 
+  getOpportunityInteractions(opportunityId: number): Observable<Interaction[]> {
+    return this.http.get<ApiResponse<Interaction[]>>(`${environment.baseUrl}/opportunities/${opportunityId}/interactions`, { withCredentials: true })
+      .pipe(map(response => response.data ?? []));
+  }
+
   logInteraction(contactId: number, request: InteractionRequest): Observable<Interaction> {
     return this.http.post<ApiResponse<Interaction>>(`${environment.baseUrl}/contacts/${contactId}/interactions`, request, { withCredentials: true })
       .pipe(map(response => response.data));
