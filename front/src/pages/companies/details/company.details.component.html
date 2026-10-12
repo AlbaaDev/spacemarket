@@ -4,25 +4,57 @@
     <button mat-stroked-button type="button" (click)="editCompany()"><mat-icon>edit</mat-icon> Edit</button>
   </header>
 
-  <mat-card class="mt-4">
-    <mat-card-content>
-      <dl class="facts">
-        <dt>Industry</dt><dd>{{ company.industry || '–' }}</dd>
-        <dt>City</dt><dd>{{ company.city || '–' }}</dd>
-        <dt>Address</dt><dd>{{ company.address || '–' }}</dd>
-        <dt>Country</dt><dd>{{ company.country || '–' }}</dd>
-        <dt>Contacts</dt>
-        <dd>
-          @for (contact of company.contacts; track contact.id) {
-            <div><a [routerLink]="['/contact', contact.id]">{{ contact.firstName }} {{ contact.lastName }}</a></div>
-          } @empty { – }
-        </dd>
-        @for (fact of customFacts(); track fact.name) {
-          <dt>{{ fact.name }}</dt><dd>{{ fact.value }}</dd>
+  <div class="layout">
+    <mat-card class="info">
+      <mat-card-content>
+        <dl class="facts">
+          <dt>Industry</dt><dd>{{ company.industry || '–' }}</dd>
+          <dt>City</dt><dd>{{ company.city || '–' }}</dd>
+          <dt>Address</dt><dd>{{ company.address || '–' }}</dd>
+          <dt>Country</dt><dd>{{ company.country || '–' }}</dd>
+          @for (fact of customFacts(); track fact.name) {
+            <dt>{{ fact.name }}</dt><dd>{{ fact.value }}</dd>
+          }
+        </dl>
+      </mat-card-content>
+    </mat-card>
+
+    <section class="contacts" aria-labelledby="contacts-title">
+      <h2 id="contacts-title">Contacts <span class="count">{{ contacts().length }}</span></h2>
+
+      @if (contacts().length === 0) {
+        <p class="muted">No contacts at {{ company.name }} yet. Pick this company when you add or edit a contact.</p>
+      } @else {
+        <app-table-search-field [search]="contactSearch" placeholder="Search contacts" />
+
+        @if (shownContacts().length === 0) {
+          <p class="muted mt-3">
+            No contacts match “{{ contactSearch.text() }}”.
+            <button mat-button type="button" (click)="contactSearch.set('')">Clear the search</button>
+          </p>
+        } @else {
+          <ul class="people">
+            @for (contact of shownContacts(); track contact.id) {
+              <li>
+                <a class="person" [routerLink]="['/contact', contact.id]" [state]="{ contact }">
+                  <span class="avatar" aria-hidden="true">{{ contact.firstName.charAt(0) }}{{ contact.lastName.charAt(0) }}</span>
+                  <span class="person-main">
+                    <span class="person-name">{{ contactName(contact) }}</span>
+                    <span class="person-meta">
+                      @if (contact.emails[0]; as email) { <span>{{ email.email }}</span> }
+                      @if (contact.phones[0]; as phone) { <span>{{ phone.phone }}</span> }
+                      @if (contact.city) { <span>{{ contact.city }}</span> }
+                    </span>
+                  </span>
+                  <mat-icon class="chevron" aria-hidden="true">chevron_right</mat-icon>
+                </a>
+              </li>
+            }
+          </ul>
         }
-      </dl>
-    </mat-card-content>
-  </mat-card>
+      }
+    </section>
+  </div>
 } @else {
   <h1 class="title">Company</h1>
   <p class="muted">This company could not be found.</p>

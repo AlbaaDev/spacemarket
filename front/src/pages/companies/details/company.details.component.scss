@@ -1,7 +1,23 @@
 :host {
   display: block;
   padding: var(--space-5);
-  max-width: 48rem;
+  max-width: 72rem;
+  container-type: inline-size;
+}
+
+// Company facts on the left, its Contacts on the right; stacked when the page is narrow.
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: var(--space-5);
+  align-items: start;
+  margin-top: var(--space-4);
+}
+
+@container (max-width: 44rem) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .head {
@@ -33,6 +49,103 @@
   dd {
     margin: 0;
   }
+}
+
+.contacts {
+  h2 {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    margin: 0 0 var(--space-3);
+  }
+
+  app-table-search-field {
+    display: block;
+    max-width: 22rem;
+  }
+}
+
+.count {
+  color: var(--mat-sys-on-surface-variant);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.people {
+  list-style: none;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+
+  li + li {
+    border-top: 1px solid var(--mat-sys-outline-variant);
+  }
+}
+
+.person {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-2);
+  color: inherit;
+  text-decoration: none;
+  border-radius: 8px;
+
+  &:hover {
+    background: var(--mat-sys-surface-container-low);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: -2px;
+  }
+
+  &:hover .person-name {
+    text-decoration: underline;
+  }
+}
+
+.avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--mat-sys-surface-container-high);
+  color: var(--mat-sys-on-surface-variant);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.person-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.person-name {
+  font-weight: 600;
+}
+
+.person-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--mat-sys-on-surface-variant);
+
+  > span {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.chevron {
+  flex: none;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .muted {
