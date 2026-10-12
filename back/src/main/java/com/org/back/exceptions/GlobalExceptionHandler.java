@@ -38,6 +38,12 @@ public class GlobalExceptionHandler {
         return ResponseUtil.error(HttpStatus.BAD_REQUEST.value(), Arrays.asList(ex.getMessage()), LocalDateTime.now().toString());
     }
 
+    @ExceptionHandler(InvalidInteractionException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ApiResponse<Object> handleInvalidInteraction(InvalidInteractionException ex, HttpServletRequest request) {
+        return ResponseUtil.error(HttpStatus.BAD_REQUEST.value(), Arrays.asList(ex.getMessage()), LocalDateTime.now().toString());
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     public ApiResponse<Object> handleBadCredentials(BadCredentialsException ex, HttpServletRequest request) {

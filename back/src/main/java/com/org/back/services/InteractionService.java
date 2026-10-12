@@ -7,7 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.org.back.dto.interaction.InteractionDto;
 import com.org.back.dto.interaction.InteractionRequest;
+import com.org.back.dto.interaction.OpportunityInteractionRequest;
 import com.org.back.exceptions.EntityNotFoundException;
+import com.org.back.exceptions.InvalidInteractionException;
 import com.org.back.models.Contact;
 import com.org.back.models.Interaction;
 import com.org.back.models.Opportunity;
@@ -47,16 +49,27 @@ public class InteractionService {
     @Transactional
     public InteractionDto logInteraction(User user, Long contactId, InteractionRequest request)
             throws EntityNotFoundException {
+        if (request.step() != null && request.opportunityId() == null) {
+            throw new InvalidInteractionException("A Step needs the Interaction to be linked to an Opportunity");
+        }
         Interaction interaction = new Interaction();
         interaction.setContact(findOwnedContact(user, contactId));
         interaction.setUser(user);
         interaction.setType(request.type());
         interaction.setOccurredOn(request.occurredOn());
         interaction.setNote(request.note() == null || request.note().isBlank() ? null : request.note().trim());
+        interaction.setStep(request.step());
         if (request.opportunityId() != null) {
             interaction.setOpportunity(findOwnedOpportunity(user, request.opportunityId()));
         }
         return toDto(interactionRepository.save(interaction));
+    }
+
+    @Transactional
+    public InteractionDto logOpportunityInteraction(User user, Long opportunityId, OpportunityInteractionRequest request)
+            throws EntityNotFoundException {
+        return logInteraction(user, request.contactId(), new InteractionRequest(
+                request.type(), request.occurredOn(), request.note(), opportunityId, request.step()));
     }
 
     @Transactional
@@ -84,6 +97,7 @@ public class InteractionService {
                 interaction.getOccurredOn(),
                 interaction.getNote(),
                 interaction.getContact().getId(),
-                interaction.getOpportunity() == null ? null : interaction.getOpportunity().getId());
+                interaction.getOpportunity() == null ? null : interaction.getOpportunity().getId(),
+                interaction.getStep());
     }
 }

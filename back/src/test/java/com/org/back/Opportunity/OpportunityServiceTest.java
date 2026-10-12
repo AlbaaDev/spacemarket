@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.org.back.dto.opportunity.OpportunityDto;
 import com.org.back.dto.opportunity.OpportunityRequest;
 import com.org.back.enums.OpportunityStatus;
+import com.org.back.enums.Step;
 import com.org.back.exceptions.EntityNotFoundException;
 import com.org.back.models.Contact;
 import com.org.back.models.Opportunity;
@@ -115,6 +117,27 @@ class OpportunityServiceTest {
 
         assertEquals(OpportunityStatus.OPEN, updated.status());
         assertNull(updated.closeDate());
+    }
+
+    @Test
+    @DisplayName("An Opportunity's Step is its most advanced Step, not its latest one")
+    void stepIsTheMostAdvanced() {
+        Opportunity interviewing = new Opportunity();
+        interviewing.setId(5L);
+        interviewing.setPrincipalContact(contact);
+        Opportunity untouched = new Opportunity();
+        untouched.setId(6L);
+        untouched.setPrincipalContact(contact);
+        when(opportunityRepository.findAllOwnedBy(USER_ID)).thenReturn(List.of(interviewing, untouched));
+        // The HR exchange comes after the Client interview, yet the Client interview is further along.
+        when(interactionRepository.findOpportunitySteps(USER_ID)).thenReturn(List.of(
+                new Object[] { 5L, Step.CLIENT },
+                new Object[] { 5L, Step.HR }));
+
+        List<OpportunityDto> opportunities = service.getOpportunities(USER_ID);
+
+        assertEquals(Step.CLIENT, opportunities.get(0).step());
+        assertNull(opportunities.get(1).step());
     }
 
     @Test

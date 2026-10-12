@@ -71,6 +71,17 @@
             }
           </mat-select>
         </mat-form-field>
+        @if (form.controls.opportunityId.value !== null) {
+          <mat-form-field class="step">
+            <mat-label>Step (optional)</mat-label>
+            <mat-select formControlName="step">
+              <mat-option [value]="null">None</mat-option>
+              @for (step of steps; track step.value) {
+                <mat-option [value]="step.value">{{ step.label }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
       }
 
       <mat-form-field class="note">
@@ -98,7 +109,7 @@
             <mat-icon class="entry-icon" aria-hidden="true">{{ typeIcon(interaction.type) }}</mat-icon>
             <div class="entry-main">
               <div class="entry-head">
-                <strong>{{ typeLabel(interaction.type) }}</strong>
+                <strong>{{ typeLabel(interaction.type) }}@if (stepLabel(interaction.step); as step) { · {{ step }}}</strong>
                 <span class="muted">{{ formatDay(interaction.occurredOn) }}</span>
                 @if (opportunityName(interaction.opportunityId); as name) {
                   <span class="chip">{{ name }}</span>

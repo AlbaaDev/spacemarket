@@ -153,3 +153,18 @@ VALUES ('EMAIL', CURRENT_DATE - 8, 'Sent the first estimate', 5, 6, 1);
 
 INSERT INTO INTERACTIONS (type, occurred_on, note, contact_id, opportunity_id, user_id)
 VALUES ('CALL', CURRENT_DATE - 5, 'Walked through the kiosk mock-ups', 7, 9, 1);
+
+INSERT INTO INTERACTIONS (type, occurred_on, note, contact_id, opportunity_id, user_id, step)
+VALUES ('CALL', CURRENT_DATE - 14, 'First screening call', 6, 6, 1, 'HR');
+
+INSERT INTO INTERACTIONS (type, occurred_on, note, contact_id, opportunity_id, user_id, step)
+VALUES ('MEETING', CURRENT_DATE - 10, 'Went over the rate and the mission scope', 6, 6, 1, 'BUSINESS_MANAGER');
+
+INSERT INTO INTERACTIONS (type, occurred_on, note, contact_id, opportunity_id, user_id, step)
+VALUES ('MEETING', CURRENT_DATE - 1, 'Technical interview with the lead architect', 5, 6, 1, 'CLIENT_TECHNICAL');
+
+INSERT INTO INTERACTIONS (type, occurred_on, note, contact_id, opportunity_id, user_id, step)
+VALUES ('MEETING', CURRENT_DATE - 6, 'Met the product owner', 7, 9, 1, 'CLIENT');
+
+INSERT INTO INTERACTIONS (type, occurred_on, note, contact_id, opportunity_id, user_id, step)
+VALUES ('CALL', CURRENT_DATE - 3, 'Paperwork with HR', 7, 9, 1, 'HR');

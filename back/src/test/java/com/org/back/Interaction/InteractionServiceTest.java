@@ -2,6 +2,8 @@ package com.org.back.Interaction;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -16,8 +18,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.org.back.dto.interaction.InteractionDto;
+import com.org.back.dto.interaction.InteractionRequest;
+import com.org.back.dto.interaction.OpportunityInteractionRequest;
 import com.org.back.enums.InteractionType;
+import com.org.back.enums.Step;
 import com.org.back.exceptions.EntityNotFoundException;
+import com.org.back.exceptions.InvalidInteractionException;
 import com.org.back.models.Contact;
 import com.org.back.models.Interaction;
 import com.org.back.models.Opportunity;
@@ -80,6 +86,31 @@ class InteractionServiceTest {
         when(opportunityRepository.findOwnedBy(OPPORTUNITY_ID, USER_ID)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> service.getOpportunityInteractions(user, OPPORTUNITY_ID));
+    }
+
+    @Test
+    @DisplayName("An Interaction logged from an Opportunity is linked to it and keeps its Step")
+    void opportunityInteractionKeepsStep() throws EntityNotFoundException {
+        when(contactRepository.findById(10L)).thenReturn(Optional.of(contact));
+        when(opportunityRepository.findOwnedBy(OPPORTUNITY_ID, USER_ID)).thenReturn(Optional.of(opportunity));
+        when(interactionRepository.save(any(Interaction.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        InteractionDto logged = service.logOpportunityInteraction(user, OPPORTUNITY_ID, new OpportunityInteractionRequest(
+                InteractionType.MEETING, LocalDate.of(2026, 10, 5), null, 10L, Step.CLIENT_TECHNICAL));
+
+        assertEquals(OPPORTUNITY_ID, logged.opportunityId());
+        assertEquals(10L, logged.contactId());
+        assertEquals(Step.CLIENT_TECHNICAL, logged.step());
+    }
+
+    @Test
+    @DisplayName("A Step without an Opportunity is rejected")
+    void stepWithoutOpportunityIsRejected() {
+        InteractionRequest request = new InteractionRequest(
+                InteractionType.CALL, LocalDate.of(2026, 10, 5), null, null, Step.HR);
+
+        assertThrows(InvalidInteractionException.class, () -> service.logInteraction(user, 10L, request));
+        verifyNoInteractions(interactionRepository);
     }
 
     private Interaction interaction(Long id, LocalDate occurredOn) {

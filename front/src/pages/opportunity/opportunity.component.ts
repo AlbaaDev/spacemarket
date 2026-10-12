@@ -17,13 +17,14 @@ import { ConfirmDialogComponent } from '../../components/confirm-dialog/confirm-
 import { TableSearch } from '../../components/table-search/table-search';
 import { TableSearchFieldComponent } from '../../components/table-search/table-search-field.component';
 import { CustomFieldService } from '../../services/custom-field/custom-field.service';
+import { STEPS, stepLabel } from '../../interfaces/Interaction';
 import { Opportunity, OPPORTUNITY_STATUS_LABELS } from '../../interfaces/Opportunity';
 import { OpportunityService } from '../../services/opportunity/opportunity.service';
 import { fromIsoDate } from '../../utils/dates';
 import { OpportunityFormModal } from './modal/opportunity-form-modal';
 import { APP_LOCALE } from '../../utils/date-adapter';
 
-type OpportunityColumn = 'name' | 'businessName' | 'principalContact' | 'value' | 'status' | 'closeDate';
+type OpportunityColumn = 'name' | 'businessName' | 'principalContact' | 'value' | 'status' | 'step' | 'closeDate';
 
 @Component({
   selector: 'opportunity',
@@ -44,6 +45,7 @@ export class OpportunityComponent implements OnInit, AfterViewInit {
     { id: 'principalContact', label: 'Principal contact' },
     { id: 'value', label: 'Value' },
     { id: 'status', label: 'Status' },
+    { id: 'step', label: 'Step' },
     { id: 'closeDate', label: 'Close date' },
   ], inject(CustomFieldService).fields('OPPORTUNITY'));
   readonly displayedColumns = computed(() => ['select', ...this.columns.visibleIds(), 'add']);
@@ -69,6 +71,8 @@ export class OpportunityComponent implements OnInit, AfterViewInit {
         case 'principalContact': return this.contactName(opportunity).toLowerCase();
         case 'closeDate': return opportunity.closeDate ?? '';
         case 'value': return opportunity.value;
+        // Selection-process order, Opportunities without a Step last.
+        case 'step': return opportunity.step === null ? STEPS.length : STEPS.findIndex(s => s.value === opportunity.step);
         default: return String(opportunity[column] ?? '').toLowerCase();
       }
     };
@@ -136,6 +140,7 @@ export class OpportunityComponent implements OnInit, AfterViewInit {
       case 'principalContact': return this.contactName(opportunity);
       case 'value': return this.money.format(opportunity.value);
       case 'status': return OPPORTUNITY_STATUS_LABELS[opportunity.status];
+      case 'step': return stepLabel(opportunity.step) ?? '–';
       case 'closeDate': return opportunity.closeDate ? this.day.format(fromIsoDate(opportunity.closeDate)) : '–';
       default: return opportunity[column] ?? '–';
     }

@@ -1,23 +1,41 @@
-import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, OnInit, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCard, MatCardContent } from '@angular/material/card';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialog } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { RouterLink } from '@angular/router';
 import { customValue, formatCustomValue } from '../../../components/columns/table-columns';
-import { Interaction, INTERACTION_TYPES, InteractionType } from '../../../interfaces/Interaction';
+import { Interaction, INTERACTION_TYPES, InteractionType, Step, stepLabel, STEPS } from '../../../interfaces/Interaction';
 import { Opportunity, OPPORTUNITY_STATUS_LABELS } from '../../../interfaces/Opportunity';
 import { ContactService } from '../../../services/contact/contact.service';
 import { CustomFieldService } from '../../../services/custom-field/custom-field.service';
 import { InteractionService } from '../../../services/interaction/interaction.service';
 import { OpportunityService } from '../../../services/opportunity/opportunity.service';
 import { APP_LOCALE } from '../../../utils/date-adapter';
-import { fromIsoDate } from '../../../utils/dates';
+import { fromIsoDate, toIsoDate } from '../../../utils/dates';
 import { OpportunityFormModal } from '../modal/opportunity-form-modal';
 
 @Component({
   selector: 'app-opportunity-details',
-  imports: [MatCard, MatCardContent, MatButtonModule, MatIconModule, RouterLink],
+  imports: [
+    MatCard,
+    MatCardContent,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    MatSelectModule,
+    ReactiveFormsModule,
+    RouterLink
+  ],
   templateUrl: './opportunity.details.component.html',
   styleUrl: './opportunity.details.component.scss'
 })
@@ -43,13 +61,41 @@ export class OpportunityDetailsComponent implements OnInit {
   });
 
   readonly statusLabels = OPPORTUNITY_STATUS_LABELS;
+  readonly types = INTERACTION_TYPES;
+  readonly steps = STEPS;
+  readonly stepLabel = stepLabel;
   readonly interactions = signal<Interaction[] | null>(null);
   readonly interactionsFailed = signal(false);
+  readonly saving = signal(false);
+  readonly saveFailed = signal(false);
+  readonly today = new Date();
+
+  // Any Contact can take part: the business manager and the client often work for different Companies.
+  readonly contacts = computed(() => [...this.contactService.contacts()]
+    .sort((a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`)));
+
+  readonly form = inject(FormBuilder).group({
+    type: ['MEETING' as InteractionType, Validators.required],
+    occurredOn: [new Date() as Date | null, Validators.required],
+    contactId: [null as number | null, Validators.required],
+    step: [null as Step | null],
+    note: [''],
+  });
   private readonly contactNames = computed(() =>
     new Map(this.contactService.contacts().map(contact => [contact.id, `${contact.firstName} ${contact.lastName}`])));
 
   private readonly money = new Intl.NumberFormat(APP_LOCALE, { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
   private readonly day = new Intl.DateTimeFormat(APP_LOCALE, { dateStyle: 'medium' });
+
+  constructor() {
+    // The principal Contact is the default participant, once the Opportunity is known.
+    effect(() => {
+      const principalId = this.opportunity()?.principalContact?.id;
+      if (principalId !== undefined && this.form.controls.contactId.value === null) {
+        this.form.controls.contactId.setValue(principalId);
+      }
+    });
+  }
 
   ngOnInit(): void {
     if (!this.opportunitiesLoaded()) {
@@ -61,6 +107,40 @@ export class OpportunityDetailsComponent implements OnInit {
     this.interactionService.getOpportunityInteractions(Number(this.id())).subscribe({
       next: interactions => this.interactions.set(interactions),
       error: () => this.interactionsFailed.set(true),
+    });
+  }
+
+  logInteraction() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
+    const value = this.form.getRawValue();
+    this.saving.set(true);
+    this.saveFailed.set(false);
+    this.interactionService.logOpportunityInteraction(Number(this.id()), {
+      type: value.type!,
+      occurredOn: toIsoDate(value.occurredOn!),
+      note: value.note?.trim() || null,
+      contactId: value.contactId!,
+      step: value.step,
+    }).subscribe({
+      next: created => {
+        this.interactions.update(list => [created, ...(list ?? [])]
+          .sort((a, b) => b.occurredOn.localeCompare(a.occurredOn) || b.id - a.id));
+        this.form.reset({
+          type: value.type,
+          occurredOn: new Date(),
+          contactId: this.opportunity()?.principalContact?.id ?? value.contactId,
+          step: null,
+          note: '',
+        });
+        this.saving.set(false);
+      },
+      error: () => {
+        this.saving.set(false);
+        this.saveFailed.set(true);
+      }
     });
   }
 
