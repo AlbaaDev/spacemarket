@@ -55,7 +55,7 @@ export class AuthService {
         next: (response) => {
           this.setCurrentUser(response.data);
         },
-        error: () => this.clearSession()
+        error: () => this.endSession()
       })
     );
   };
@@ -63,7 +63,7 @@ export class AuthService {
   logout(): Observable<void> {
     return this.http.post<void>(environment.baseUrl + '/auth/logout', {}, { withCredentials: true })
       .pipe(
-        tap(() => this.clearSession())
+        tap(() => this.endSession())
       );
   }
 
@@ -80,7 +80,8 @@ export class AuthService {
     return document.cookie.split(';').some(c => c.trim().startsWith('jwt='));
   }
 
-  private clearSession(): void {
+  /** Forgets the signed-in user locally, e.g. after logout or when the API says the session has expired. */
+  endSession(): void {
     this._isAuthenticated.set(false);
     this._currentUser.set(null);
     localStorage.removeItem('user');
