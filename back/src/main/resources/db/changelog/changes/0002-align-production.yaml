@@ -1,0 +1,61 @@
+# Production was shaped by ddl-auto=update and a restore under another owner, so it drifted from
+# the baseline. Each changeset fixes one drift where it exists and is marked as ran elsewhere. A unique
+# constraint under Hibernate's generated name is renamed, or dropped when it duplicates the baseline one.
+databaseChangeLog:
+- changeSet:
+    id: 0002-interactions-step
+    author: abi
+    preConditions:
+    - onFail: MARK_RAN
+    - not:
+      - columnExists:
+          tableName: interactions
+          columnName: step
+    changes:
+    - addColumn:
+        tableName: interactions
+        columns:
+        - column:
+            name: step
+            type: VARCHAR(16)
+    - sql:
+        dbms: postgresql
+        sql: ALTER TABLE interactions ADD CONSTRAINT interactions_step_check CHECK (step IN ('HR', 'BUSINESS_MANAGER', 'CLIENT', 'CLIENT_TECHNICAL'));
+- changeSet:
+    id: 0002-users-email-key-name
+    author: abi
+    dbms: postgresql
+    preConditions:
+    - onFail: MARK_RAN
+    - sqlCheck:
+        expectedResult: 1
+        sql: SELECT count(*) FROM pg_constraint WHERE conname = 'uk6dotkott2kjsp8vw4d0m25fb7'
+    changes:
+    - sql:
+        splitStatements: false
+        sql: >-
+          DO $$ BEGIN
+            IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_email_key')
+            THEN ALTER TABLE users DROP CONSTRAINT uk6dotkott2kjsp8vw4d0m25fb7;
+            ELSE ALTER TABLE users RENAME CONSTRAINT uk6dotkott2kjsp8vw4d0m25fb7 TO users_email_key;
+            END IF;
+          END $$;
+- changeSet:
+    id: 0002-custom-fields-key-name
+    author: abi
+    dbms: postgresql
+    preConditions:
+    - onFail: MARK_RAN
+    - sqlCheck:
+        expectedResult: 1
+        sql: SELECT count(*) FROM pg_constraint WHERE conname = 'ukt87sgu03golgaxypwfgi50lqb'
+    changes:
+    - sql:
+        splitStatements: false
+        sql: >-
+          DO $$ BEGIN
+            IF EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'custom_fields_user_id_target_name_key')
+            THEN ALTER TABLE custom_fields DROP CONSTRAINT ukt87sgu03golgaxypwfgi50lqb;
+            ELSE ALTER TABLE custom_fields RENAME CONSTRAINT ukt87sgu03golgaxypwfgi50lqb TO custom_fields_user_id_target_name_key;
+            END IF;
+          END $$;

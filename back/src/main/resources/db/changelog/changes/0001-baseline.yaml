@@ -541,3 +541,10 @@ databaseChangeLog:
           ALTER TABLE interactions ADD CONSTRAINT interactions_step_check CHECK (step IN ('HR', 'BUSINESS_MANAGER', 'CLIENT', 'CLIENT_TECHNICAL'));
           ALTER TABLE interactions ADD CONSTRAINT interactions_type_check CHECK (type IN ('CALL', 'EMAIL', 'MEETING', 'MESSAGE'));
           ALTER TABLE opportunities ADD CONSTRAINT opportunities_status_check CHECK (status IN ('OPEN', 'WON', 'LOST'));
+- changeSet:
+    id: 0001-baseline-tag
+    author: abi
+    comment: Databases created before Liquibase are synced up to this tag with changelogSyncToTag.
+    changes:
+    - tagDatabase:
+        tag: baseline

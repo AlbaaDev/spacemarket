@@ -163,8 +163,11 @@
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <version>${liquibase.version}</version>
+                <!-- Resolve the changelog from src/main/resources, as the application does from the classpath,
+                     so both record the same changeset file names. -->
                 <configuration>
-                    <changeLogFile>src/main/resources/db/changelog/db.changelog-master.yaml</changeLogFile>
+                    <searchPath>${project.basedir}/src/main/resources</searchPath>
+                    <changeLogFile>db/changelog/db.changelog-master.yaml</changeLogFile>
                 </configuration>
                 <dependencies>
                     <dependency>

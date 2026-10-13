@@ -2,3 +2,6 @@ databaseChangeLog:
   - include:
       file: changes/0001-baseline.yaml
       relativeToChangelogFile: true
+  - include:
+      file: changes/0002-align-production.yaml
+      relativeToChangelogFile: true
