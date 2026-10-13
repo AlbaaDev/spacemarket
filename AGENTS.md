@@ -18,6 +18,10 @@ That server doesn't cover Angular Material and the CDK: for those, use the Conte
 
 The schema follows the JPA entities through Hibernate `ddl-auto=update`; there are no migrations. Development seed data is in `data.sql`.
 
+## Spring Boot
+
+The backend is on Spring Boot 4.1, which may postdate what you know. Before relying on memory for a Spring Boot API or property, check it with the Context7 MCP server (library `/spring-projects/spring-boot`, version `v4.1.0`).
+
 ## Language and decisions
 
 Name things with the terms in `GLOSSARY.md`, in code, UI copy and pull requests. Past architecture decisions are in `docs/adr/`. For UI work, `PRODUCT.md` describes the users and `DESIGN.md` the design system.
