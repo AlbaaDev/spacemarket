@@ -1,0 +1,119 @@
+@if (opportunity(); as opportunity) {
+  <header class="head">
+    <div class="title-group">
+      <h1 class="title">{{ opportunity.name }}</h1>
+      <span class="status" [attr.data-status]="opportunity.status">{{ statusLabels[opportunity.status] }}</span>
+    </div>
+    <button mat-stroked-button type="button" (click)="editOpportunity()"><mat-icon>edit</mat-icon> Edit</button>
+  </header>
+
+  <mat-card class="mt-4">
+    <mat-card-content>
+      <dl class="facts">
+        <dt>Value</dt><dd class="tabular">{{ formatMoney(opportunity.value) }}</dd>
+        <dt>Business name</dt><dd>{{ opportunity.businessName || '–' }}</dd>
+        <dt>Principal contact</dt>
+        <dd>
+          @if (opportunity.principalContact; as contact) {
+            <a [routerLink]="['/contact', contact.id]">{{ contact.firstName }} {{ contact.lastName }}</a>
+          } @else { – }
+        </dd>
+        <dt>Step</dt><dd>{{ stepLabel(opportunity.step) ?? '–' }}</dd>
+        <dt>Close date</dt>
+        <dd>
+          @if (opportunity.closeDate) { {{ formatDay(opportunity.closeDate) }} }
+          @else { <span class="muted">Still open</span> }
+        </dd>
+        @for (fact of customFacts(); track fact.name) {
+          <dt>{{ fact.name }}</dt><dd>{{ fact.value }}</dd>
+        }
+      </dl>
+    </mat-card-content>
+  </mat-card>
+
+  <section class="interactions" aria-labelledby="interactions-title">
+    <h2 id="interactions-title">Interactions</h2>
+
+    <form class="log" [formGroup]="form" (ngSubmit)="logInteraction()">
+      <mat-button-toggle-group formControlName="type" aria-label="Interaction type" hideSingleSelectionIndicator>
+        @for (type of types; track type.value) {
+          <mat-button-toggle [value]="type.value">
+            <mat-icon aria-hidden="true">{{ type.icon }}</mat-icon> {{ type.label }}
+          </mat-button-toggle>
+        }
+      </mat-button-toggle-group>
+
+      <div class="log-fields">
+        <mat-form-field class="date">
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="picker" [max]="today" formControlName="occurredOn" required>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error>Pick a date</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="contact">
+          <mat-label>Contact</mat-label>
+          <mat-select formControlName="contactId" required>
+            @for (contact of contacts(); track contact.id) {
+              <mat-option [value]="contact.id">{{ contact.firstName }} {{ contact.lastName }}</mat-option>
+            }
+          </mat-select>
+          <mat-error>Pick a contact</mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="step">
+          <mat-label>Step (optional)</mat-label>
+          <mat-select formControlName="step">
+            <mat-option [value]="null">None</mat-option>
+            @for (step of steps; track step.value) {
+              <mat-option [value]="step.value">{{ step.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="note">
+          <mat-label>Note (optional)</mat-label>
+          <textarea matInput formControlName="note" rows="1" maxlength="2000"></textarea>
+        </mat-form-field>
+
+        <button mat-flat-button type="submit" class="submit" [disabled]="saving()">Log interaction</button>
+      </div>
+      @if (saveFailed()) {
+        <p class="error" role="alert">The interaction could not be saved. Try again.</p>
+      }
+    </form>
+
+    @if (interactionsFailed()) {
+      <p class="error" role="alert">Interactions could not be loaded.</p>
+    } @else if (interactions() !== null) {
+      @let list = interactions()!;
+      @if (list.length === 0) {
+        <p class="muted">No interactions linked to this opportunity yet. Log your interviews and exchanges above; the most advanced Step becomes the opportunity's Step.</p>
+      } @else {
+        <ol class="history">
+          @for (interaction of list; track interaction.id) {
+            <li class="entry">
+              <mat-icon class="entry-icon" aria-hidden="true">{{ typeIcon(interaction.type) }}</mat-icon>
+              <div class="entry-main">
+                <div class="entry-head">
+                  <strong>{{ typeLabel(interaction.type) }}@if (stepLabel(interaction.step); as step) { · {{ step }}}</strong>
+                  <span class="muted">{{ formatDay(interaction.occurredOn) }}</span>
+                  @if (contactName(interaction.contactId); as name) {
+                    <a [routerLink]="['/contact', interaction.contactId]">{{ name }}</a>
+                  }
+                </div>
+                @if (interaction.note) {
+                  <p class="entry-note">{{ interaction.note }}</p>
+                }
+              </div>
+            </li>
+          }
+        </ol>
+      }
+    }
+  </section>
+} @else if (notFound()) {
+  <h1 class="title">Opportunity</h1>
+  <p class="muted">This opportunity could not be found. <a routerLink="/opportunities">Back to opportunities</a></p>
+}

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Observable, tap, throwError } from 'rxjs';
+import { catchError, firstValueFrom, Observable, of, tap, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../../interfaces/ApiResponse';
 import { User } from '../../interfaces/User';
@@ -55,7 +55,7 @@ export class AuthService {
         next: (response) => {
           this.setCurrentUser(response.data);
         },
-        error: () => this.clearSession()
+        error: () => this.endSession()
       })
     );
   };
@@ -63,7 +63,7 @@ export class AuthService {
   logout(): Observable<void> {
     return this.http.post<void>(environment.baseUrl + '/auth/logout', {}, { withCredentials: true })
       .pipe(
-        tap(() => this.clearSession())
+        tap(() => this.endSession())
       );
   }
 
@@ -75,12 +75,20 @@ export class AuthService {
     console.log(" this._currentUser : ", this._currentUser());
   }
 
-  hasJwtCookie(): boolean {
-    if (typeof document === 'undefined') return false;
-    return document.cookie.split(';').some(c => c.trim().startsWith('jwt='));
+  /**
+   * At startup, checks that the stored user's session is still alive. The jwt cookie is httpOnly,
+   * so asking the API is the only way to know; an expired session ends here instead of showing
+   * empty pages.
+   */
+  restoreSession(): Promise<unknown> {
+    if (!this._isAuthenticated()) {
+      return Promise.resolve();
+    }
+    return firstValueFrom(this.getCurrentUser().pipe(catchError(() => of(null))));
   }
 
-  private clearSession(): void {
+  /** Forgets the signed-in user locally, e.g. after logout or when the API says the session has expired. */
+  endSession(): void {
     this._isAuthenticated.set(false);
     this._currentUser.set(null);
     localStorage.removeItem('user');

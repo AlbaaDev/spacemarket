@@ -2,7 +2,11 @@ package com.org.back.services;
 
 import java.time.Clock;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +15,7 @@ import com.org.back.dto.opportunity.OpportunityDto;
 import com.org.back.dto.opportunity.OpportunityRequest;
 import com.org.back.enums.CustomFieldTarget;
 import com.org.back.enums.OpportunityStatus;
+import com.org.back.enums.Step;
 import com.org.back.exceptions.EntityNotFoundException;
 import com.org.back.interfaces.OpportunityService;
 import com.org.back.models.Contact;
@@ -40,7 +45,13 @@ public class OpportunityServiceImpl implements OpportunityService {
     @Override
     @Transactional(readOnly = true)
     public List<OpportunityDto> getOpportunities(Long userId) {
-        return opportunityRepository.findAllOwnedBy(userId).stream().map(OpportunityServiceImpl::toDto).toList();
+        Map<Long, Step> steps = new HashMap<>();
+        for (Object[] row : interactionRepository.findOpportunitySteps(userId)) {
+            steps.merge((Long) row[0], (Step) row[1], (a, b) -> mostAdvanced(List.of(a, b)));
+        }
+        return opportunityRepository.findAllOwnedBy(userId).stream()
+                .map(opportunity -> toDto(opportunity, steps.get(opportunity.getId())))
+                .toList();
     }
 
     @Override
@@ -48,7 +59,7 @@ public class OpportunityServiceImpl implements OpportunityService {
     public OpportunityDto addOpportunity(Long userId, OpportunityRequest request) throws EntityNotFoundException {
         Opportunity opportunity = new Opportunity();
         apply(userId, opportunity, request);
-        return toDto(opportunityRepository.save(opportunity));
+        return toDto(opportunityRepository.save(opportunity), null);
     }
 
     @Override
@@ -57,7 +68,7 @@ public class OpportunityServiceImpl implements OpportunityService {
             throws EntityNotFoundException {
         Opportunity opportunity = findOwned(userId, opportunityId);
         apply(userId, opportunity, request);
-        return toDto(opportunityRepository.save(opportunity));
+        return toDto(opportunityRepository.save(opportunity), mostAdvanced(interactionRepository.findSteps(opportunityId)));
     }
 
     @Override
@@ -96,7 +107,12 @@ public class OpportunityServiceImpl implements OpportunityService {
                 .orElseThrow(() -> new EntityNotFoundException("Opportunity not found with id: " + opportunityId));
     }
 
-    private static OpportunityDto toDto(Opportunity opportunity) {
+    // An Opportunity's Step is the most advanced Step among its Interactions, whatever their dates.
+    private static Step mostAdvanced(Collection<Step> steps) {
+        return steps.stream().max(Comparator.naturalOrder()).orElse(null);
+    }
+
+    private static OpportunityDto toDto(Opportunity opportunity, Step step) {
         Contact contact = opportunity.getPrincipalContact();
         return new OpportunityDto(
                 opportunity.getId(),
@@ -106,6 +122,7 @@ public class OpportunityServiceImpl implements OpportunityService {
                 opportunity.getStatus(),
                 opportunity.getCloseDate(),
                 new OpportunityDto.PrincipalContact(contact.getId(), contact.getFirstName(), contact.getLastName()),
-                opportunity.getCustomValues());
+                opportunity.getCustomValues(),
+                step);
     }
 }

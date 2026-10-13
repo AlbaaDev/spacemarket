@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-05T20:30:00Z",
+  "title": "Design System: SpaceMarket",
+  "extensions": {
+    "colorMeta": {
+      "teal": { "role": "primary", "displayName": "Desk Teal", "canonical": "#1f6f66", "tonalRamp": ["#0b3b35", "#12534c", "#1f6f66", "#3a8a80", "#63a79e", "#92c4bc", "#cfe8e2", "#eaf5f2"] },
+      "paper": { "role": "neutral", "displayName": "Paper", "canonical": "#f7f6f2", "tonalRamp": ["#1c2321", "#4a5552", "#7a8480", "#cfd3cc", "#dedcd4", "#ebeae4", "#f1f0eb", "#f7f6f2"] }
+    },
+    "typographyMeta": {
+      "headline": { "displayName": "Headline", "purpose": "One page title per screen." },
+      "title": { "displayName": "Title", "purpose": "Panel headings and row emphasis." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "skeleton-shimmer", "value": "1.4s ease-in-out infinite", "purpose": "Loading placeholder; disabled under reduced motion." }
+    ],
+    "breakpoints": [{ "name": "collapse", "value": "960px" }]
+  },
+  "components": [
+    {
+      "name": "Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "Flat white container with a hairline border.",
+      "html": "<section class=\"ds-panel\"><h2>Largest opportunities</h2><p>Content</p></section>",
+      "css": ".ds-panel{background:#fff;border:1px solid #cfd3cc;border-radius:8px;padding:16px 24px 24px;font-family:'Hanken Grotesk',system-ui,sans-serif;color:#1c2321}.ds-panel h2{margin:0 0 12px;font-size:1.125rem;font-weight:600}.ds-panel p{margin:0;color:#4a5552;font-size:.875rem}"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "One per view; the main action.",
+      "html": "<button class=\"ds-btn\">Add an opportunity</button>",
+      "css": ".ds-btn{background:#1f6f66;color:#fff;border:0;border-radius:999px;padding:10px 24px;font:500 .875rem 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-btn:hover{background:#185a53}.ds-btn:focus-visible{outline:2px solid #1f6f66;outline-offset:2px}"
+    },
+    {
+      "name": "Nav Item",
+      "kind": "nav",
+      "refersTo": "nav-item-active",
+      "description": "Sidebar link; active state uses Teal Wash.",
+      "html": "<a class=\"ds-nav ds-nav-active\" href=\"#\">Dashboard</a>",
+      "css": ".ds-nav{display:block;padding:10px 16px;border-radius:999px;font:500 .875rem 'Hanken Grotesk',system-ui,sans-serif;color:#1c2321;text-decoration:none}.ds-nav:hover{background:#ebeae4}.ds-nav-active{background:#cfe8e2;color:#0b3b35}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Quiet Desk",
+    "overview": "A desk for one person: warm paper, clear ink, one pen colour. Familiarity wins over expression; identity lives in palette, a single type family, hairline borders and a restrained accent.",
+    "keyCharacteristics": ["Warm neutral surfaces, one deep teal accent.", "One family (Hanken Grotesk).", "Flat by default: hairline borders instead of shadows.", "Plain-language empty states that name the next action."],
+    "rules": [
+      { "name": "The One Pen Rule", "body": "Teal marks actions, current location and state only. It is never decoration.", "section": "colors" },
+      { "name": "The Tabular Numbers Rule", "body": "Any figure that can be compared uses .tabular.", "section": "typography" }
+    ],
+    "dos": ["Do override Material through --mat-sys-* tokens in src/styles.css.", "Do keep Bootstrap to utility classes, bridged by --bs-* tokens.", "Do write empty states that name the next action."],
+    "donts": ["Don't use teal as decoration or on inactive states.", "Don't add a colored side-stripe border to rows or alerts.", "Don't nest panels or turn every row into a card.", "Don't introduce a second font family."]
+  }
+}

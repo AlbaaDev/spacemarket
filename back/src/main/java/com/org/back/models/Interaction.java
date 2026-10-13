@@ -3,6 +3,7 @@ package com.org.back.models;
 import java.time.LocalDate;
 
 import com.org.back.enums.InteractionType;
+import com.org.back.enums.Step;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,6 +40,11 @@ public class Interaction {
 
     @Column(length = 2000)
     private String note;
+
+    // Only set on an Interaction linked to an Opportunity.
+    @Enumerated(EnumType.STRING)
+    @Column(length = 16)
+    private Step step;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "contact_id", nullable = false)

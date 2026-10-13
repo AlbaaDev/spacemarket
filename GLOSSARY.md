@@ -36,6 +36,10 @@ _Avoid_: Deal, lead, sale
 Where an Opportunity stands: Open, Won or Lost.
 _Avoid_: Stage, state
 
+**Step**:
+How far an Opportunity's selection process has gone, in a fixed order: HR, Business manager, Client interview, Client technical interview. An Interaction linked to an Opportunity may record the Step it covers; an Opportunity's Step is the most advanced Step among its Interactions.
+_Avoid_: Stage, round, interview type
+
 **Close date**:
 The date an Opportunity became Won or Lost.
 _Avoid_: End date, closing date

@@ -57,3 +57,13 @@ back/src/main/resources/application-dev.properties
 
 # Graphify
 graphify-out/
+
+# Maven debug output
+effective-pom-*.log
+
+# Agent tooling for editors not used on this project (Cursor, Copilot, Codex)
+.cursor/
+.codex/
+.github/skills/
+.github/agents/
+.github/hooks/

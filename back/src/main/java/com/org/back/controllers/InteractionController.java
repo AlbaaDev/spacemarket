@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.org.back.dto.interaction.InteractionDto;
 import com.org.back.dto.interaction.InteractionRequest;
+import com.org.back.dto.interaction.OpportunityInteractionRequest;
 import com.org.back.exceptions.EntityNotFoundException;
 import com.org.back.models.ApiResponse;
 import com.org.back.models.ResponseUtil;
@@ -42,6 +43,16 @@ public class InteractionController {
                 request.getRequestURI()));
     }
 
+    @GetMapping("/opportunities/{opportunityId}/interactions")
+    public ResponseEntity<ApiResponse<List<InteractionDto>>> getOpportunityInteractions(@PathVariable Long opportunityId,
+            @AuthenticationPrincipal User user, HttpServletRequest request) throws EntityNotFoundException {
+        return ResponseEntity.ok(ResponseUtil.success(
+                HttpStatus.OK.value(),
+                "Success",
+                interactionService.getOpportunityInteractions(user, opportunityId),
+                request.getRequestURI()));
+    }
+
     @PostMapping("/contacts/{contactId}/interactions")
     public ResponseEntity<ApiResponse<InteractionDto>> logInteraction(@PathVariable Long contactId,
             @Valid @RequestBody InteractionRequest body, @AuthenticationPrincipal User user,
@@ -52,6 +63,19 @@ public class InteractionController {
                         HttpStatus.CREATED.value(),
                         "Interaction logged",
                         interactionService.logInteraction(user, contactId, body),
+                        request.getRequestURI()));
+    }
+
+    @PostMapping("/opportunities/{opportunityId}/interactions")
+    public ResponseEntity<ApiResponse<InteractionDto>> logOpportunityInteraction(@PathVariable Long opportunityId,
+            @Valid @RequestBody OpportunityInteractionRequest body, @AuthenticationPrincipal User user,
+            HttpServletRequest request) throws EntityNotFoundException {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ResponseUtil.success(
+                        HttpStatus.CREATED.value(),
+                        "Interaction logged",
+                        interactionService.logOpportunityInteraction(user, opportunityId, body),
                         request.getRequestURI()));
     }
 

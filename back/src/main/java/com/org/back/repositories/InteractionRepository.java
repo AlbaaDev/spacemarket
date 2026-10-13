@@ -10,12 +10,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.org.back.enums.Step;
 import com.org.back.models.Interaction;
 
 @Repository
 public interface InteractionRepository extends JpaRepository<Interaction, Long> {
 
     List<Interaction> findAllByContact_IdAndUser_IdOrderByOccurredOnDescIdDesc(Long contactId, Long userId);
+
+    List<Interaction> findAllByOpportunity_IdAndUser_IdOrderByOccurredOnDescIdDesc(Long opportunityId, Long userId);
 
     Optional<Interaction> findByIdAndUser_Id(Long id, Long userId);
 
@@ -31,6 +34,15 @@ public interface InteractionRepository extends JpaRepository<Interaction, Long> 
             group by i.occurredOn
             """)
     List<Object[]> countByDay(@Param("userId") Long userId, @Param("from") LocalDate from, @Param("to") LocalDate to);
+
+    @Query("""
+            select i.opportunity.id, i.step from Interaction i
+            where i.user.id = :userId and i.opportunity is not null and i.step is not null
+            """)
+    List<Object[]> findOpportunitySteps(@Param("userId") Long userId);
+
+    @Query("select i.step from Interaction i where i.opportunity.id = :opportunityId and i.step is not null")
+    List<Step> findSteps(@Param("opportunityId") Long opportunityId);
 
     @Modifying
     @Query("delete from Interaction i where i.contact.id = :contactId")

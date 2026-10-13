@@ -23,6 +23,7 @@ export const routes: Routes = [
   { path: 'contacts', loadComponent: () => import('../pages/contacts/contacts.component').then(m => m.ContactsComponent), canActivate: [AuthGuard] },
   { path: 'contact/:id', loadComponent: () => import('../pages/contacts/details/contact.details.component').then(m => m.ContactDetailsComponent), canActivate: [AuthGuard] },
   { path: 'opportunities', loadComponent: () => import('../pages/opportunity/opportunity.component').then(m => m.OpportunityComponent), canActivate: [AuthGuard] },
+  { path: 'opportunity/:id', loadComponent: () => import('../pages/opportunity/details/opportunity.details.component').then(m => m.OpportunityDetailsComponent), canActivate: [AuthGuard] },
   { path: 'calendar', loadComponent: () => import('../pages/calendrier/calendrier.component').then(m => m.CalendrierComponent), canActivate: [AuthGuard] },
   { path: 'workflow', loadComponent: () => import('../pages/workflow/workflow.component').then(m => m.WorkflowComponent), canActivate: [AuthGuard] },
   { path: 'reporting', loadComponent: () => import('../pages/reporting/reporting.component').then(m => m.ReportingComponent), canActivate: [AuthGuard] },

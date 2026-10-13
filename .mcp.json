@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "spotlight": {
+      "command": "front/node_modules/.bin/spotlight",
+      "args": ["mcp"]
+    }
+  }
+}

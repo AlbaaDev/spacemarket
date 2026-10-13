@@ -73,7 +73,7 @@ public class AuthenticationController {
                                 .httpOnly(true)
                                 .secure(true)
                                 .sameSite("None")
-                                .maxAge(Duration.ofHours(2))
+                                .maxAge(Duration.ofMillis(jwtService.getExpirationTime()))
                                 .path("/")
                                 .build();
 

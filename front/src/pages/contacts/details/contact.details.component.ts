@@ -1,4 +1,5 @@
 import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -14,7 +15,7 @@ import { ConfirmDialogComponent } from '../../../components/confirm-dialog/confi
 import { CustomFieldService } from '../../../services/custom-field/custom-field.service';
 import { EditContactModal } from '../modals/Edit/edit-contact-modal';
 import { Contact } from '../../../interfaces/Contact';
-import { Interaction, INTERACTION_TYPES, InteractionType } from '../../../interfaces/Interaction';
+import { Interaction, INTERACTION_TYPES, InteractionType, Step, stepLabel, STEPS } from '../../../interfaces/Interaction';
 import { ContactService } from '../../../services/contact/contact.service';
 import { InteractionService } from '../../../services/interaction/interaction.service';
 import { OpportunityService } from '../../../services/opportunity/opportunity.service';
@@ -59,6 +60,8 @@ export class ContactDetailsComponent implements OnInit {
   });
 
   readonly types = INTERACTION_TYPES;
+  readonly steps = STEPS;
+  readonly stepLabel = stepLabel;
   readonly interactions = signal<Interaction[] | null>(null);
   readonly loadFailed = signal(false);
   readonly saving = signal(false);
@@ -75,7 +78,15 @@ export class ContactDetailsComponent implements OnInit {
     occurredOn: [new Date() as Date | null, Validators.required],
     note: [''],
     opportunityId: [null as number | null],
+    step: [null as Step | null],
   });
+
+  constructor() {
+    // A Step only exists on an Interaction linked to an Opportunity.
+    this.form.controls.opportunityId.valueChanges.pipe(takeUntilDestroyed()).subscribe(opportunityId => {
+      if (opportunityId === null) this.form.controls.step.setValue(null);
+    });
+  }
 
   private readonly day = new Intl.DateTimeFormat(APP_LOCALE, { dateStyle: 'medium' });
 
@@ -102,11 +113,12 @@ export class ContactDetailsComponent implements OnInit {
       occurredOn: toIsoDate(value.occurredOn!),
       note: value.note?.trim() || null,
       opportunityId: value.opportunityId,
+      step: value.opportunityId === null ? null : value.step,
     }).subscribe({
       next: created => {
         this.interactions.update(list => [created, ...(list ?? [])]
           .sort((a, b) => b.occurredOn.localeCompare(a.occurredOn) || b.id - a.id));
-        this.form.reset({ type: value.type, occurredOn: new Date(), note: '', opportunityId: null });
+        this.form.reset({ type: value.type, occurredOn: new Date(), note: '', opportunityId: null, step: null });
         this.saving.set(false);
       },
       error: () => {
@@ -125,7 +137,7 @@ export class ContactDetailsComponent implements OnInit {
       }
     }).afterClosed().subscribe(confirmed => {
       if (!confirmed) return;
-      this.interactionService.deleteInteraction(interaction.id).subscribe(() =>
+      this.interactionService.deleteInteraction(interaction).subscribe(() =>
         this.interactions.update(list => (list ?? []).filter(i => i.id !== interaction.id)));
     });
   }
