@@ -1,12 +1,12 @@
 # SpaceMarket
 
-SpaceMarket is a CRM project using **Angular 20**, **Java 25 Spring Boot 3.5**, and **PostgreSQL**.
+SpaceMarket is a CRM project using **Angular 22**, **Java 25 Spring Boot 4.1**, and **PostgreSQL**.
 
 
 ## Prerequisites
 
 - **Docker**, running. The backend's tests and demo mode start a throwaway PostgreSQL in it; nothing else to install for the database.
-- **JDK 25** and **Node.js**.
+- **JDK 25** and **Node.js** 22.22.3+, 24.15+ or 26+ (required by Angular 22).
 
 ## Installation
 
