@@ -18,6 +18,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -31,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@ToString(exclude = { "principalContact", "contacts" })
+@ToString(exclude = { "user", "company", "contacts" })
 @Setter
 @Getter
 @RequiredArgsConstructor
@@ -59,10 +60,6 @@ public class Opportunity {
     @Column(nullable = false, length = 124)
     private String name;
 
-    @NotBlank
-    @Column(nullable = false, length = 124)
-    private String businessName;
-
     @Column(name = "opportunity_value", nullable = false)
     private Long value;
 
@@ -74,16 +71,22 @@ public class Opportunity {
     // Set when the Opportunity becomes Won or Lost, cleared when it is reopened.
     private LocalDate closeDate;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "contact_id", nullable = false)
-    private Contact principalContact;
+    @JoinColumn(name = "company_id")
+    private Company company;
 
-    public void setPrincipalContact(Contact principalContact) {
-        this.principalContact = principalContact;
-    }
-
-    @ManyToMany(mappedBy =  "opportunities")
-    Set<Contact> contacts = new HashSet<>();
+    // This side owns the join table: Contacts are chosen from the Opportunity (docs/adr/0003-opportunity-belongs-to-the-user.md).
+    @ManyToMany
+    @JoinTable(
+        name = "contact_opportunity",
+        joinColumns = @JoinColumn(name = "opportunity_id"),
+        inverseJoinColumns = @JoinColumn(name = "contact_id")
+    )
+    private Set<Contact> contacts = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

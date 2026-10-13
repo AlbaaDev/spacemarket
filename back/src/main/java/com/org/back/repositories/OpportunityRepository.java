@@ -11,20 +11,25 @@ import org.springframework.stereotype.Repository;
 
 import com.org.back.models.Opportunity;
 
-// An Opportunity belongs to the user who owns its principal Contact.
 @Repository
 public interface OpportunityRepository extends JpaRepository<Opportunity, Long> {
     Optional<Opportunity> findByName(String name);
 
-    @Query("select o from Opportunity o join fetch o.principalContact c where c.user.id = :userId order by o.id")
+    @Query("""
+            select distinct o from Opportunity o left join fetch o.company left join fetch o.contacts
+            where o.user.id = :userId order by o.id
+            """)
     List<Opportunity> findAllOwnedBy(@Param("userId") Long userId);
 
-    @Query("select o from Opportunity o join fetch o.principalContact c where o.id = :id and c.user.id = :userId")
+    @Query("""
+            select o from Opportunity o left join fetch o.company left join fetch o.contacts
+            where o.id = :id and o.user.id = :userId
+            """)
     Optional<Opportunity> findOwnedBy(@Param("id") Long id, @Param("userId") Long userId);
 
     @Query("""
             select coalesce(sum(o.value), 0) from Opportunity o
-            where o.principalContact.user.id = :userId
+            where o.user.id = :userId
               and o.status = com.org.back.enums.OpportunityStatus.WON
               and o.closeDate between :from and :to
             """)
@@ -32,7 +37,7 @@ public interface OpportunityRepository extends JpaRepository<Opportunity, Long> 
 
     @Query("""
             select o.closeDate, sum(o.value) from Opportunity o
-            where o.principalContact.user.id = :userId
+            where o.user.id = :userId
               and o.status = com.org.back.enums.OpportunityStatus.WON
               and o.closeDate between :from and :to
             group by o.closeDate

@@ -1,0 +1,98 @@
+# An Opportunity belongs to its user, has an optional Company and any number of Contacts (ADR 0003).
+# The data migration is plain SQL, written to run on any database Liquibase supports.
+databaseChangeLog:
+- changeSet:
+    id: 0003-opportunity-columns
+    author: abi
+    changes:
+    - addColumn:
+        tableName: opportunities
+        columns:
+        - column:
+            name: user_id
+            type: BIGINT
+        - column:
+            name: company_id
+            type: BIGINT
+- changeSet:
+    id: 0003-opportunity-data
+    author: abi
+    comment: The principal Contact gives the user and becomes one of the Contacts; each business name becomes a Company of that user.
+    changes:
+    - sql:
+        sql: >-
+          UPDATE opportunities SET user_id =
+            (SELECT c.user_id FROM contacts c WHERE c.contact_id = opportunities.contact_id);
+
+          INSERT INTO contact_opportunity (contact_id, opportunity_id)
+            SELECT o.contact_id, o.id FROM opportunities o
+            WHERE NOT EXISTS (SELECT 1 FROM contact_opportunity co
+                              WHERE co.contact_id = o.contact_id AND co.opportunity_id = o.id);
+
+          INSERT INTO companies (name, user_id)
+            SELECT MIN(SUBSTRING(TRIM(o.business_name) FROM 1 FOR 45)), o.user_id FROM opportunities o
+            WHERE o.user_id IS NOT NULL AND TRIM(o.business_name) <> ''
+              AND NOT EXISTS (SELECT 1 FROM companies c
+                              WHERE c.user_id = o.user_id
+                                AND LOWER(c.name) = LOWER(SUBSTRING(TRIM(o.business_name) FROM 1 FOR 45)))
+            GROUP BY o.user_id, LOWER(SUBSTRING(TRIM(o.business_name) FROM 1 FOR 45));
+
+          UPDATE opportunities SET company_id =
+            (SELECT MIN(c.company_id) FROM companies c
+             WHERE c.user_id = opportunities.user_id
+               AND LOWER(c.name) = LOWER(SUBSTRING(TRIM(opportunities.business_name) FROM 1 FOR 45)));
+- changeSet:
+    id: 0003-opportunity-constraints
+    author: abi
+    changes:
+    - addNotNullConstraint:
+        tableName: opportunities
+        columnName: user_id
+        columnDataType: BIGINT
+    - addForeignKeyConstraint:
+        constraintName: fk_opportunities_user
+        baseTableName: opportunities
+        baseColumnNames: user_id
+        referencedTableName: users
+        referencedColumnNames: id
+    - addForeignKeyConstraint:
+        constraintName: fk_opportunities_company
+        baseTableName: opportunities
+        baseColumnNames: company_id
+        referencedTableName: companies
+        referencedColumnNames: company_id
+        onDelete: SET NULL
+    - dropForeignKeyConstraint:
+        baseTableName: opportunities
+        constraintName: fk5gqptcylo65yohtvwxgxoiks2
+    - dropColumn:
+        tableName: opportunities
+        columnName: contact_id
+    - dropColumn:
+        tableName: opportunities
+        columnName: business_name
+- changeSet:
+    id: 0003-contact-opportunity-cascade
+    author: abi
+    comment: The Opportunity side now owns the join table, so deleting a Contact or an Opportunity leaves the clean-up to the database.
+    changes:
+    - dropForeignKeyConstraint:
+        baseTableName: contact_opportunity
+        constraintName: fkjehlcc6n8oopmgx5opfjpns3n
+    - dropForeignKeyConstraint:
+        baseTableName: contact_opportunity
+        constraintName: fkdrei7n0kbv3c2d6xh911ktqi
+    - addForeignKeyConstraint:
+        constraintName: fk_contact_opportunity_contact
+        baseTableName: contact_opportunity
+        baseColumnNames: contact_id
+        referencedTableName: contacts
+        referencedColumnNames: contact_id
+        onDelete: CASCADE
+    - addForeignKeyConstraint:
+        constraintName: fk_contact_opportunity_opportunity
+        baseTableName: contact_opportunity
+        baseColumnNames: opportunity_id
+        referencedTableName: opportunities
+        referencedColumnNames: id
+        onDelete: CASCADE

@@ -16,7 +16,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -69,12 +68,7 @@ public class Contact {
     @Column(nullable = true, length = 45)
     private String country;
 
-    @ManyToMany
-    @JoinTable(
-        name = "contact_opportunity",
-        joinColumns = @JoinColumn(name = "contact_id"),
-        inverseJoinColumns = @JoinColumn(name = "opportunity_id")
-    )
+    @ManyToMany(mappedBy = "contacts")
     private List<Opportunity> opportunities = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

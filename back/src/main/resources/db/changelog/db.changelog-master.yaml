@@ -8,3 +8,6 @@ databaseChangeLog:
   - include:
       file: demo/demo-data.yaml
       relativeToChangelogFile: true
+  - include:
+      file: changes/0003-opportunity-user-company-contacts.yaml
+      relativeToChangelogFile: true
