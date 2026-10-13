@@ -67,3 +67,7 @@ effective-pom-*.log
 .github/skills/
 .github/agents/
 .github/hooks/
+
+# Agent instructions, kept local
+AGENTS.md
+CLAUDE.md
