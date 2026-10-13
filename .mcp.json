@@ -3,6 +3,10 @@
     "spotlight": {
       "command": "front/node_modules/.bin/spotlight",
       "args": ["mcp"]
+    },
+    "angular-cli": {
+      "command": "front/node_modules/.bin/ng",
+      "args": ["mcp"]
     }
   }
 }
