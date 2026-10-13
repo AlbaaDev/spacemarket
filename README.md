@@ -18,7 +18,7 @@ SpaceMarket is a CRM project using **Angular 22**, **Java 25 Spring Boot 4.1**, 
     
     b. Run this command: **node start.js**
 
-    The backend starts against a fresh PostgreSQL filled with demo data (`back/src/main/resources/data.sql`). It is thrown away when you stop it. To run only the backend this way, launch `TestBackApplication` from your IDE or run `mvn spring-boot:test-run` in `back/`.
+    The backend starts against a fresh PostgreSQL filled with demo data (`back/src/main/resources/db/changelog/demo/demo-data.sql`). It is thrown away when you stop it. To run only the backend this way, launch `TestBackApplication` from your IDE or run `mvn spring-boot:test-run` in `back/`.
 
 3. Login with ;
 
