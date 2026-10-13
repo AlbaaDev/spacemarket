@@ -25,3 +25,7 @@ The backend is on Spring Boot 4.1, which may postdate what you know. Before rely
 ## Language and decisions
 
 Name things with the terms in `GLOSSARY.md`, in code, UI copy and pull requests. Past architecture decisions are in `docs/adr/`. For UI work, `PRODUCT.md` describes the users and `DESIGN.md` the design system.
+
+## Working with Abi on features
+
+Abi builds features to keep learning, not to hand them off. When a new feature comes up, ask how Abi would approach it before proposing your own design, then challenge that answer. When running the `grill-with-docs`, `grill-me` or `grilling` skills, leave out your recommended answer to each question until Abi has answered it. Write the implementation only when Abi asks for it; otherwise point out the next step, review Abi's code and explain what you would change.
