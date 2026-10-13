@@ -30,7 +30,7 @@ import { TableSearchFieldComponent } from '../../components/table-search/table-s
 import { Contact } from '../../interfaces/Contact';
 import { CustomFieldService } from '../../services/custom-field/custom-field.service';
 import { ContactService } from '../../services/contact/contact.service';
-import { DeleteCompanyModal } from '../companies/modals/Delete/delete-company-modal';
+import { DeleteContactModal } from './modals/Delete/delete-contact-modal';
 import { AddContactModal } from './modals/Add/add-contact-modal-component';
 import { EditContactModal } from './modals/Edit/edit-contact-modal';
 
@@ -144,7 +144,7 @@ export class ContactsComponent implements AfterViewInit {
   }
   openDeleteDialog() {
     if (this.selection.selected) {
-      this.dialog.open(DeleteCompanyModal);
+      this.dialog.open(DeleteContactModal);
     }
   }
   openEditDialog() {
