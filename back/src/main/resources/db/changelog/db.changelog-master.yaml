@@ -5,3 +5,6 @@ databaseChangeLog:
   - include:
       file: changes/0002-align-production.yaml
       relativeToChangelogFile: true
+  - include:
+      file: demo/demo-data.yaml
+      relativeToChangelogFile: true

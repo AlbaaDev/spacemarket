@@ -1,0 +1,11 @@
+# Demo data for TestBackApplication. "@demo" runs it only when the demo context is asked for:
+# a plain "demo" context would also run wherever no context is set, production included.
+databaseChangeLog:
+- changeSet:
+    id: demo-data
+    author: abi
+    context: "@demo"
+    changes:
+    - sqlFile:
+        path: demo-data.sql
+        relativeToChangelogFile: true

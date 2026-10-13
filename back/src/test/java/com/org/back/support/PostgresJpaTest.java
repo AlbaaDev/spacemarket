@@ -13,7 +13,11 @@ import org.springframework.context.annotation.Import;
 /** A JPA slice test against a real PostgreSQL started by {@link TestcontainersConfiguration}. */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@DataJpaTest(properties = "spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect")
+@DataJpaTest(properties = {
+    "spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect",
+    // Liquibase builds the schema; validate fails the test when an entity and the changelog disagree.
+    "spring.jpa.hibernate.ddl-auto=validate"
+})
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Import(TestcontainersConfiguration.class)
 public @interface PostgresJpaTest {
