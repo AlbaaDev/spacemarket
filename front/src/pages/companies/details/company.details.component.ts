@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,6 +17,7 @@ import { EditCompanyModal } from '../modals/Edit/edit-company-modal';
   selector: 'app-company',
   imports: [MatCard, MatCardContent, MatButtonModule, MatIconModule, RouterLink, TableSearchFieldComponent],
   templateUrl: './company.details.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './company.details.component.scss'
 })
 export class CompanyDetailsComponent {

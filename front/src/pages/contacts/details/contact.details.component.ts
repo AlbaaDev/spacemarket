@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -37,6 +37,7 @@ import { APP_LOCALE } from '../../../utils/date-adapter';
     ReactiveFormsModule
   ],
   templateUrl: './contact.details.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './contact.details.component.scss'
 })
 export class ContactDetailsComponent implements OnInit {

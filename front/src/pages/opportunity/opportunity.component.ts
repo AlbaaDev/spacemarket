@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, computed, effect, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, inject, OnInit, signal, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
@@ -30,6 +30,7 @@ type OpportunityColumn = 'name' | 'businessName' | 'principalContact' | 'value' 
   selector: 'opportunity',
   imports: [MatTableModule, MatSortModule, MatPaginatorModule, MatCheckbox, MatIconModule, MatButtonModule, ColumnPickerComponent, ColumnHeaderMenuComponent, TableSearchFieldComponent],
   templateUrl: './opportunity.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './opportunity.component.css'
 })
 export class OpportunityComponent implements OnInit, AfterViewInit {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenav, MatSidenavContainer, MatSidenavModule } from '@angular/material/sidenav';
@@ -12,6 +12,7 @@ import { environment } from '../environments/environment';
   selector: 'app-root',
   imports: [SidebarComponent, HeaderComponent, MatSidenavContainer, MatButtonModule, MatSidenav, MatSidenavModule, MatListModule, RouterOutlet],
   templateUrl: './app.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app.component.css'
 })
 export class AppComponent {

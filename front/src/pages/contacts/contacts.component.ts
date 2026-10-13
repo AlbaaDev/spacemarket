@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, computed, effect, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, inject, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
@@ -60,6 +60,7 @@ import { EditContactModal } from './modals/Edit/edit-contact-modal';
     ReactiveFormsModule
   ],
   templateUrl: './contacts.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './contacts.component.scss'
 })
 export class ContactsComponent implements AfterViewInit {
