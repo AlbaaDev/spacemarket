@@ -1,0 +1,543 @@
+databaseChangeLog:
+- changeSet:
+    id: 0001-baseline-1
+    author: abi (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: close_date
+            type: date
+        - column:
+            constraints:
+              nullable: false
+            name: contact_id
+            type: BIGINT
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: opportunities_pkey
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: opportunity_value
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            defaultValue: OPEN
+            name: status
+            type: VARCHAR(8)
+        - column:
+            constraints:
+              nullable: false
+            name: business_name
+            type: VARCHAR(124)
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(124)
+        - column:
+            name: custom_values
+            type: JSONB
+        tableName: opportunities
+- changeSet:
+    id: 0001-baseline-2
+    author: abi (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: is_primary
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: contact_id
+            type: BIGINT
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: contact_emails_pkey
+            name: email_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: type
+            type: VARCHAR(255)
+        tableName: contact_emails
+- changeSet:
+    id: 0001-baseline-3
+    author: abi (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: is_primary
+            type: BOOLEAN
+        - column:
+            constraints:
+              nullable: false
+            name: contact_id
+            type: BIGINT
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: contact_phones_pkey
+            name: phone_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: phone
+            type: VARCHAR(12)
+        - column:
+            name: type
+            type: VARCHAR(255)
+        tableName: contact_phones
+- changeSet:
+    id: 0001-baseline-4
+    author: abi (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: custom_fields_pkey
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: target
+            type: VARCHAR(16)
+        - column:
+            constraints:
+              nullable: false
+            name: type
+            type: VARCHAR(16)
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(64)
+        - column:
+            constraints:
+              nullable: false
+            name: options
+            type: JSONB
+        tableName: custom_fields
+- changeSet:
+    id: 0001-baseline-5
+    author: abi (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: occurred_on
+            type: date
+        - column:
+            constraints:
+              nullable: false
+            name: contact_id
+            type: BIGINT
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: interactions_pkey
+            name: id
+            type: BIGINT
+        - column:
+            name: opportunity_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: type
+            type: VARCHAR(8)
+        - column:
+            constraints:
+              nullable: false
+            name: user_id
+            type: BIGINT
+        - column:
+            name: step
+            type: VARCHAR(16)
+        - column:
+            name: note
+            type: VARCHAR(2000)
+        tableName: interactions
+- changeSet:
+    id: 0001-baseline-6
+    author: abi (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: users_pkey
+            name: id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: first_name
+            type: VARCHAR(45)
+        - column:
+            constraints:
+              nullable: false
+            name: last_name
+            type: VARCHAR(45)
+        - column:
+            constraints:
+              nullable: false
+            name: email
+            type: VARCHAR(128)
+        - column:
+            constraints:
+              nullable: false
+            name: password
+            type: VARCHAR(128)
+        tableName: users
+- changeSet:
+    id: 0001-baseline-7
+    author: abi (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: user_id, target, name
+        constraintName: custom_fields_user_id_target_name_key
+        tableName: custom_fields
+- changeSet:
+    id: 0001-baseline-8
+    author: abi (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: email
+        constraintName: users_email_key
+        tableName: users
+- changeSet:
+    id: 0001-baseline-9
+    author: abi (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: companies_pkey
+            name: company_id
+            type: BIGINT
+        - column:
+            name: user_id
+            type: BIGINT
+        - column:
+            name: address
+            type: VARCHAR(45)
+        - column:
+            name: city
+            type: VARCHAR(45)
+        - column:
+            name: country
+            type: VARCHAR(45)
+        - column:
+            name: industry
+            type: VARCHAR(45)
+        - column:
+            constraints:
+              nullable: false
+            name: name
+            type: VARCHAR(45)
+        - column:
+            name: custom_values
+            type: JSONB
+        tableName: companies
+- changeSet:
+    id: 0001-baseline-10
+    author: abi (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+            name: contact_id
+            type: BIGINT
+        - column:
+            constraints:
+              nullable: false
+            name: opportunity_id
+            type: BIGINT
+        tableName: contact_opportunity
+- changeSet:
+    id: 0001-baseline-11
+    author: abi (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            name: company_id
+            type: BIGINT
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: contacts_pkey
+            name: contact_id
+            type: BIGINT
+        - column:
+            name: user_id
+            type: BIGINT
+        - column:
+            name: address
+            type: VARCHAR(45)
+        - column:
+            name: city
+            type: VARCHAR(45)
+        - column:
+            name: country
+            type: VARCHAR(45)
+        - column:
+            constraints:
+              nullable: false
+            name: first_name
+            type: VARCHAR(45)
+        - column:
+            constraints:
+              nullable: false
+            name: last_name
+            type: VARCHAR(45)
+        - column:
+            name: custom_values
+            type: JSONB
+        tableName: contacts
+- changeSet:
+    id: 0001-baseline-12
+    author: abi (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: interactions
+        constraintName: fk3en1u622jlvp97u4p5q93qyom
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 0001-baseline-13
+    author: abi (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: contact_id
+        baseTableName: opportunities
+        constraintName: fk5gqptcylo65yohtvwxgxoiks2
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: contact_id
+        referencedTableName: contacts
+        validate: true
+- changeSet:
+    id: 0001-baseline-14
+    author: abi (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: company_id
+        baseTableName: contacts
+        constraintName: fk5nvk2pja04n1pbiyk1xn7739l
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: company_id
+        referencedTableName: companies
+        validate: true
+- changeSet:
+    id: 0001-baseline-15
+    author: abi (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: opportunity_id
+        baseTableName: interactions
+        constraintName: fk7lhgjqt2pjeldvnn0e9delwb4
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: opportunities
+        validate: true
+- changeSet:
+    id: 0001-baseline-16
+    author: abi (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: companies
+        constraintName: fk9l5d0fem75e59uwf9upwuf9du
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 0001-baseline-17
+    author: abi (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: custom_fields
+        constraintName: fk9vohp2sy8bt9qa63ktqhh4ara
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+- changeSet:
+    id: 0001-baseline-18
+    author: abi (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: contact_id
+        baseTableName: interactions
+        constraintName: fkbmk7gplci690h6x5qlfvedxfi
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: contact_id
+        referencedTableName: contacts
+        validate: true
+- changeSet:
+    id: 0001-baseline-19
+    author: abi (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: opportunity_id
+        baseTableName: contact_opportunity
+        constraintName: fkdrei7n0kbv3c2d6xh911ktqi
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: opportunities
+        validate: true
+- changeSet:
+    id: 0001-baseline-20
+    author: abi (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: contact_id
+        baseTableName: contact_emails
+        constraintName: fkelumwei9rdn3dybkahl69vn7e
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: contact_id
+        referencedTableName: contacts
+        validate: true
+- changeSet:
+    id: 0001-baseline-21
+    author: abi (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: contact_id
+        baseTableName: contact_phones
+        constraintName: fkfhdgb0dro8m0a8mkqo35maxnv
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: contact_id
+        referencedTableName: contacts
+        validate: true
+- changeSet:
+    id: 0001-baseline-22
+    author: abi (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: contact_id
+        baseTableName: contact_opportunity
+        constraintName: fkjehlcc6n8oopmgx5opfjpns3n
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: contact_id
+        referencedTableName: contacts
+        validate: true
+- changeSet:
+    id: 0001-baseline-23
+    author: abi (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: user_id
+        baseTableName: contacts
+        constraintName: fkna8bddygr3l3kq1imghgcskt8
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: users
+        validate: true
+
+- changeSet:
+    id: 0001-baseline-enum-checks
+    author: abi
+    comment: Enum check constraints Hibernate creates; Liquibase Community does not capture them.
+    dbms: postgresql
+    changes:
+    - sql:
+        sql: >-
+          ALTER TABLE contact_emails ADD CONSTRAINT contact_emails_type_check CHECK (type IN ('WORK', 'HOME'));
+          ALTER TABLE contact_phones ADD CONSTRAINT contact_phones_type_check CHECK (type IN ('WORK', 'HOME'));
+          ALTER TABLE custom_fields ADD CONSTRAINT custom_fields_target_check CHECK (target IN ('CONTACT', 'COMPANY', 'OPPORTUNITY'));
+          ALTER TABLE custom_fields ADD CONSTRAINT custom_fields_type_check CHECK (type IN ('TEXT', 'NUMBER', 'DATE', 'SINGLE_CHOICE', 'CHECKBOX'));
+          ALTER TABLE interactions ADD CONSTRAINT interactions_step_check CHECK (step IN ('HR', 'BUSINESS_MANAGER', 'CLIENT', 'CLIENT_TECHNICAL'));
+          ALTER TABLE interactions ADD CONSTRAINT interactions_type_check CHECK (type IN ('CALL', 'EMAIL', 'MEETING', 'MESSAGE'));
+          ALTER TABLE opportunities ADD CONSTRAINT opportunities_status_check CHECK (status IN ('OPEN', 'WON', 'LOST'));
