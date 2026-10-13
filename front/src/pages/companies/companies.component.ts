@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { AfterViewInit, Component, computed, effect, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, inject, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckbox } from "@angular/material/checkbox";
@@ -49,6 +49,7 @@ import { EditCompanyModal } from './modals/Edit/edit-company-modal';
     MatCheckbox,
     ReactiveFormsModule],
   templateUrl: './companies.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './companies.component.scss'
 })
 export class CompaniesComponent implements AfterViewInit {

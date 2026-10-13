@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,6 +11,7 @@ import { MatCard, MatCardContent, MatCardTitle } from '@angular/material/card';
   selector: 'app-sign-up',
   imports: [MatCardContent, MatCard, MatCardTitle, ReactiveFormsModule, FormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
   templateUrl: './sign-up.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './sign-up.component.scss'
 })
 export class SignUpComponent {

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatNavList } from '@angular/material/list';
 import { MatListModule } from '@angular/material/list';
@@ -8,6 +8,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   selector: 'app-sidebar',
   imports: [MatNavList, MatListModule, MatIconModule, RouterLink, RouterLinkActive],
   templateUrl: './sidebar.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {

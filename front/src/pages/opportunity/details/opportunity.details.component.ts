@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -37,6 +37,7 @@ import { OpportunityFormModal } from '../modal/opportunity-form-modal';
     RouterLink
   ],
   templateUrl: './opportunity.details.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './opportunity.details.component.scss'
 })
 export class OpportunityDetailsComponent implements OnInit {

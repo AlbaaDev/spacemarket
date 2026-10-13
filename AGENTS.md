@@ -8,6 +8,12 @@ A one-person CRM: a freelancer tracks their contacts, companies, opportunities a
 - Frontend tests: `npx ng test --watch=false --browsers=ChromeHeadless` from `front/`. Without Google Chrome installed, set `CHROME_BIN` to another Chromium browser.
 - Frontend type check, templates included: `npm run build:dev` from `front/`.
 
+## Angular
+
+The app is on a recent Angular release that may postdate what you know. Before relying on memory for an Angular API, check it with `search_documentation` or `get_best_practices` from the `angular-cli` MCP server, which answers for the installed version.
+
+That server doesn't cover Angular Material and the CDK: for those, use the Context7 MCP server (library `/angular/components`). Its newest indexed version may trail the installed one, so check `package.json` when an API looks off.
+
 ## Database
 
 The schema follows the JPA entities through Hibernate `ddl-auto=update`; there are no migrations. Development seed data is in `data.sql`.
