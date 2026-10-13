@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(graphify:*)",
+      "Bash(mkdir -p graphify-out)",
+      "Bash(rm -f graphify-out/*)",
+      "Read(~/.claude/skills/graphify/**)"
+    ]
+  }
+}
