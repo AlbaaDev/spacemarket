@@ -1,18 +1,7 @@
 databaseChangeLog:
-  - changeSet:
-      id: 1
-      author: abi
-      changes:
-        - createTable:
-            tableName: company
-            columns:
-              - column:
-                  name: id
-                  type: int
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: address
-                  type: varchar(255)
+  - include:
+      file: changes/0001-baseline.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changes/0002-align-production.yaml
+      relativeToChangelogFile: true
