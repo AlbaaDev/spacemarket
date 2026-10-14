@@ -57,7 +57,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyDto addCompany(Company company, Long userId)
             throws CompanyAlreadyExistException, EntityNotFoundException {
-        if (companyRepository.findByName(company.getName()).isPresent()) {
+        if (companyRepository.existsByUser_IdAndName(userId, company.getName())) {
             throw new CompanyAlreadyExistException(
                     "Company with name " + company.getName() + " already exist.");
         }

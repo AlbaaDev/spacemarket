@@ -12,6 +12,7 @@ import com.org.back.models.Contact;
 public interface ContactRepository extends JpaRepository<Contact, Long> {
     Optional<Contact> findByEmails_Email(String email);
     Optional<Contact> findByIdAndUser_Id(Long id, Long userId);
+    boolean existsByUser_IdAndFirstNameAndLastName(Long userId, String firstName, String lastName);
     Optional<Contact> findByPhones_Phone(String phone);
     List<Contact> findAllByUser_Id(Long userId);
 }

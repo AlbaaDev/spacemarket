@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.org.back.exceptions.CompanyAlreadyExistException;
 import com.org.back.exceptions.EntityNotFoundException;
 import com.org.back.mapper.CompanyMapper;
 import com.org.back.models.Company;
@@ -83,6 +84,15 @@ class CompanyServiceTest {
         when(companyRepository.findByIdAndUser_Id(COMPANY_ID, OTHER_USER_ID)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> service.updateCompany(OTHER_USER_ID, company));
+        verify(companyRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("A Company name already used in the same account is refused")
+    void duplicateNameInTheSameAccount() {
+        when(companyRepository.existsByUser_IdAndName(USER_ID, "Acme")).thenReturn(true);
+
+        assertThrows(CompanyAlreadyExistException.class, () -> service.addCompany(company, USER_ID));
         verify(companyRepository, never()).save(any());
     }
 

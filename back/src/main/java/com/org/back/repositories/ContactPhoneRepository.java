@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.org.back.enums.PhoneType;
 import com.org.back.models.ContactPhone;
 
 @Repository
@@ -21,8 +20,6 @@ public interface ContactPhoneRepository extends JpaRepository<ContactPhone, Long
                   @Param("phone") String phone,
                   @Param("excludeContactId") Long excludeContactId);
 
-      boolean existsByContactFirstNameAndContactLastName(String firstName, String lastName);
-
-      boolean existsByContactIdAndPhoneAndType(Long contactId, String phone, PhoneType type);
+      boolean existsByContact_User_IdAndPhone(Long userId, String phone);
 
 }

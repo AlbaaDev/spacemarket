@@ -71,8 +71,8 @@ public class ContactServiceImpl implements ContactService {
         } 
         contact.setUser(user);
         contact.setCustomValues(customFieldService.validateValues(userId, CustomFieldTarget.CONTACT, contact.getCustomValues()));
-        // TODO : Implement Sets to avoid all this ...
-        if (contactEmailRepository.existsByContactFirstNameAndContactLastName(contact.getFirstName(),
+        // Duplicates are looked for among this user's Contacts only, as updateContact does.
+        if (contactRepository.existsByUser_IdAndFirstNameAndLastName(userId, contact.getFirstName(),
                 contact.getLastName())) {
             throw new ContactAlreadyExistException("Contact with firstName : " +
                     contact.getFirstName() + " and lastName : " + contact.getLastName()
@@ -80,24 +80,16 @@ public class ContactServiceImpl implements ContactService {
         }
         if (!(contact.getEmails().isEmpty())) {
             for (ContactEmail email : contact.getEmails()) {
-                if (contactEmailRepository.existsByContactIdAndEmailAndType(userId, email.getEmail(),
-                        email.getType())) {
+                if (contactEmailRepository.existsByContact_User_IdAndEmail(userId, email.getEmail())) {
                     throw new ContactAlreadyExistException(
                             "Email " + email.getEmail() + " already used by another contact.");
                 }
                 email.setContact(contact);
             }
         }
-        if (contactPhoneRepository.existsByContactFirstNameAndContactLastName(contact.getFirstName(),
-                contact.getLastName())) {
-            throw new ContactAlreadyExistException("Contact with firstName : " +
-                    contact.getFirstName() + " and lastName : " + contact.getLastName()
-                    + " already used by another contact.");
-        }
         if (!(contact.getPhones().isEmpty())) {
             for (ContactPhone phone : contact.getPhones()) {
-                if (contactPhoneRepository.existsByContactIdAndPhoneAndType(
-                        userId, phone.getPhone(), phone.getType())) {
+                if (contactPhoneRepository.existsByContact_User_IdAndPhone(userId, phone.getPhone())) {
                     throw new ContactAlreadyExistException(
                             "Phone " + phone.getPhone() + " already used by another contact.");
                 }
