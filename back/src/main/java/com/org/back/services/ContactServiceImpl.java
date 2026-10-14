@@ -67,9 +67,7 @@ public class ContactServiceImpl implements ContactService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         if (contact.getCompany() != null && contact.getCompany().getId() != null) {
-            Company foundCompany = companyRepository.findById(contact.getCompany().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Company not found"));
-            contact.setCompany(foundCompany);
+            contact.setCompany(findOwnedCompany(userId, contact.getCompany().getId()));
         } 
         contact.setUser(user);
         contact.setCustomValues(customFieldService.validateValues(userId, CustomFieldTarget.CONTACT, contact.getCustomValues()));
@@ -111,22 +109,18 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public ContactDto getContactById(Long id) throws EntityNotFoundException {
-        Contact contact = contactRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Contact not found with id: " + id));
-        return contactMapper.toContactDTO(contact);
+    public ContactDto getContactById(Long userId, Long id) throws EntityNotFoundException {
+        return contactMapper.toContactDTO(findOwnedContact(userId, id));
     }
 
     @Override
-    public ContactDto updateContact(Contact contactForm) throws ContactAlreadyExistException, EntityNotFoundException {
+    public ContactDto updateContact(Long userId, Contact contactForm) throws ContactAlreadyExistException, EntityNotFoundException {
 
-        Contact existingContact = contactRepository.findById(contactForm.getId())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Contact not found with id: " + contactForm.getId()));
-
-        Long userId = existingContact.getUser().getId();
+        Contact existingContact = findOwnedContact(userId, contactForm.getId());
         Long contactId = contactForm.getId();
+        if (contactForm.getCompany() != null && contactForm.getCompany().getId() != null) {
+            contactForm.setCompany(findOwnedCompany(userId, contactForm.getCompany().getId()));
+        }
 
         if (contactForm.getEmails() != null && !contactForm.getEmails().isEmpty()) {
             for (ContactEmail emailForm : contactForm.getEmails()) {
@@ -157,11 +151,21 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     @Transactional
-    public void deleteContactById(Long id) throws EntityNotFoundException {
-        Contact contact = contactRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Contact not found with id: " + id));
+    public void deleteContactById(Long userId, Long id) throws EntityNotFoundException {
+        Contact contact = findOwnedContact(userId, id);
         interactionRepository.deleteAllByContactId(id);
         contactRepository.delete(contact);
+    }
+
+    // Another user's Contact or Company is reported as not found, so its existence does not leak.
+    private Contact findOwnedContact(Long userId, Long contactId) throws EntityNotFoundException {
+        return contactRepository.findByIdAndUser_Id(contactId, userId)
+                .orElseThrow(() -> new EntityNotFoundException("Contact not found with id: " + contactId));
+    }
+
+    private Company findOwnedCompany(Long userId, Long companyId) throws EntityNotFoundException {
+        return companyRepository.findByIdAndUser_Id(companyId, userId)
+                .orElseThrow(() -> new EntityNotFoundException("Company not found with id: " + companyId));
     }
 
     @Override

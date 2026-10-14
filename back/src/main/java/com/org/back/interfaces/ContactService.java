@@ -10,8 +10,8 @@ import com.org.back.models.Contact;
 public interface ContactService {
     List<ContactDto> getUserContacts(Long userId);
     ContactDto addContact(Long userId, Contact contact) throws ContactAlreadyExistException, EntityNotFoundException;
-    ContactDto getContactById(Long id) throws EntityNotFoundException;
-    ContactDto updateContact(Contact contact) throws EntityNotFoundException, ContactAlreadyExistException;
-    void deleteContactById(Long id) throws EntityNotFoundException;
+    ContactDto getContactById(Long userId, Long id) throws EntityNotFoundException;
+    ContactDto updateContact(Long userId, Contact contact) throws EntityNotFoundException, ContactAlreadyExistException;
+    void deleteContactById(Long userId, Long id) throws EntityNotFoundException;
     void addCompanyToContact(Long contactId, Long companyId) throws EntityNotFoundException;
 }

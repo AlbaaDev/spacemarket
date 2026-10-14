@@ -1,0 +1,16 @@
+# Deleting a Company keeps its Contacts, without a Company, as it already keeps its Opportunities.
+databaseChangeLog:
+- changeSet:
+    id: 0004-contacts-company-set-null
+    author: abi
+    changes:
+    - dropForeignKeyConstraint:
+        baseTableName: contacts
+        constraintName: fk5nvk2pja04n1pbiyk1xn7739l
+    - addForeignKeyConstraint:
+        constraintName: fk_contacts_company
+        baseTableName: contacts
+        baseColumnNames: company_id
+        referencedTableName: companies
+        referencedColumnNames: company_id
+        onDelete: SET NULL

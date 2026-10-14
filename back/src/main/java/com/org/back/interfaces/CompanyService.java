@@ -11,7 +11,7 @@ public interface CompanyService {
     List<CompanyDto> getContactCompanies(Long companyId);
     CompanyDto addCompany(Company company, Long userId) throws CompanyAlreadyExistException, EntityNotFoundException;
     CompanyDto getCompanyById(Long id) throws EntityNotFoundException;
-    void updateCompany(Company company) throws EntityNotFoundException;
-    void deleteCompanyById(Long id);
+    void updateCompany(Long userId, Company company) throws EntityNotFoundException;
+    void deleteCompanyById(Long userId, Long id) throws EntityNotFoundException;
     List<CompanyDto> getCompaniesByUserId(Long userId);
 }

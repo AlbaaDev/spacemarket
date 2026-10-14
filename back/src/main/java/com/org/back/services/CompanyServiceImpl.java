@@ -1,5 +1,6 @@
 package com.org.back.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,19 +67,10 @@ public class CompanyServiceImpl implements CompanyService {
         company.setUser(user);
         company.setCustomValues(customFieldService.validateValues(userId, CustomFieldTarget.COMPANY, company.getCustomValues()));
         if (company.getContacts() != null) {
-            List<Contact> attachedContacts = company.getContacts().stream()
-                    .map((Contact contact) -> {
-                        try {
-                            return contactRepository.findById(contact.getId())
-                                    .orElseThrow(() -> new EntityNotFoundException(
-                                            "Contact not found with id: " + contact.getId()));
-                        } catch (EntityNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        return contact;
-                    }) 
-                    .collect(Collectors.toList());
-
+            List<Contact> attachedContacts = new ArrayList<>();
+            for (Contact contact : company.getContacts()) {
+                attachedContacts.add(findOwnedContact(userId, contact.getId()));
+            }
             attachedContacts.forEach(contact -> contact.setCompany(company));
             company.setContacts(attachedContacts);
         }
@@ -89,9 +81,8 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Transactional()
     @Override
-    public void updateCompany(Company company) throws EntityNotFoundException {
-        Company existingCompany = companyRepository.findById(company.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Company not found with id: " + company.getId()));
+    public void updateCompany(Long userId, Company company) throws EntityNotFoundException {
+        Company existingCompany = findOwnedCompany(userId, company.getId());
 
         existingCompany.setName(company.getName());
         existingCompany.setContacts(company.getContacts());
@@ -104,9 +95,7 @@ public class CompanyServiceImpl implements CompanyService {
         if (company.getContacts() != null) {
             List<Contact> attachedContacts = company.getContacts().stream()
                     .map(c -> {
-                        Contact contact = contactRepository.findById(c.getId())
-                                .orElseThrow(() -> new EntityNotFoundException(
-                                        "Contact not found with id: " + c.getId()));
+                        Contact contact = findOwnedContact(userId, c.getId());
                         contact.setCompany(existingCompany);
                         return contact;
                     })
@@ -116,9 +105,22 @@ public class CompanyServiceImpl implements CompanyService {
         companyRepository.save(existingCompany);
     }
 
+    // Its Contacts and Opportunities stay, without a Company: the database clears the link.
     @Override
-    public void deleteCompanyById(Long id) {
-        companyRepository.deleteById(id);
+    @Transactional
+    public void deleteCompanyById(Long userId, Long id) throws EntityNotFoundException {
+        companyRepository.delete(findOwnedCompany(userId, id));
+    }
+
+    // Another user's Company or Contact is reported as not found, so its existence does not leak.
+    private Company findOwnedCompany(Long userId, Long companyId) throws EntityNotFoundException {
+        return companyRepository.findByIdAndUser_Id(companyId, userId)
+                .orElseThrow(() -> new EntityNotFoundException("Company not found with id: " + companyId));
+    }
+
+    private Contact findOwnedContact(Long userId, Long contactId) throws EntityNotFoundException {
+        return contactRepository.findByIdAndUser_Id(contactId, userId)
+                .orElseThrow(() -> new EntityNotFoundException("Contact not found with id: " + contactId));
     }
 
     @Override

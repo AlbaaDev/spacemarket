@@ -159,7 +159,7 @@ class ContactControllerTest {
     @DisplayName("Should return 200 when user tries to get contact by id")
     void getContactById_should_return_contact() throws Exception {
         // GIVEN
-        when(contactService.getContactById(1L)).thenReturn(contactDto1);
+        when(contactService.getContactById(1L, 1L)).thenReturn(contactDto1);
 
         // WHEN
         ResultActions response = mockMvc.perform(get("/contacts/1")

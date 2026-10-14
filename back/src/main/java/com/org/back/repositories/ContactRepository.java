@@ -11,6 +11,7 @@ import com.org.back.models.Contact;
 @Repository
 public interface ContactRepository extends JpaRepository<Contact, Long> {
     Optional<Contact> findByEmails_Email(String email);
+    Optional<Contact> findByIdAndUser_Id(Long id, Long userId);
     Optional<Contact> findByPhones_Phone(String phone);
     List<Contact> findAllByUser_Id(Long userId);
 }
