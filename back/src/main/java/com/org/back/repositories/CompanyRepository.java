@@ -12,7 +12,7 @@ import com.org.back.models.Company;
 
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
-    Optional<Company> findByName(String name);
+    boolean existsByUser_IdAndName(Long userId, String name);
     Optional<Company> findByIdAndUser_Id(Long id, Long userId);
     List<Company> findAllByContacts_Id(Long contactId);
     List<Company> findAllByUser_Id(Long userId);

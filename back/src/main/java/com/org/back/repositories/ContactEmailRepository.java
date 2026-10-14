@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.org.back.enums.EmailType;
 import com.org.back.models.ContactEmail;
 
 @Repository
@@ -21,6 +20,5 @@ public interface ContactEmailRepository extends JpaRepository<ContactEmail, Long
                         @Param("email") String email,
                         @Param("excludeContactId") Long excludeContactId);
 
-        boolean existsByContactFirstNameAndContactLastName(String firstName, String lastName);
-        boolean existsByContactIdAndEmailAndType(Long contactId, String email, EmailType type);
+        boolean existsByContact_User_IdAndEmail(Long userId, String email);
 }
