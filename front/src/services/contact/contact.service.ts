@@ -53,6 +53,12 @@ export class ContactService {
     );
   }
 
+  /** A deleted Company leaves its Contacts without a Company, as the backend does. */
+  forgetCompany(companyId: number) {
+    this._contacts.update(contacts => contacts.map(contact =>
+      contact.company?.id === companyId ? { ...contact, company: null } : contact));
+  }
+
   private fetchContacts(): void {
     this.getContacts().subscribe({
       next: (response) => {
