@@ -66,7 +66,8 @@ public class Company {
     private String industry;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "company", cascade = { CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.LAZY)
+    // Deleting a Company keeps its Contacts: the database clears their company_id (changeset 0004).
+    @OneToMany(mappedBy = "company", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private List<Contact> contacts;
 
     @ManyToOne(fetch = FetchType.LAZY)

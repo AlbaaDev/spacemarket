@@ -13,6 +13,7 @@ import com.org.back.models.Company;
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
     Optional<Company> findByName(String name);
+    Optional<Company> findByIdAndUser_Id(Long id, Long userId);
     List<Company> findAllByContacts_Id(Long contactId);
     List<Company> findAllByUser_Id(Long userId);
     @Query("SELECT c FROM Company c LEFT JOIN FETCH c.contacts WHERE c.user.id = :userId")

@@ -43,7 +43,7 @@ public class ContactController {
                 .body(ResponseUtil.success(
                         HttpStatus.OK.value(),
                         "Success",
-                        contactService.getContactById(user.getId()),
+                        contactService.getContactById(user.getId(), id),
                         request.getRequestURI()));
     }
 
@@ -61,9 +61,9 @@ public class ContactController {
     }
 
     @PatchMapping("/")
-    public ResponseEntity<Void> updateContact(@Valid @RequestBody Contact contact)
+    public ResponseEntity<Void> updateContact(@Valid @RequestBody Contact contact, @AuthenticationPrincipal User user)
             throws EntityNotFoundException, ContactAlreadyExistException {
-        contactService.updateContact(contact);
+        contactService.updateContact(user.getId(), contact);
         return ResponseEntity.noContent().build();
     }
 
@@ -79,8 +79,9 @@ public class ContactController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteContact(@PathVariable Long id) throws EntityNotFoundException {
-        contactService.deleteContactById(id);
+    public ResponseEntity<Void> deleteContact(@PathVariable Long id, @AuthenticationPrincipal User user)
+            throws EntityNotFoundException {
+        contactService.deleteContactById(user.getId(), id);
         return ResponseEntity.noContent().build();
     }
 

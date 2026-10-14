@@ -48,8 +48,9 @@ public class CompanyController {
     }
 
     @PatchMapping("/")
-    public ResponseEntity<Void> editCompany(@Valid @RequestBody Company company) throws EntityNotFoundException {
-        companyService.updateCompany(company);
+    public ResponseEntity<Void> editCompany(@Valid @RequestBody Company company, @AuthenticationPrincipal User user)
+            throws EntityNotFoundException {
+        companyService.updateCompany(user.getId(), company);
         return ResponseEntity.noContent().build();
     }
 
@@ -65,8 +66,9 @@ public class CompanyController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCompany(@PathVariable Long id) {
-        companyService.deleteCompanyById(id);
+    public ResponseEntity<Void> deleteCompany(@PathVariable Long id, @AuthenticationPrincipal User user)
+            throws EntityNotFoundException {
+        companyService.deleteCompanyById(user.getId(), id);
         return ResponseEntity.noContent().build();
     }
 }
