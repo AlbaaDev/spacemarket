@@ -20,10 +20,18 @@ stages:
     - checkout: self
       submodules: true
 
+    # Build on the agent itself. The deploy task's own build runs in an x86_64 container, emulated on
+    # this Apple Silicon agent, where npm install and ng build fail intermittently (ETXTBSY, out of memory).
+    - script: npm ci && npm run build
+      displayName: 'Build Angular'
+      workingDirectory: front
+
     - task: AzureStaticWebApp@0
-      displayName: 'Build and Deploy SWA'
+      displayName: 'Deploy SWA'
       inputs:
-        app_location: '/front'            
-        api_location: ''                  
-        output_location: 'dist/front/browser' 
+        app_location: '/front/dist/front/browser'
+        api_location: ''
+        output_location: ''
+        skip_app_build: true
+        skip_api_build: true
         azure_static_web_apps_api_token: $(SWA_TOKEN)
