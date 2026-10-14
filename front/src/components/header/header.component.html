@@ -10,7 +10,9 @@
 
   @if(!(authService.isAuthenticated())) {
     <button mat-raised-button routerLink="/app-login" class="mx-2">Sign in</button>
-    <button mat-raised-button routerLink="/app-sign-up" class="mx-2">Sign Up</button>
+    @if (registrationOpen) {
+      <button mat-raised-button routerLink="/app-sign-up" class="mx-2">Sign Up</button>
+    }
 
   }
   @if(authService.isAuthenticated()) {

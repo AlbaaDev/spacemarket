@@ -5,6 +5,7 @@ import { MatToolbar } from '@angular/material/toolbar';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth/auth-service';
 import { ThemeService } from '../../services/theme/theme.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -21,6 +22,7 @@ import { ThemeService } from '../../services/theme/theme.service';
 export class HeaderComponent {
   protected readonly authService = inject(AuthService);
   protected readonly themeService = inject(ThemeService);
+  protected readonly registrationOpen = environment.registrationOpen;
   private readonly router = inject(Router);
 
   logout() {

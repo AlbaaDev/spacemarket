@@ -19,6 +19,7 @@ export class LoginComponent {
     private readonly formBuilder = inject(FormBuilder);
     private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
+    protected readonly registrationOpen = environment.registrationOpen;
 
     errorMessage: string | null = null;
     loginForm: FormGroup;
