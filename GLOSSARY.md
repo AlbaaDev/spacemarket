@@ -29,8 +29,8 @@ _Avoid_: Contacts made, contacts done
 ### Deals
 
 **Opportunity**:
-A potential deal with a monetary value, attached to a principal Contact.
-_Avoid_: Deal, lead, sale
+A potential deal with a monetary value, optionally for a Company and with any number of Contacts, none included.
+_Avoid_: Deal, lead, sale, principal Contact, business name
 
 **Opportunity status**:
 Where an Opportunity stands: Open, Won or Lost.

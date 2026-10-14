@@ -10,14 +10,21 @@ export const OPPORTUNITY_STATUS_LABELS: Record<OpportunityStatus, string> = {
     LOST: 'Lost',
 };
 
+export interface OpportunityContact {
+    id: number,
+    firstName: string,
+    lastName: string,
+}
+
 export interface Opportunity {
     id: number,
     name: string,
-    businessName: string,
+    company: { id: number, name: string } | null,
     value: number,
     status: OpportunityStatus,
     closeDate: IsoDate | null,
-    principalContact: { id: number, firstName: string, lastName: string },
+    /** Sorted by last name; may be empty. */
+    contacts: OpportunityContact[],
     customValues: CustomValues,
     /** The most advanced Step among its Interactions; computed, never sent back. */
     step: Step | null,
@@ -25,10 +32,14 @@ export interface Opportunity {
 
 export interface OpportunityRequest {
     name: string,
-    businessName: string,
+    companyId: number | null,
     value: number,
     status: OpportunityStatus,
     closeDate: IsoDate | null,
-    principalContactId: number,
+    contactIds: number[],
     customValues: CustomValues,
+}
+
+export function contactFullName(contact: OpportunityContact): string {
+    return `${contact.firstName} ${contact.lastName}`.trim();
 }

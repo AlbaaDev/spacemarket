@@ -70,7 +70,7 @@ export class ContactDetailsComponent implements OnInit {
   readonly today = new Date();
 
   readonly contactOpportunities = computed(() =>
-    this.opportunityService.opportunities().filter(o => o.principalContact?.id === Number(this.id())));
+    this.opportunityService.opportunities().filter(o => o.contacts.some(contact => contact.id === Number(this.id()))));
   private readonly opportunityNames = computed(() =>
     new Map(this.opportunityService.opportunities().map(o => [o.id, o.name])));
 

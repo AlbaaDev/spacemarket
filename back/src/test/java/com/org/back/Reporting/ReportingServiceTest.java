@@ -146,14 +146,14 @@ class ReportingServiceTest {
         return entityManager.persist(contact);
     }
 
-    private void opportunity(Contact principalContact, long value, OpportunityStatus status, LocalDate closeDate) {
+    private void opportunity(Contact contact, long value, OpportunityStatus status, LocalDate closeDate) {
         Opportunity opportunity = new Opportunity();
         opportunity.setName("Deal");
-        opportunity.setBusinessName("Business");
         opportunity.setValue(value);
         opportunity.setStatus(status);
         opportunity.setCloseDate(closeDate);
-        opportunity.setPrincipalContact(principalContact);
+        opportunity.setUser(contact.getUser());
+        opportunity.getContacts().add(contact);
         entityManager.persist(opportunity);
     }
 

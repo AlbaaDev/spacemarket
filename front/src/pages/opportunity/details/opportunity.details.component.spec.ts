@@ -6,8 +6,8 @@ import { provideAppDateAdapter } from '../../../utils/date-adapter';
 import { OpportunityDetailsComponent } from './opportunity.details.component';
 
 const opportunity: Opportunity = {
-  id: 5, name: 'Cloud migration', businessName: 'Microsoft', value: 45000, status: 'OPEN', closeDate: null,
-  principalContact: { id: 3, firstName: 'Sarah', lastName: 'Connor' }, customValues: {}, step: 'CLIENT',
+  id: 5, name: 'Cloud migration', company: { id: 2, name: 'Microsoft' }, value: 45000, status: 'OPEN', closeDate: null,
+  contacts: [{ id: 3, firstName: 'Sarah', lastName: 'Connor' }], customValues: {}, step: 'CLIENT',
 };
 
 describe('OpportunityDetailsComponent', () => {
@@ -39,7 +39,7 @@ describe('OpportunityDetailsComponent', () => {
     expect(fixture.nativeElement.querySelector('.facts').textContent).toContain('Client interview');
   });
 
-  it('logs an interaction with the principal contact by default', () => {
+  it("logs an interaction with the opportunity's first contact by default", () => {
     expect(component.form.controls.contactId.value).toBe(3);
   });
 });

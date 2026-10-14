@@ -62,7 +62,8 @@ class InteractionServiceTest {
         contact.setUser(user);
         opportunity = new Opportunity();
         opportunity.setId(OPPORTUNITY_ID);
-        opportunity.setPrincipalContact(contact);
+        opportunity.setUser(user);
+        opportunity.getContacts().add(contact);
     }
 
     @Test
