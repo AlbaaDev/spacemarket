@@ -11,12 +11,12 @@
     <mat-card-content>
       <dl class="facts">
         <dt>Value</dt><dd class="tabular">{{ formatMoney(opportunity.value) }}</dd>
-        <dt>Business name</dt><dd>{{ opportunity.businessName || '–' }}</dd>
-        <dt>Principal contact</dt>
+        <dt>Company</dt><dd>{{ opportunity.company?.name ?? '–' }}</dd>
+        <dt>Contacts</dt>
         <dd>
-          @if (opportunity.principalContact; as contact) {
-            <a [routerLink]="['/contact', contact.id]">{{ contact.firstName }} {{ contact.lastName }}</a>
-          } @else { – }
+          @for (contact of opportunity.contacts; track contact.id; let last = $last) {
+            <a [routerLink]="['/contact', contact.id]">{{ contact.firstName }} {{ contact.lastName }}</a>@if (!last) {, }
+          } @empty { – }
         </dd>
         <dt>Step</dt><dd>{{ stepLabel(opportunity.step) ?? '–' }}</dd>
         <dt>Close date</dt>

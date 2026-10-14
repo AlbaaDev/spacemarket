@@ -82,6 +82,7 @@ export class OpportunityDetailsComponent implements OnInit {
     step: [null as Step | null],
     note: [''],
   });
+  private readonly defaultContactId = computed(() => this.opportunity()?.contacts[0]?.id ?? null);
   private readonly contactNames = computed(() =>
     new Map(this.contactService.contacts().map(contact => [contact.id, `${contact.firstName} ${contact.lastName}`])));
 
@@ -89,11 +90,11 @@ export class OpportunityDetailsComponent implements OnInit {
   private readonly day = new Intl.DateTimeFormat(APP_LOCALE, { dateStyle: 'medium' });
 
   constructor() {
-    // The principal Contact is the default participant, once the Opportunity is known.
+    // The Opportunity's first Contact is the default participant, once the Opportunity is known.
     effect(() => {
-      const principalId = this.opportunity()?.principalContact?.id;
-      if (principalId !== undefined && this.form.controls.contactId.value === null) {
-        this.form.controls.contactId.setValue(principalId);
+      const defaultId = this.defaultContactId();
+      if (defaultId !== null && this.form.controls.contactId.value === null) {
+        this.form.controls.contactId.setValue(defaultId);
       }
     });
   }
@@ -132,7 +133,7 @@ export class OpportunityDetailsComponent implements OnInit {
         this.form.reset({
           type: value.type,
           occurredOn: new Date(),
-          contactId: this.opportunity()?.principalContact?.id ?? value.contactId,
+          contactId: this.defaultContactId() ?? value.contactId,
           step: null,
           note: '',
         });

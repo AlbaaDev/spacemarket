@@ -12,4 +12,4 @@ An Opportunity used to reach its user through a mandatory principal Contact and 
 - Every Opportunity query filters on the Opportunity's own user; assigning a Contact or a Company checks that it belongs to the same user.
 - The Opportunity side owns the `contact_opportunity` join table, since Contacts are chosen from the Opportunity.
 - Migrating existing data: each principal Contact becomes one of the Opportunity's Contacts, and each business name is linked to the user's Company of the same name, created when none exists.
-- An Interaction still needs a Contact, so an Opportunity without Contacts cannot log Interactions, and its Step cannot move, until one is assigned.
+- An Interaction linked to an Opportunity may involve any of the user's Contacts, not only the Opportunity's: the business manager and the client often work for different Companies. An Opportunity without Contacts can therefore still log Interactions.

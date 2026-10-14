@@ -190,15 +190,10 @@ export class DashboardComponent implements OnInit {
     return `${contact.firstName} ${contact.lastName}`.trim();
   }
 
-  principalContactName(opportunity: Opportunity): string {
-    const contact: unknown = opportunity.principalContact;
-    if (typeof contact === 'string') {
-      return contact;
-    }
-    if (contact && typeof contact === 'object') {
-      return this.contactName(contact as Contact);
-    }
-    return '';
+  /** Company and Contacts of an Opportunity, each part left out when missing. */
+  opportunitySubtitle(opportunity: Opportunity): string {
+    const contacts = opportunity.contacts.map(contact => this.contactName(contact)).join(', ');
+    return [opportunity.company?.name, contacts].filter(Boolean).join(' · ');
   }
 
   private latest<T extends { id: number }>(items: T[] | null): T[] {

@@ -18,13 +18,13 @@ import { TableSearch } from '../../components/table-search/table-search';
 import { TableSearchFieldComponent } from '../../components/table-search/table-search-field.component';
 import { CustomFieldService } from '../../services/custom-field/custom-field.service';
 import { STEPS, stepLabel } from '../../interfaces/Interaction';
-import { Opportunity, OPPORTUNITY_STATUS_LABELS } from '../../interfaces/Opportunity';
+import { contactFullName, Opportunity, OPPORTUNITY_STATUS_LABELS } from '../../interfaces/Opportunity';
 import { OpportunityService } from '../../services/opportunity/opportunity.service';
 import { fromIsoDate } from '../../utils/dates';
 import { OpportunityFormModal } from './modal/opportunity-form-modal';
 import { APP_LOCALE } from '../../utils/date-adapter';
 
-type OpportunityColumn = 'name' | 'businessName' | 'principalContact' | 'value' | 'status' | 'step' | 'closeDate';
+type OpportunityColumn = 'name' | 'company' | 'contacts' | 'value' | 'status' | 'step' | 'closeDate';
 
 @Component({
   selector: 'opportunity',
@@ -42,8 +42,8 @@ export class OpportunityComponent implements OnInit, AfterViewInit {
 
   readonly columns = new TableColumns('spacemarket.columns.opportunities', [
     { id: 'name', label: 'Name' },
-    { id: 'businessName', label: 'Business name' },
-    { id: 'principalContact', label: 'Principal contact' },
+    { id: 'company', label: 'Company' },
+    { id: 'contacts', label: 'Contacts' },
     { id: 'value', label: 'Value' },
     { id: 'status', label: 'Status' },
     { id: 'step', label: 'Step' },
@@ -69,12 +69,14 @@ export class OpportunityComponent implements OnInit, AfterViewInit {
       if (field) return customSortValue(field, customValue(opportunity, field));
       const column = columnId as OpportunityColumn;
       switch (column) {
-        case 'principalContact': return this.contactName(opportunity).toLowerCase();
+        case 'company': return opportunity.company?.name.toLowerCase() ?? '';
+        case 'contacts': return this.contactNames(opportunity).toLowerCase();
         case 'closeDate': return opportunity.closeDate ?? '';
         case 'value': return opportunity.value;
         // Selection-process order, Opportunities without a Step last.
         case 'step': return opportunity.step === null ? STEPS.length : STEPS.findIndex(s => s.value === opportunity.step);
-        default: return String(opportunity[column] ?? '').toLowerCase();
+        case 'name': return opportunity.name.toLowerCase();
+        case 'status': return opportunity.status;
       }
     };
   }
@@ -138,17 +140,17 @@ export class OpportunityComponent implements OnInit, AfterViewInit {
     if (tableColumn.field) return formatCustomValue(tableColumn.field, customValue(opportunity, tableColumn.field));
     const column = tableColumn.id as OpportunityColumn;
     switch (column) {
-      case 'principalContact': return this.contactName(opportunity);
+      case 'name': return opportunity.name;
+      case 'company': return opportunity.company?.name ?? '–';
+      case 'contacts': return this.contactNames(opportunity) || '–';
       case 'value': return this.money.format(opportunity.value);
       case 'status': return OPPORTUNITY_STATUS_LABELS[opportunity.status];
       case 'step': return stepLabel(opportunity.step) ?? '–';
       case 'closeDate': return opportunity.closeDate ? this.day.format(fromIsoDate(opportunity.closeDate)) : '–';
-      default: return opportunity[column] ?? '–';
     }
   }
 
-  private contactName(opportunity: Opportunity): string {
-    const contact = opportunity.principalContact;
-    return contact ? `${contact.firstName} ${contact.lastName}` : '';
+  private contactNames(opportunity: Opportunity): string {
+    return opportunity.contacts.map(contactFullName).join(', ');
   }
 }
