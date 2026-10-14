@@ -6,13 +6,14 @@ import { LoginComponent } from '../pages/login/login.component';
 import { PageNotFoundComponent } from '../pages/page-not-found/page-not-found.component';
 import { PasswordForgottenComponent } from '../pages/password-forgotten/password-forgotten.component';
 import { SignUpComponent } from '../pages/sign-up/sign-up.component';
+import { environment } from '../environments/environment';
 
 // Signed-in pages load on demand so the first screen (login) stays small.
 export const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'app-home', component: HomeComponent },
   { path: 'app-login', component: LoginComponent, canActivate: [NoAuthGaurd] },
-  { path: 'app-sign-up', component: SignUpComponent, canActivate: [NoAuthGaurd] },
+  ...(environment.registrationOpen ? [{ path: 'app-sign-up', component: SignUpComponent, canActivate: [NoAuthGaurd] }] : []),
   { path: 'app-password-forgotten', component: PasswordForgottenComponent },
   { path: 'app-logout', redirectTo: '/app-login' },
   { path: 'app-dashboard', loadComponent: () => import('../pages/dashboard/dashboard.component').then(m => m.DashboardComponent), canActivate: [AuthGuard] },

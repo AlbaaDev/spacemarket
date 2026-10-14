@@ -41,7 +41,9 @@
 
             <div class="mt-4">
                 <button mat-raised-button type="submit" color="primary" [disabled]="loginForm.invalid">Login</button>
-                <a routerLink="/app-sign-up" class="mx-4">Don't have an account ? Sign up</a>
+                @if (registrationOpen) {
+                    <a routerLink="/app-sign-up" class="mx-4">Don't have an account ? Sign up</a>
+                }
 
                 @if (errorMessage !== null) {
                 <mat-error class="mt-4">{{errorMessage}}</mat-error>

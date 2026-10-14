@@ -2,6 +2,7 @@ package com.org.back.controllers;
 
 import java.time.Duration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.org.back.dto.user.UserCreateDto;
 import com.org.back.dto.user.UserLoginDto;
@@ -36,22 +38,29 @@ public class AuthenticationController {
         private final AuthenticationService authenticationService;
         private final UserServiceImpl userService;
         private final UserMapper userMapper;
+        // Off in production, where the only account already exists.
+        private final boolean registrationEnabled;
 
         public AuthenticationController(JwtService jwtService,
                         AuthenticationService authenticationService,
                         UserServiceImpl userServiceImpl,
-                        UserMapper userMapper) {
+                        UserMapper userMapper,
+                        @Value("${app.registration.enabled:true}") boolean registrationEnabled) {
 
                 this.userService = userServiceImpl;
                 this.jwtService = jwtService;
                 this.authenticationService = authenticationService;
                 this.userMapper = userMapper;
+                this.registrationEnabled = registrationEnabled;
         }
 
         @PostMapping("/register")
         public ResponseEntity<ApiResponse<UserResponseDto>> registerUser(
                         @Valid @RequestBody UserCreateDto userCreateDto,
                         HttpServletRequest request) throws UserAlreadyExistsException {
+                if (!registrationEnabled) {
+                        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Registration is closed");
+                }
 
                 return ResponseEntity.ok(
                                 ResponseUtil.success(
