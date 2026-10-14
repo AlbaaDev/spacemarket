@@ -11,6 +11,7 @@ export interface Contact {
     city: string;
     address: string;
     country: string;
+    company?: { id: number, name: string } | null;
     customValues?: CustomValues;
 }
 

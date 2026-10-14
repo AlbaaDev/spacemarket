@@ -5,12 +5,14 @@ import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../../interfaces/ApiResponse';
 import { Company } from '../../interfaces/Company';
+import { ContactService } from '../contact/contact.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CompanyService {
   private readonly http = inject(HttpClient);
+  private readonly contactService = inject(ContactService);
   private readonly _companies = signal<Company[]>([]);
 
   readonly companies = this._companies.asReadonly();
@@ -49,6 +51,7 @@ export class CompanyService {
     return this.http.delete<void>(environment.baseUrl + `/companies/${id}`, { withCredentials: true }).pipe(
       tap(() => {
         this._companies.update(companies => companies.filter((company) => company.id !== id));
+        this.contactService.forgetCompany(id);
         this.canDeleteCompanies.set(false);
       })
     );
